@@ -3,6 +3,7 @@
 namespace Jawabapp\Community;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 class CommunityServiceProvider extends ServiceProvider
 {
@@ -17,7 +18,8 @@ class CommunityServiceProvider extends ServiceProvider
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'community');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'community');
         // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        $this->loadRoutesFrom(__DIR__.'/routes.php');
+
+        $this->registerRoutes();
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -56,5 +58,31 @@ class CommunityServiceProvider extends ServiceProvider
         $this->app->singleton('community', function () {
             return new Community;
         });
+    }
+
+    /**
+     * Register the package routes.
+     *
+     * @return void
+     */
+    private function registerRoutes()
+    {
+        Route::group($this->routeConfiguration(), function () {
+            $this->loadRoutesFrom(__DIR__.'/routes.php');
+        });
+    }
+
+    /**
+     * Get the Telescope route group configuration array.
+     *
+     * @return array
+     */
+    private function routeConfiguration()
+    {
+        return [
+            'namespace' => 'Jawabapp\Community\Http\Controllers',
+//            'prefix' => config('community.path'),
+//            'middleware' => config('community.middleware'),
+        ];
     }
 }
