@@ -16,7 +16,7 @@ class CommunityServiceProvider extends ServiceProvider
          * Optional methods to load your package assets
          */
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'community');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'community');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'community');
         // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         $this->registerRoutes();
@@ -32,9 +32,9 @@ class CommunityServiceProvider extends ServiceProvider
             ], 'views');*/
 
             // Publishing assets.
-            /*$this->publishes([
-                __DIR__.'/../resources/assets' => public_path('vendor/community'),
-            ], 'assets');*/
+            $this->publishes([
+                __DIR__.'/../public' => public_path('vendor/community'),
+            ], 'assets');
 
             // Publishing the translation files.
             /*$this->publishes([
