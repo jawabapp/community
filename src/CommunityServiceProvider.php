@@ -68,7 +68,7 @@ class CommunityServiceProvider extends ServiceProvider
     private function registerRoutes()
     {
         Route::group($this->routeConfiguration(), function () {
-            $this->loadRoutesFrom(__DIR__.'/routes.php');
+            $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
         });
     }
 
@@ -81,8 +81,8 @@ class CommunityServiceProvider extends ServiceProvider
     {
         return [
             'namespace' => 'Jawabapp\Community\Http\Controllers',
-//            'prefix' => config('community.path'),
-//            'middleware' => config('community.middleware'),
+            'prefix' => config('community.route.prefix'),
+            'middleware' => config('community.route.middleware'),
         ];
     }
 }
