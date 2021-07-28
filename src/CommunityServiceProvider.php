@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Route;
 
 class CommunityServiceProvider extends ServiceProvider
 {
+
+    /**
+     * This namespace is applied to your controller routes.
+     *
+     * In addition, it is set as the URL generator's root namespace.
+     *
+     * @var string
+     */
+    protected $namespace = 'Jawabapp\Community\Http\Controllers';
+
     /**
      * Bootstrap the application services.
      */
@@ -17,7 +27,7 @@ class CommunityServiceProvider extends ServiceProvider
          */
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'community');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'community');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         $this->registerRoutes();
 
@@ -67,22 +77,38 @@ class CommunityServiceProvider extends ServiceProvider
      */
     private function registerRoutes()
     {
-        Route::group($this->routeConfiguration(), function () {
-            $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
-        });
+        $this->mapWebRoutes();
+
+        $this->mapApiRoutes();
     }
 
     /**
-     * Get the Telescope route group configuration array.
+     * Define the "web" routes for the application.
      *
-     * @return array
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
      */
-    private function routeConfiguration()
+    protected function mapWebRoutes()
     {
-        return [
-            'namespace' => 'Jawabapp\Community\Http\Controllers',
-            'prefix' => config('community.route.prefix'),
-            'middleware' => config('community.route.middleware'),
-        ];
+        Route::prefix(config('community.route.prefix'))
+            ->middleware(config('community.route.middleware', 'web'))
+            ->namespace($this->namespace)
+            ->group(__DIR__ . '/../routes/web.php');
+    }
+
+    /**
+     * Define the "api" routes for the application.
+     *
+     * These routes are typically stateless.
+     *
+     * @return void
+     */
+    protected function mapApiRoutes()
+    {
+        Route::prefix('api')
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(__DIR__ . '/../routes/api.php');
     }
 }
