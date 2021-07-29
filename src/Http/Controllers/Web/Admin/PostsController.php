@@ -23,7 +23,7 @@ class PostsController extends Controller
 
     public function __construct(Post $repository)
     {
-        $this->middleware(['auth', 'auth.trend.admin']);
+        $this->middleware(['auth']);
 
         $this->repository = $repository;
     }
@@ -37,33 +37,33 @@ class PostsController extends Controller
     {
         $query = $this->repository->with('account')->select('posts.*')->whereNull('related_post_id');
 
-        if($request->has('parent_post_id')) {
+        if ($request->has('parent_post_id')) {
             $query->whereParentPostId($request->get('parent_post_id'));
             $query->orderBy('children_count', 'desc');
         } else {
             $query->whereNull('parent_post_id');
         }
 
-        if($request->get('slug')) {
+        if ($request->get('slug')) {
             $account = Account::where('slug', 'like', "%{$request->get('slug')}%")->first();
-            if($account) {
+            if ($account) {
                 $query->where('posts.account_id', $account->id);
             }
         }
 
         $join = false;
 
-        if($request->has('all_reports')) {
+        if ($request->has('all_reports')) {
             $join = true;
         }
 
-        if($request->get('report')) {
+        if ($request->get('report')) {
             $query->where('post_reports.report', $request->get('report'));
 
             $join = true;
         }
 
-        if($join) {
+        if ($join) {
             $query->join('post_reports', 'posts.id', '=', 'post_reports.post_id');
         }
 
@@ -79,7 +79,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-//        return view('admin.posts.create');
+        //        return view('admin.posts.create');
     }
 
     /**
@@ -90,14 +90,14 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-//        $item = $this->repository->find($id);
-//
-//        if (!$item->id) {
-//            Session::flash('flash_message', ['type' => 'error', 'message' => 'Invalid Resource']);
-//            return redirect(route('posts.index'));
-//        }
-//
-//        return view('admin.posts.show')->with('item', $item);
+        //        $item = $this->repository->find($id);
+        //
+        //        if (!$item->id) {
+        //            Session::flash('flash_message', ['type' => 'error', 'message' => 'Invalid Resource']);
+        //            return redirect(route('posts.index'));
+        //        }
+        //
+        //        return view('admin.posts.show')->with('item', $item);
     }
 
     /**
@@ -148,10 +148,10 @@ class PostsController extends Controller
      */
     protected function store(CreateRequest $request)
     {
-//        $this->repository->create($request->all());
-//
-//        Session::flash('flash_message', ['type' => 'notice', 'message' => 'Saved Successfully']);
-//        return redirect(route('posts.index'));
+        //        $this->repository->create($request->all());
+        //
+        //        Session::flash('flash_message', ['type' => 'notice', 'message' => 'Saved Successfully']);
+        //        return redirect(route('posts.index'));
     }
 
     /**
@@ -175,5 +175,4 @@ class PostsController extends Controller
         Session::flash('flash_message', ['type' => 'notice', 'message' => 'Updated Successfully']);
         return redirect(route('posts.index'));
     }
-
 }

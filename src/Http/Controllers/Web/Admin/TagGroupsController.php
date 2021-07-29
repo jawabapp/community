@@ -23,7 +23,7 @@ class TagGroupsController extends Controller
 
     public function __construct(TagGroup $repository)
     {
-        $this->middleware(['auth', 'auth.trend.admin']);
+        $this->middleware(['auth']);
 
         TagGroup::$enableGlobalScope = false;
 
@@ -39,7 +39,7 @@ class TagGroupsController extends Controller
     {
         $query = $this->repository->select()->whereNull('parent_id');
 
-        if(request('name')) {
+        if (request('name')) {
             $query->where('name', 'like', '%' . request('name') . '%');
         }
 
@@ -170,7 +170,7 @@ class TagGroupsController extends Controller
             ]);
         }
 
-        if(!$request->get('services')){
+        if (!$request->get('services')) {
             $item->update([
                 'services' => null
             ]);
@@ -188,7 +188,7 @@ class TagGroupsController extends Controller
             $join->on('tags.id', '=', 'tpc.tag_id');
         })->latest('post_counts');
 
-        if(request('hash_tag')) {
+        if (request('hash_tag')) {
             $query->where('hash_tag', 'like', '%' . request('hash_tag') . '%');
         }
 
@@ -197,13 +197,14 @@ class TagGroupsController extends Controller
         return view('admin.tag-groups.tags')->with('data', $data)->with('tagGroups', TagGroup::get());
     }
 
-    public function assign(Request $request) {
+    public function assign(Request $request)
+    {
         $tag_id = $request->get('tag_id');
         $tag_group_id = $request->get('tag_group_id');
 
         $tag = Tag::find($tag_id);
 
-        if($tag) {
+        if ($tag) {
             $tag->tag_group_id = $tag_group_id;
             $tag->save();
         }
