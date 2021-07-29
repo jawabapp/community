@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api\Community\HashTag\Follow;
+namespace JawabApp\Community\Http\Controllers\Api\Community\HashTag\Follow;
 
-use App\Http\Controllers\Controller;
+use JawabApp\Community\Http\Controllers\Controller;
 use App\Http\Resources\Api\FollowingTagResource;
-use App\Http\Resources\Api\PaginateResource;
 use App\Models\Account;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

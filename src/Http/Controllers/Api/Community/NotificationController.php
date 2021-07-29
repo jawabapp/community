@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api\Community;
+namespace JawabApp\Community\Http\Controllers\Api\Community;
 
 
-use App\Http\Controllers\Controller;
+use JawabApp\Community\Http\Controllers\Controller;
 use App\Models\Account;
-use App\Models\Post;
-use App\Models\Tag;
+use JawabApp\Community\Models\Post;
+use JawabApp\Community\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -15,9 +15,11 @@ use Illuminate\Validation\ValidationException;
  *
  * APIs for managing community and the notifications
  */
-class NotificationController extends Controller {
+class NotificationController extends Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware('auth:api');
     }
 
@@ -42,13 +44,14 @@ class NotificationController extends Controller {
      * @return \Illuminate\Http\JsonResponse
      * @throws ValidationException
      */
-    public function subscribe($type, $id, $account_id, Request $request) {
+    public function subscribe($type, $id, $account_id, Request $request)
+    {
         // POST, Account, HashTag
         $user = $request->user();
 
         $account = $user->getAccount($account_id);
 
-        if(!$account) {
+        if (!$account) {
             throw ValidationException::withMessages([
                 'account_id' => [trans("Invalid account id")],
             ]);
@@ -57,7 +60,7 @@ class NotificationController extends Controller {
         switch ($type) {
             case 'post':
                 $notifiable = Post::find($id);
-                if(!$notifiable) {
+                if (!$notifiable) {
                     throw ValidationException::withMessages([
                         'id' => [trans("Invalid {$type} id")],
                     ]);
@@ -67,7 +70,7 @@ class NotificationController extends Controller {
 
             case 'account':
                 $notifiable = Account::find($id);
-                if(!$notifiable) {
+                if (!$notifiable) {
                     throw ValidationException::withMessages([
                         'id' => [trans("Invalid {$type} id")],
                     ]);
@@ -78,7 +81,7 @@ class NotificationController extends Controller {
 
             case 'hashtag':
                 $notifiable = Tag::find($id);
-                if(!$notifiable) {
+                if (!$notifiable) {
                     throw ValidationException::withMessages([
                         'id' => [trans("Invalid {$type} id")],
                     ]);
@@ -91,10 +94,9 @@ class NotificationController extends Controller {
                     'type' => [trans("Invalid type")],
                 ]);
                 break;
-
         }
 
-        if(!$notifiable->topic) {
+        if (!$notifiable->topic) {
             $notifiable->save();
         }
 
@@ -126,13 +128,14 @@ class NotificationController extends Controller {
      * @return \Illuminate\Http\JsonResponse
      * @throws ValidationException
      */
-    public function unSubscribe($type, $id, $account_id, Request $request) {
+    public function unSubscribe($type, $id, $account_id, Request $request)
+    {
         // POST, Account, HashTag
         $user = $request->user();
 
         $account = $user->getAccount($account_id);
 
-        if(!$account) {
+        if (!$account) {
             throw ValidationException::withMessages([
                 'account_id' => [trans("Invalid account id")],
             ]);
@@ -141,7 +144,7 @@ class NotificationController extends Controller {
         switch ($type) {
             case 'post':
                 $notifiable = Post::find($id);
-                if(!$notifiable) {
+                if (!$notifiable) {
                     throw ValidationException::withMessages([
                         'id' => [trans("Invalid {$type} id")],
                     ]);
@@ -151,7 +154,7 @@ class NotificationController extends Controller {
 
             case 'account':
                 $notifiable = Account::find($id);
-                if(!$notifiable) {
+                if (!$notifiable) {
                     throw ValidationException::withMessages([
                         'id' => [trans("Invalid {$type} id")],
                     ]);
@@ -161,7 +164,7 @@ class NotificationController extends Controller {
 
             case 'hashtag':
                 $notifiable = Tag::find($id);
-                if(!$notifiable) {
+                if (!$notifiable) {
                     throw ValidationException::withMessages([
                         'id' => [trans("Invalid {$type} id")],
                     ]);
@@ -176,7 +179,7 @@ class NotificationController extends Controller {
                 break;
         }
 
-        if(!$notifiable->topic) {
+        if (!$notifiable->topic) {
             $notifiable->save();
         }
 

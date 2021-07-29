@@ -1,13 +1,13 @@
 <?php
 
 
-namespace App\Http\Controllers\Api\Community\Post;
+namespace JawabApp\Community\Http\Controllers\Api\Community\Post;
 
 
-use App\Http\Controllers\Controller;
+use JawabApp\Community\Http\Controllers\Controller;
 use App\Http\Requests\Community\Post\ReportRequest;
-use App\Models\Post;
-use App\Models\PostReport;
+use JawabApp\Community\Models\Post;
+use JawabApp\Community\Models\PostReport;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 
@@ -24,8 +24,9 @@ class ReportController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function index() {
-        return response()->json(collect(PostReport::REPORT_TYPES)->map(function ($name, $id){
+    public function index()
+    {
+        return response()->json(collect(PostReport::REPORT_TYPES)->map(function ($name, $id) {
             return [
                 'id' => $id,
                 'name' => $name
@@ -33,18 +34,19 @@ class ReportController extends Controller
         })->values());
     }
 
-    public function report($id, ReportRequest $request) {
+    public function report($id, ReportRequest $request)
+    {
 
         /** @var \App\Models\User $user */
         $user = $request->user();
 
-//        if($user->is_anonymous) {
-//            throw ValidationException::withMessages([
-//                'id' => [trans('User is anonymous')],
-//            ]);
-//        }
+        //        if($user->is_anonymous) {
+        //            throw ValidationException::withMessages([
+        //                'id' => [trans('User is anonymous')],
+        //            ]);
+        //        }
 
-        if(Carbon::parse($user->block_until)->isFuture()) {
+        if (Carbon::parse($user->block_until)->isFuture()) {
             throw ValidationException::withMessages([
                 'account_id' => [trans('Account is blocked until') . ' ' . $user->block_until],
             ]);
@@ -60,13 +62,13 @@ class ReportController extends Controller
 
         $account = $user->getAccount($request->get('account_id'));
 
-        if(!$account) {
+        if (!$account) {
             throw ValidationException::withMessages([
                 'id' => [trans("You don't have permission to do any Interaction with this post!")],
             ]);
         }
 
-        if($post->account_id === $request->get('account_id')) {
+        if ($post->account_id === $request->get('account_id')) {
             throw ValidationException::withMessages([
                 'id' => [trans("You don't have permission to report your post!")],
             ]);
@@ -76,7 +78,7 @@ class ReportController extends Controller
             ->whereAccountId($request->get('account_id'))
             ->first();
 
-        if($postReport) {
+        if ($postReport) {
             $postReport->update([
                 'report' => $request->get('report')
             ]);
@@ -92,5 +94,4 @@ class ReportController extends Controller
             'status' => 'OK'
         ]);
     }
-
 }

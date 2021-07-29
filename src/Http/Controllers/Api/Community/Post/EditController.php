@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\Community\Post;
+namespace JawabApp\Community\Http\Controllers\Api\Community\Post;
 
-use App\Http\Controllers\Controller;
+use JawabApp\Community\Http\Controllers\Controller;
 use App\Http\Requests\Community\Post\EditRequest;
-use App\Models\Post;
+use JawabApp\Community\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 
@@ -28,7 +28,7 @@ class EditController extends Controller
         /** @var \App\Models\User $user */
         $user = $request->user();
 
-        if($user->is_anonymous) {
+        if ($user->is_anonymous) {
             throw ValidationException::withMessages([
                 'id' => [trans('User is anonymous')],
             ]);
@@ -44,13 +44,13 @@ class EditController extends Controller
 
         $account = $user->getAccount($this->post->account_id);
 
-        if(!$account) {
+        if (!$account) {
             throw ValidationException::withMessages([
                 'id' => [trans("You don't have permission to delete this post!")],
             ]);
         }
 
-        if($this->post instanceof Post\Text) {
+        if ($this->post instanceof Post\Text) {
             $this->post->update([
                 'content' => $request->get('post'),
             ]);

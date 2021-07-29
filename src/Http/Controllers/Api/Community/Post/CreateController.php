@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api\Community\Post;
+namespace JawabApp\Community\Http\Controllers\Api\Community\Post;
 
-use App\Http\Controllers\Controller;
+use JawabApp\Community\Http\Controllers\Controller;
 use App\Http\Requests\Community\Post\CreateRequest;
-use App\Models\Post;
-use App\Plugins\CommonPlugin;
+use JawabApp\Community\Models\Post;
+use JawabApp\Community\Plugins\CommonPlugin;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
@@ -29,13 +29,13 @@ class CreateController extends Controller
         /** @var \App\Models\User $user */
         $user = $request->user();
 
-        if($user->is_anonymous) {
+        if ($user->is_anonymous) {
             throw ValidationException::withMessages([
                 'id' => [trans('User is anonymous')],
             ]);
         }
 
-        if(Carbon::parse($user->block_until)->isFuture()) {
+        if (Carbon::parse($user->block_until)->isFuture()) {
             throw ValidationException::withMessages([
                 'account_id' => [trans('Account is blocked until') . ' ' . $user->block_until],
             ]);
@@ -43,17 +43,17 @@ class CreateController extends Controller
 
         $account = $user->getAccount($request->get('account_id'));
 
-        if(!$account) {
+        if (!$account) {
             throw ValidationException::withMessages([
                 'account_id' => [trans('Account id is not valid!')],
             ]);
         }
 
-        if($request->has('parent_post_id')) {
+        if ($request->has('parent_post_id')) {
             $parent_post = Post::find($request->get('parent_post_id'));
         }
 
-        if($request->has('post')) {
+        if ($request->has('post')) {
             $this->post = Post\Text::create([
                 'account_id' => $account->id,
                 'parent_post_id' => $parent_post->id ?? null,
@@ -62,11 +62,11 @@ class CreateController extends Controller
             ]);
         }
 
-        if($request->has('attachment_type')) {
+        if ($request->has('attachment_type')) {
 
             $postClass = Post::class . '\\' . ucfirst($request->get('attachment_type'));
 
-            if(class_exists($postClass)) {
+            if (class_exists($postClass)) {
                 foreach ($request->attachments as $attachment) {
                     $post = $postClass::create([
                         'account_id' => $account->id,
@@ -76,7 +76,7 @@ class CreateController extends Controller
                         'is_status' => false
                     ]);
 
-                    if(is_null($this->post)) {
+                    if (is_null($this->post)) {
                         $this->post = $post;
                     }
                 }
@@ -87,14 +87,14 @@ class CreateController extends Controller
 
         $post = Post::whereId($this->post->id)->with(['related', 'account'])->first();
 
-        if($post->parent_post_id) {
+        if ($post->parent_post_id) {
             $parentPost = Post::whereId($post->parent_post_id)->first();
 
-            if($account->user_id != $parentPost->account->user->id) {
+            if ($account->user_id != $parentPost->account->user->id) {
 
                 $rootPost = $post->getRootPost();
 
-                CommonPlugin::mqttPublish($parentPost->account->id,'usr/community/' . $parentPost->account->user->id, [
+                CommonPlugin::mqttPublish($parentPost->account->id, 'usr/community/' . $parentPost->account->user->id, [
                     'type' => 'reply',
                     'content' => trans('notification.post_reply', ['nickname' => $account->slug], $parentPost->account->user->language),
                     'deeplink' => $rootPost->deep_link,
@@ -109,6 +109,5 @@ class CreateController extends Controller
         return response()->json([
             'result' => $post
         ]);
-
     }
 }

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api\Community\HashTag\Group;
+namespace JawabApp\Community\Http\Controllers\Api\Community\HashTag\Group;
 
-use App\Http\Controllers\Controller;
+use JawabApp\Community\Http\Controllers\Controller;
 use App\Http\Requests\Community\TagGroup\Follow\FollowRequest;
-use App\Models\TagGroup;
-use App\Models\TagGroupFollower;
+use JawabApp\Community\Models\TagGroup;
+use JawabApp\Community\Models\TagGroupFollower;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 
@@ -57,15 +57,17 @@ class ListController extends Controller
      *
      * @responseFile  responses/community/hash-tag/group/follow.json
      */
-    public function follow($accountId, FollowRequest $request) {
+    public function follow($accountId, FollowRequest $request)
+    {
 
         \Log::info('Follow Tag Groups', $request->all());
 
-        $user = $request->user(); /** @var \App\Models\User $user */
+        $user = $request->user();
+        /** @var \App\Models\User $user */
 
         $account = $user->getAccount($accountId);
 
-        if(!$account) {
+        if (!$account) {
             throw ValidationException::withMessages([
                 'account_id' => [trans('Account id is not valid!')],
             ]);
@@ -91,7 +93,7 @@ class ListController extends Controller
             }
         }
 
-        if($toDeletes) {
+        if ($toDeletes) {
             TagGroupFollower::where('account_id', $account->id)->whereIn('tag_group_id', $toDeletes)->delete();
         }
 

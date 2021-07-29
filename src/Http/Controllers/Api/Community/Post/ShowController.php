@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\Community\Post;
+namespace JawabApp\Community\Http\Controllers\Api\Community\Post;
 
-use App\Http\Controllers\Controller;
-use App\Models\Account;
-use App\Models\Post;
-use App\Models\PostInteraction;
+use JawabApp\Community\Http\Controllers\Controller;
+use JawabApp\Community\Models\Post;
+use JawabApp\Community\Models\PostInteraction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Validation\ValidationException;
@@ -30,7 +29,7 @@ class ShowController extends Controller
     {
         $query = Post::with(['related', 'account', 'tags']);
 
-        if(preg_match("/[a-zA-Z]/i", $id)){
+        if (preg_match("/[a-zA-Z]/i", $id)) {
             $post = $query->where('hash', $id)->first();
         } else {
             $post = $query->find($id);

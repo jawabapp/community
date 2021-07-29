@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api\Community\HashTag\Follow;
+namespace JawabApp\Community\Http\Controllers\Api\Community\HashTag\Follow;
 
-use App\Http\Controllers\Controller;
+use JawabApp\Community\Http\Controllers\Controller;
 use App\Http\Requests\Community\Tag\Follow\FollowRequest;
-use App\Models\Tag;
-use App\Models\TagFollower;
+use JawabApp\Community\Models\Tag;
+use JawabApp\Community\Models\TagFollower;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 
@@ -23,9 +23,10 @@ class FollowController extends Controller
 
     public function index($accountId, FollowRequest $request): JsonResponse
     {
-        $user = $request->user(); /** @var \App\Models\User $user */
+        $user = $request->user();
+        /** @var \App\Models\User $user */
 
-        if($user->is_anonymous) {
+        if ($user->is_anonymous) {
             throw ValidationException::withMessages([
                 'id' => [trans('User is anonymous')],
             ]);
@@ -33,13 +34,13 @@ class FollowController extends Controller
 
         $owner_account = $user->getAccount($accountId);
 
-        if(!$owner_account) {
+        if (!$owner_account) {
             throw ValidationException::withMessages([
                 'account_id' => [trans('Account id is not valid!')],
             ]);
         }
 
-        if($request->has('hash_tag')) {
+        if ($request->has('hash_tag')) {
             $hashTag = '#' . str_replace('#', '', $request->get('hash_tag'));
             $tag = Tag::where('hash_tag', $hashTag)->first();
         } else {

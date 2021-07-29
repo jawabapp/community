@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Web\Admin;
+namespace JawabApp\Community\Http\Controllers\Web\Admin;
 
-use App\Http\Controllers\Controller;
+use JawabApp\Community\Http\Controllers\Controller;
 
 use App\Http\Requests\Post\CreateRequest;
 use App\Http\Requests\Post\UpdateRequest;
 
 use App\Models\Account;
-use App\Models\Post;
+use JawabApp\Community\Models\Post;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\Community\Post;
+namespace JawabApp\Community\Http\Controllers\Api\Community\Post;
 
-use App\Http\Controllers\Controller;
+use JawabApp\Community\Http\Controllers\Controller;
 use App\Http\Requests\Community\Post\DeleteRequest;
-use App\Models\Post;
+use JawabApp\Community\Models\Post;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -20,12 +20,13 @@ class DeleteController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function index($id, DeleteRequest $request) {
+    public function index($id, DeleteRequest $request)
+    {
 
         /** @var \App\Models\User $user */
         $user = $request->user();
 
-        if($user->is_anonymous) {
+        if ($user->is_anonymous) {
             throw ValidationException::withMessages([
                 'id' => [trans('User is anonymous')],
             ]);
@@ -41,7 +42,7 @@ class DeleteController extends Controller
 
         $account = $user->getAccount($post->account_id);
 
-        if(!$account) {
+        if (!$account) {
             throw ValidationException::withMessages([
                 'id' => [trans("You don't have permission to delete this post!")],
             ]);

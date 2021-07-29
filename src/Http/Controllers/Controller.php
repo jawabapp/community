@@ -1,6 +1,6 @@
 <?php
 
-namespace Jawabapp\Community\Http\Controllers;
+namespace JawabApp\Community\Http\Controllers;
 
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Bus\DispatchesJobs;

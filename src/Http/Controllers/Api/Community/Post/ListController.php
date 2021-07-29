@@ -1,11 +1,12 @@
 <?php
-namespace App\Http\Controllers\Api\Community\Post;
 
-use App\Http\Controllers\Controller;
+namespace JawabApp\Community\Http\Controllers\Api\Community\Post;
+
+use JawabApp\Community\Http\Controllers\Controller;
 use App\Http\Requests\Community\Post\ListRequest;
 use App\Models\Account;
-use App\Models\Post;
-use App\Models\PostInteraction;
+use JawabApp\Community\Models\Post;
+use JawabApp\Community\Models\PostInteraction;
 use App\Services\Caching;
 
 /**
@@ -36,7 +37,7 @@ class ListController extends Controller
         $cacheKey = "{$page}_{$accountId}_{$parentPostId}_{$activeAccountId}";
 
         $cacheTags = ['posts'];
-        if($activeAccountId) {
+        if ($activeAccountId) {
             $cacheTags[] = "posts-{$activeAccountId}";
         }
 
@@ -63,12 +64,11 @@ class ListController extends Controller
                 $query->whereAccountId($accountId);
             }
 
-            if($parentPostId) {
+            if ($parentPostId) {
                 PostInteraction::assignInteractionToAccount('viewed', $parentPostId);
             }
 
             return $query->paginate(20);
-
         }, $ttl);
 
         return response()->json($data);
