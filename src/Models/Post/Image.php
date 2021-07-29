@@ -1,6 +1,6 @@
 <?php
 
-namespace JawabApp\CloudMessaging\Models\Post;
+namespace JawabApp\Community\Models\Post;
 
 use App\Models\Post;
 use App\Plugins\ImagePlugin;

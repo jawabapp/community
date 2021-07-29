@@ -1,6 +1,6 @@
 <?php
 
-namespace JawabApp\CloudMessaging\Models\Post;
+namespace JawabApp\Community\Models\Post;
 
 use App\Jobs\CompressVideoJob;
 use App\Models\Post;

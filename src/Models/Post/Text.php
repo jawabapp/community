@@ -1,6 +1,6 @@
 <?php
 
-namespace JawabApp\CloudMessaging\Models\Post;
+namespace JawabApp\Community\Models\Post;
 
 use App\Models\Account;
 use App\Models\Post;
