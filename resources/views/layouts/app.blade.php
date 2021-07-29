@@ -23,7 +23,9 @@
     <div class="container-fluid mb-5">
         <div class="d-flex align-items-center py-4 header">
 
-            <h4 class="mb-0 ml-3"><strong>JawabApp</strong> Community {{ config('app.name') ? ' - ' . config('app.name') : '' }}</h4>
+            <a href="/">
+                <h4 class="mb-0 ml-3"><strong>JawabApp</strong> Community {{ config('app.name') ? ' - ' . config('app.name') : '' }}</h4>
+            </a>
 
         </div>
 

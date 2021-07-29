@@ -1,0 +1,16 @@
+@extends('community::layouts.app')
+
+@section('content')
+    <div class="card">
+        <div class="card-header">
+            Add / Tag Group
+        </div>
+
+        <div class="card-body">
+            <form method="POST" action="{{ route('tag-groups.store') }}" class="form-horizontal" enctype="multipart/form-data">
+                @csrf
+                @include('community::admin.tag-groups.fields')
+            </form>
+        </div>
+    </div>
+@endsection
