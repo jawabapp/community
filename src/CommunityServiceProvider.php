@@ -26,14 +26,14 @@ class CommunityServiceProvider extends ServiceProvider
          * Optional methods to load your package assets
          */
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'community');
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'community');
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'community');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
         $this->registerRoutes();
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('community.php'),
+                __DIR__ . '/../config/config.php' => config_path('community.php'),
             ], 'config');
 
             // Publishing the views.
@@ -43,7 +43,7 @@ class CommunityServiceProvider extends ServiceProvider
 
             // Publishing assets.
             $this->publishes([
-                __DIR__.'/../public' => public_path('vendor/community'),
+                __DIR__ . '/../public' => public_path('vendor/community'),
             ], 'assets');
 
             // Publishing the translation files.
@@ -62,7 +62,7 @@ class CommunityServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'community');
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'community');
 
         // Register the main class to use with the facade
         $this->app->singleton('community', function () {
