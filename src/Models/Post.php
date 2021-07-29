@@ -1,5 +1,6 @@
 <?php
-namespace App\Models;
+
+namespace JawabApp\CloudMessaging\Models;
 
 use App\Services\Caching;
 use App\Services\DeepLinkBuilder;
@@ -45,7 +46,8 @@ class Post extends Model
         'is_subscribed'
     ];
 
-    public function getTypeAttribute() {
+    public function getTypeAttribute()
+    {
         return strtolower(str_replace(self::class . '\\', '', $this->class_type));
     }
 
@@ -53,27 +55,29 @@ class Post extends Model
     {
         $activeAccountId = Account::getActiveAccountId();
 
-        if($activeAccountId) {
+        if ($activeAccountId) {
             return PostInteraction::wherePostId($this->getKey())
-                    ->whereAccountId($activeAccountId)
-                    ->whereIn('type', PostInteraction::SINGLE_TYPES)
-                    ->first()->type ?? '';
+                ->whereAccountId($activeAccountId)
+                ->whereIn('type', PostInteraction::SINGLE_TYPES)
+                ->first()->type ?? '';
         }
 
         return '';
     }
 
-    public function getIsSubscribedAttribute() {
+    public function getIsSubscribedAttribute()
+    {
         $activeAccountId = Account::getActiveAccountId();
-        if($activeAccountId) {
+        if ($activeAccountId) {
             return $this->subscribedAccounts()->where('account_id', $activeAccountId)->exists();
         }
         return false;
     }
 
-    public function getInteractionsAttribute($value) {
+    public function getInteractionsAttribute($value)
+    {
 
-        if(is_null($value)) {
+        if (is_null($value)) {
             return array_fill_keys(PostInteraction::TYPES, 0);
         }
 
@@ -90,22 +94,22 @@ class Post extends Model
 
             $activeAccountId = Account::getActiveAccountId();
 
-            if($activeAccountId) {
-                $builder->whereNotIn('posts.id', function($q) use ($activeAccountId) {
+            if ($activeAccountId) {
+                $builder->whereNotIn('posts.id', function ($q) use ($activeAccountId) {
                     $q->select('post_reports.post_id')->from('post_reports')->where('post_reports.account_id', $activeAccountId);
                 });
 
-                $builder->whereNotIn('posts.account_id', function($q) use ($activeAccountId) {
+                $builder->whereNotIn('posts.account_id', function ($q) use ($activeAccountId) {
                     $q->select('account_blocks.block_account_id')->from('account_blocks')->where('account_blocks.account_id', $activeAccountId);
                 });
             }
         });
 
-        static::creating(function(self $node) {
+        static::creating(function (self $node) {
             $node->setAttribute('hash', uniqid());
         });
 
-        static::created(function(self $node) {
+        static::created(function (self $node) {
             $node->generateDeepLink();
             $node->updateParentsCount();
             $node->updatePostAccountCount();
@@ -113,34 +117,35 @@ class Post extends Model
             $node->updatePostTagsCount();
         });
 
-        static::saving(function(self $node) {
-            if(static::class != self::class) {
+        static::saving(function (self $node) {
+            if (static::class != self::class) {
                 $node->setAttribute('topic', 'notifications/posts/' . $node->id);
                 $node->setAttribute('class_type', static::class);
             }
         });
 
-        static::saved(function(self $node) {
+        static::saved(function (self $node) {
             $node->resetCache();
         });
 
-        static::deleted(function(self $node) {
+        static::deleted(function (self $node) {
             $node->updateParentsCount(true);
             $node->updatePostAccountCount();
             $node->updatePostTagsCount();
             $node->resetCache();
         });
-
     }
 
-    private function updatePostAccountCount() {
+    private function updatePostAccountCount()
+    {
         $this->account->update([
             'post_count' => $this->account->getPostCount()
         ]);
     }
 
-    private function updatePostTagsCount() {
-        if($this->tags) {
+    private function updatePostTagsCount()
+    {
+        if ($this->tags) {
             foreach ($this->tags as $tag) {
                 $tag->update([
                     'posts_count' => $tag->getPostsCount()
@@ -158,14 +163,13 @@ class Post extends Model
      */
     public function newFromBuilder($attributes = [], $connection = null)
     {
-        if(isset($attributes->class_type) && class_exists($attributes->class_type)) {
+        if (isset($attributes->class_type) && class_exists($attributes->class_type)) {
 
             $model = (new $attributes->class_type((array) $attributes));
 
             $model->exists = true;
 
             $model->setTable($this->getTable());
-
         } else {
             $model = $this->newInstance([], true);
         }
@@ -181,7 +185,8 @@ class Post extends Model
 
     #################### From Builder Depend on Class Type :: END ####################
 
-    public function resetCache() {
+    public function resetCache()
+    {
         Caching::deleteCacheByTags('posts');
     }
 
@@ -232,21 +237,22 @@ class Post extends Model
         );
     }
 
-    public function updateParentsCount($isDecrease = false) {
+    public function updateParentsCount($isDecrease = false)
+    {
 
         $parent_post = self::find($this->parent_post_id);
 
-        if($parent_post && empty($this->related_post_id)) {
+        if ($parent_post && empty($this->related_post_id)) {
             $parent_post->update([
                 'children_count' => ($isDecrease ? ($parent_post->children_count - $this->children_count - 1) : ($parent_post->children_count + 1))
             ]);
 
             $parent_post->updateParentsCount($isDecrease);
         }
-
     }
 
-    public function generateDeepLink() {
+    public function generateDeepLink()
+    {
 
         $deep_link = '';
 
@@ -265,15 +271,17 @@ class Post extends Model
             $this->update([
                 'deep_link' => $deep_link
             ]);
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         return $deep_link;
     }
 
-    public function getRootPost() {
+    public function getRootPost()
+    {
         if ($this->parent_post_id) {
             $parentPost = self::find($this->parent_post_id);
-            if($parentPost) {
+            if ($parentPost) {
                 return $parentPost->getRootPost();
             }
         }
@@ -281,16 +289,17 @@ class Post extends Model
         return $this;
     }
 
-    public static function getUserFilteredData(Builder $builder) {
+    public static function getUserFilteredData(Builder $builder)
+    {
 
         $activeAccountId = Account::getActiveAccountId();
-        if($activeAccountId) {
+        if ($activeAccountId) {
 
             $tagGroupFollower = TagGroupFollower::where('account_id', $activeAccountId)->count();
 
-            if($tagGroupFollower == 0) {
-                $builder->where(function($query) use ($activeAccountId){
-                    $query->whereNotIn('posts.id', function($q) use ($activeAccountId) {
+            if ($tagGroupFollower == 0) {
+                $builder->where(function ($query) use ($activeAccountId) {
+                    $query->whereNotIn('posts.id', function ($q) use ($activeAccountId) {
                         $q->select('post_tags.post_id')->from('post_tags')
                             ->join('tags', 'post_tags.tag_id', '=', 'tags.id')
                             ->join('tag_groups', 'tags.tag_group_id', '=', 'tag_groups.id')
@@ -298,53 +307,53 @@ class Post extends Model
                     });
                 });
             } else {
-                $builder->where(function($query) use ($activeAccountId){
+                $builder->where(function ($query) use ($activeAccountId) {
                     // Get user's followed tag-groups posts
-                    $query->whereIn('posts.id', function($q) use ($activeAccountId) {
+                    $query->whereIn('posts.id', function ($q) use ($activeAccountId) {
                         $q->select('post_tags.post_id')->from('post_tags')
                             ->join('tags', 'post_tags.tag_id', '=', 'tags.id')
                             ->join('tag_group_followers', 'tags.tag_group_id', '=', 'tag_group_followers.tag_group_id')
                             ->where('tag_group_followers.account_id', $activeAccountId);
                     });
                     // Get user's followed hashtags posts
-                    $query->orWhereIn('posts.id', function($q) use ($activeAccountId) {
+                    $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
                         $q->select('post_tags.post_id')->from('post_tags')
                             ->join('tag_followers', 'post_tags.tag_id', '=', 'tag_followers.tag_id')
                             ->where('tag_followers.account_id', $activeAccountId);
                     });
-//                    // Get user's followed accounts posts
-//                    $query->orWhereIn('posts.account_id', function($q) use ($activeAccountId) {
-//                        $q->select('account_followers.follower_account_id')->from('account_followers')
-//                            ->where('account_followers.account_id', $activeAccountId);
-//                    });
+                    //                    // Get user's followed accounts posts
+                    //                    $query->orWhereIn('posts.account_id', function($q) use ($activeAccountId) {
+                    //                        $q->select('account_followers.follower_account_id')->from('account_followers')
+                    //                            ->where('account_followers.account_id', $activeAccountId);
+                    //                    });
                     // Get user's own posts
                     $query->orWhere('posts.account_id', $activeAccountId);
                 });
             }
-
         }
     }
 
-    public static function getRelatedPostFilteredData(Builder $builder, Post $post) {
+    public static function getRelatedPostFilteredData(Builder $builder, Post $post)
+    {
 
-        if(!$post) {
+        if (!$post) {
             return;
         }
 
         // Filter by class_type
         $classType = $post->class_type;
 
-        if($post->related[0] ?? false) {
+        if ($post->related[0] ?? false) {
             $classType = $post->related[0]->class_type;
         }
 
-        $builder->whereIn('posts.id', function($q) use ($classType) {
+        $builder->whereIn('posts.id', function ($q) use ($classType) {
             $q->select(\DB::raw('(CASE WHEN p.related_post_id IS NULL THEN p.id ELSE p.related_post_id END) AS post_id'))->from('posts as p')
                 ->where('p.class_type', $classType);
         });
 
         // Filter by tags
-        $builder->whereIn('posts.id', function($q) use ($post) {
+        $builder->whereIn('posts.id', function ($q) use ($post) {
             $q->select('post_tags.post_id')->from('post_tags')
                 ->whereIn('post_tags.tag_id', function ($qq) use ($post) {
                     $qq->select('post_tags.tag_id')->from('post_tags')->where('post_tags.post_id', $post->id);
@@ -360,17 +369,3 @@ class Post extends Model
         return $this->morphToMany(Account::class, 'notifiable', 'account_notifications')->withTimestamps();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

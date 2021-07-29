@@ -1,5 +1,6 @@
 <?php
-namespace App\Models\Post;
+
+namespace JawabApp\CloudMessaging\Models\Post;
 
 use App\Models\Account;
 use App\Models\Post;
@@ -13,9 +14,9 @@ class Text extends Post
     {
         parent::boot();
 
-        static::saved(function(self $node) {
+        static::saved(function (self $node) {
 
-            if($node->isDirty('content')) {
+            if ($node->isDirty('content')) {
                 $content = $node->getAttribute('content');
 
                 // hash tags
@@ -31,15 +32,15 @@ class Text extends Post
                 // mentions
                 $mentions = self::getMentions($content);
 
-                if($mentions) {
+                if ($mentions) {
                     foreach ($mentions as $mention) {
                         $account = Account::where('slug', $mention)->first();
 
-                        if($account) {
+                        if ($account) {
 
                             $rootPost = $node->getRootPost();
 
-                            CommonPlugin::mqttPublish($account->id,'usr/community/' . $account->user->id, [
+                            CommonPlugin::mqttPublish($account->id, 'usr/community/' . $account->user->id, [
                                 'type' => 'mention',
                                 'content' => trans('notification.post_mention', ['nickname' => $node->account->slug], $account->user->language),
                                 'deeplink' => $rootPost->deep_link,
@@ -52,7 +53,6 @@ class Text extends Post
                     }
                 }
             }
-
         });
     }
 
@@ -61,11 +61,13 @@ class Text extends Post
         return Post::class;
     }
 
-    public function draw() {
+    public function draw()
+    {
         return view('admin.posts.types.text')->with('post', $this);
     }
 
-    private static function getHashTags($string) {
+    private static function getHashTags($string)
+    {
         preg_match_all("/(#\w+)/u", $string, $matches);
 
         $hashTags = [];
@@ -78,7 +80,8 @@ class Text extends Post
         return $hashTags;
     }
 
-    private static function getMentions($string) {
+    private static function getMentions($string)
+    {
         preg_match_all("/(@\w+)/u", $string, $matches);
 
         $mentions = [];

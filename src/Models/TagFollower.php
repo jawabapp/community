@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace JawabApp\CloudMessaging\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -44,10 +44,10 @@ class TagFollower extends Model
         });
     }
 
-    private function updateFollowersCount() {
+    private function updateFollowersCount()
+    {
         $this->tag->update([
             'followers_count' => $this->tag->getFollowersCount(),
         ]);
     }
-
 }

@@ -1,5 +1,6 @@
 <?php
-namespace App\Models\Post;
+
+namespace JawabApp\CloudMessaging\Models\Post;
 
 use App\Models\Post;
 use App\Plugins\ImagePlugin;
@@ -16,17 +17,17 @@ class Image extends Post
     {
         parent::boot();
 
-        static::saving(function(self $node) {
+        static::saving(function (self $node) {
 
-            if($node->isDirty('content')) {
-                if($node->getAttribute('content') instanceof UploadedFile) {
+            if ($node->isDirty('content')) {
+                if ($node->getAttribute('content') instanceof UploadedFile) {
 
-                    if($node->getOriginal('content')) {
+                    if ($node->getOriginal('content')) {
                         $toDelete = self::$post_path . str_replace(
-                                Storage::url(self::$post_path),
-                                '',
-                                $node->getOriginal('content')
-                            );
+                            Storage::url(self::$post_path),
+                            '',
+                            $node->getOriginal('content')
+                        );
                         Storage::delete($toDelete);
                     }
 
@@ -49,7 +50,6 @@ class Image extends Post
                     $node->setAttribute('content', Storage::url($original));
                 }
             }
-
         });
     }
 
@@ -58,8 +58,8 @@ class Image extends Post
         return Post::class;
     }
 
-    public function draw() {
+    public function draw()
+    {
         return view('admin.posts.types.image')->with('post', $this);
     }
-
 }

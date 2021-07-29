@@ -1,5 +1,6 @@
 <?php
-namespace App\Models\Post;
+
+namespace JawabApp\CloudMessaging\Models\Post;
 
 use App\Jobs\CompressVideoJob;
 use App\Models\Post;
@@ -14,19 +15,19 @@ class Video extends Post
     {
         parent::boot();
 
-        static::saving(function(self $node) {
+        static::saving(function (self $node) {
 
             $empty_compress = empty($node->getAttribute('extra_info')['compress']);
 
-            if($node->isDirty('content') && $empty_compress) {
+            if ($node->isDirty('content') && $empty_compress) {
                 if ($node->getAttribute('content') instanceof UploadedFile) {
 
                     if ($node->getOriginal('content')) {
                         $toDelete = self::$post_path . str_replace(
-                                Storage::url(self::$post_path),
-                                '',
-                                $node->getOriginal('content')
-                            );
+                            Storage::url(self::$post_path),
+                            '',
+                            $node->getOriginal('content')
+                        );
                         Storage::delete($toDelete);
                     }
 
@@ -39,17 +40,15 @@ class Video extends Post
                     $node->setAttribute('content', Storage::url($original));
                 }
             }
-
         });
 
-        static::saved(function(self $node) {
+        static::saved(function (self $node) {
 
             $empty_compress = empty($node->getAttribute('extra_info')['compress']);
 
-            if($node->isDirty('content') && $empty_compress) {
+            if ($node->isDirty('content') && $empty_compress) {
                 CompressVideoJob::dispatch($node);
             }
-
         });
     }
 
@@ -58,7 +57,8 @@ class Video extends Post
         return Post::class;
     }
 
-    public function draw() {
+    public function draw()
+    {
         return view('admin.posts.types.video')->with('post', $this);
     }
 }

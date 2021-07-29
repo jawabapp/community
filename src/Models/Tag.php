@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ibraheemqanah
- * Date: 2019-05-20
- * Time: 13:18
- */
 
-namespace App\Models;
+namespace JawabApp\CloudMessaging\Models;
 
 use App\Services\DeepLinkBuilder;
 use Illuminate\Database\Eloquent\Model;
@@ -34,27 +28,32 @@ class Tag extends Model
         'is_subscribed',
     ];
 
-    public function getHashTagStringAttribute() {
+    public function getHashTagStringAttribute()
+    {
         return str_replace('#', '', $this->hash_tag);
     }
 
-    public function getAccountFollowingAttribute() {
+    public function getAccountFollowingAttribute()
+    {
         return $this->isAccountFollowingBy();
     }
 
-    public function getIsSubscribedAttribute() {
+    public function getIsSubscribedAttribute()
+    {
         $activeAccountId = Account::getActiveAccountId();
-        if($activeAccountId) {
+        if ($activeAccountId) {
             return $this->subscribedAccounts()->where('account_id', $activeAccountId)->exists();
         }
         return false;
     }
 
-    public function getPostsCount() {
+    public function getPostsCount()
+    {
         return $this->posts()->count();
     }
 
-    public function getFollowersCount() {
+    public function getFollowersCount()
+    {
         return $this->followers()->count();
     }
 
@@ -77,7 +76,7 @@ class Tag extends Model
     {
         $activeAccountId = Account::getActiveAccountId();
 
-        if($activeAccountId) {
+        if ($activeAccountId) {
             return TagFollower::whereAccountId($activeAccountId)
                 ->whereTagId($this->getKey())
                 ->exists();
@@ -90,17 +89,17 @@ class Tag extends Model
     {
         parent::boot();
 
-        static::created(function(self $node) {
+        static::created(function (self $node) {
             $node->generateDeepLink();
         });
 
-        static::saving(function(self $node) {
+        static::saving(function (self $node) {
             $node->setAttribute('topic', 'notifications/tags/' . $node->id);
         });
-
     }
 
-    public function generateDeepLink() {
+    public function generateDeepLink()
+    {
 
         $deep_link = '';
 
@@ -118,7 +117,8 @@ class Tag extends Model
             $this->update([
                 'deep_link' => $deep_link
             ]);
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         return $deep_link;
     }

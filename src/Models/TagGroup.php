@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ibraheemqanah
- * Date: 2020-07-16
- * Time: 13:41
- */
 
-namespace App\Models;
+namespace JawabApp\CloudMessaging\Models;
 
 use App\Scopes\TagGroup\CountryCodeScope;
 use App\Scopes\TagGroup\PublishedScope;
@@ -39,16 +33,17 @@ class TagGroup extends Model
     ];
 
     protected $hidden = [
-      'deleted_at',
-      'created_at',
-      'updated_at',
+        'deleted_at',
+        'created_at',
+        'updated_at',
     ];
 
     protected $appends = [
         'account_following',
     ];
 
-    public function getAccountFollowingAttribute() {
+    public function getAccountFollowingAttribute()
+    {
         return $this->isAccountFollowingBy();
     }
 
@@ -67,10 +62,11 @@ class TagGroup extends Model
         return $this->hasMany(TagGroup::class, 'parent_id', 'id')->oldest('order');
     }
 
-    public function getRoot() {
+    public function getRoot()
+    {
         if ($this->parent_id) {
             $parent = self::find($this->parent_id);
-            if($parent) {
+            if ($parent) {
                 return $parent->getRoot();
             }
         }
@@ -82,7 +78,7 @@ class TagGroup extends Model
     {
         $activeAccountId = Account::getActiveAccountId();
 
-        if($activeAccountId) {
+        if ($activeAccountId) {
             return TagGroupFollower::whereAccountId($activeAccountId)
                 ->whereTagGroupId($this->getKey())
                 ->exists();
@@ -103,11 +99,10 @@ class TagGroup extends Model
 
         ////
 
-        static::deleted(function(self $node) {
-            if(is_null($node->parent_id)){
+        static::deleted(function (self $node) {
+            if (is_null($node->parent_id)) {
                 self::where('parent_id', $node->id)->delete();
             }
         });
-
     }
 }

@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ibraheemqanah
- * Date: 2020-07-16
- * Time: 13:41
- */
 
-namespace App\Models;
+namespace JawabApp\CloudMessaging\Models;
 
 use App\Services\Caching;
 use Illuminate\Database\Eloquent\Model;
@@ -22,17 +16,17 @@ class TagGroupFollower extends Model
     {
         parent::boot();
 
-        static::saved(function(self $node) {
+        static::saved(function (self $node) {
             $node->resetCache();
         });
 
-        static::deleted(function(self $node) {
+        static::deleted(function (self $node) {
             $node->resetCache();
         });
-
     }
 
-    public function resetCache() {
+    public function resetCache()
+    {
         Caching::deleteCacheByTags("posts-{$this->account_id}");
     }
 }
