@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Scopes\TagGroup;
+namespace JawabApp\Community\Scopes\TagGroup;
 
 use App\Models\TagGroup;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,11 +19,11 @@ class CountryCodeScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        if(TagGroup::$enableGlobalScope && auth()->check()) {
+        if (TagGroup::$enableGlobalScope && auth()->check()) {
             $builder->where(function ($query) {
                 $query->whereNull('country_code');
 
-                if(auth()->user()->phone_country ?? false) {
+                if (auth()->user()->phone_country ?? false) {
                     $query->orWhere('country_code', auth()->user()->phone_country);
                 }
             });

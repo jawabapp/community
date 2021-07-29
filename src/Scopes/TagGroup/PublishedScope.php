@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Scopes\TagGroup;
+namespace JawabApp\Community\Scopes\TagGroup;
 
 use App\Models\TagGroup;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,7 +19,7 @@ class PublishedScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        if(TagGroup::$enableGlobalScope) {
+        if (TagGroup::$enableGlobalScope) {
             $builder->where('is_published', true);
         }
     }
