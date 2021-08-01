@@ -1,6 +1,6 @@
 <?php
 
-namespace JawabApp\Community\Services;
+namespace Jawabapp\Community\Services;
 
 use Illuminate\Support\Facades\Cache;
 use Closure;

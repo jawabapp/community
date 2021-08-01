@@ -1,6 +1,6 @@
 <?php
 
-namespace JawabApp\Community\Http\Resources\Api;
+namespace Jawabapp\Community\Http\Resources\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 

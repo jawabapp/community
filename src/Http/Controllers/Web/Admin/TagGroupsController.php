@@ -1,6 +1,6 @@
 <?php
 
-namespace JawabApp\Community\Http\Controllers\Web\Admin;
+namespace Jawabapp\Community\Http\Controllers\Web\Admin;
 
 use App\Plugins\ImagePlugin;
 use Illuminate\Http\Request;

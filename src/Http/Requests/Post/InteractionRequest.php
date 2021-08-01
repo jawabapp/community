@@ -1,8 +1,8 @@
 <?php
 
-namespace JawabApp\Community\Http\Requests\Community\Post;
+namespace Jawabapp\Community\Http\Requests\Community\Post;
 
-use JawabApp\Community\Models\PostInteraction;
+use Jawabapp\Community\Models\PostInteraction;
 use Illuminate\Foundation\Http\FormRequest;
 
 class InteractionRequest extends FormRequest

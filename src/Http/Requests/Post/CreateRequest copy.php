@@ -1,6 +1,6 @@
 <?php
 
-namespace JawabApp\Community\Http\Requests\Community\Post;
+namespace Jawabapp\Community\Http\Requests\Community\Post;
 
 use Illuminate\Foundation\Http\FormRequest;
 
