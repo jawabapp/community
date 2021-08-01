@@ -3,11 +3,11 @@
 namespace Jawabapp\Community\Models;
 
 use App\Services\Caching;
-use Illuminate\Http\Request;
 use App\Services\DeepLinkBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Request;
 
 class Post extends Model
 {

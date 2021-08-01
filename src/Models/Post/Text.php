@@ -3,8 +3,8 @@
 namespace Jawabapp\Community\Models\Post;
 
 use App\Models\Account;
-use App\Models\Post;
-use App\Models\Tag;
+use Jawabapp\Community\Models\Post;
+use Jawabapp\Community\Models\Tag;
 use App\Plugins\CommonPlugin;
 
 class Text extends Post

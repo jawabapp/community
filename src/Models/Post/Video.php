@@ -3,7 +3,7 @@
 namespace Jawabapp\Community\Models\Post;
 
 use App\Jobs\CompressVideoJob;
-use App\Models\Post;
+use Jawabapp\Community\Models\Post;
 use Illuminate\Http\UploadedFile;
 use Storage;
 

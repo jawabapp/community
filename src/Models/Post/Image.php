@@ -2,7 +2,7 @@
 
 namespace Jawabapp\Community\Models\Post;
 
-use App\Models\Post;
+use Jawabapp\Community\Models\Post;
 use App\Plugins\ImagePlugin;
 use Illuminate\Http\UploadedFile;
 use Storage;
