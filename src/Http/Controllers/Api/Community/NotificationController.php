@@ -2,13 +2,12 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Community;
 
-
-use Jawabapp\Community\Http\Controllers\Controller;
 use App\Models\Account;
-use Jawabapp\Community\Models\Post;
-use Jawabapp\Community\Models\Tag;
 use Illuminate\Http\Request;
+use Jawabapp\Community\Models\Tag;
+use Jawabapp\Community\Models\Post;
 use Illuminate\Validation\ValidationException;
+use Jawabapp\Community\Http\Controllers\Controller;
 
 /**
  * @group  Community management

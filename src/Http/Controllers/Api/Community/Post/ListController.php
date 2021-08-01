@@ -2,12 +2,12 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 
-use Jawabapp\Community\Http\Controllers\Controller;
-use Jawabapp\Community\Http\Requests\Community\Post\ListRequest;
 use App\Models\Account;
+use App\Services\Caching;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\PostInteraction;
-use App\Services\Caching;
+use Jawabapp\Community\Http\Controllers\Controller;
+use Jawabapp\Community\Http\Requests\Community\Post\ListRequest;
 
 /**
  * @group  Community management

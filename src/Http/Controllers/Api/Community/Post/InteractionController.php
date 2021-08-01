@@ -1,16 +1,14 @@
 <?php
 
-
 namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 
-
-use Jawabapp\Community\Http\Controllers\Controller;
-use App\Http\Requests\Community\Post\InteractionRequest;
+use Carbon\Carbon;
+use App\Plugins\CommonPlugin;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\PostInteraction;
-use App\Plugins\CommonPlugin;
-use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
+use Jawabapp\Community\Http\Controllers\Controller;
+use Jawabapp\Community\Http\Requests\Community\Post\InteractionRequest;
 
 /**
  * @group  Community management
