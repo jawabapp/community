@@ -25,54 +25,7 @@ class SearchController extends Controller
         }
     }
 
-    public function index(SearchRequest $request)
-    {
-
-        $query = trim($request->get('query'));
-
-        $keyword = str_replace(['-', '_', '&', '"', '\'', ',', ';', '^', '!', '\\', '/', '(', ')', '[', ']', '%', '$', '#', '@', '~', '+', '*', '|'], ' ', $query);
-        $keyword = preg_replace('/\s+/', ' ', $keyword);
-        $keyword = trim($keyword);
-
-        $keywords = '+' . preg_replace('#[\s]+#i', '+', $keyword);
-
-        $limit = 10;
-
-        $posts = Post::whereRaw("MATCH (`content`) AGAINST(? IN BOOLEAN MODE)", $keywords)
-            ->whereClassType(Post\Text::class)
-            ->whereNull('related_post_id')
-            ->whereNull('parent_post_id')
-            ->orderBy('children_count', 'desc')
-            ->limit($limit)
-            ->with(['related', 'account'])
-            ->get();
-
-        $accounts = Account::where('slug', 'LIKE', "%{$query}%")
-            ->orWhere('nickname', 'LIKE', "%{$keyword}%")
-            ->orWhere('status', 'LIKE', "%{$keyword}%")
-            ->limit($limit)
-            ->get();
-
-        $tags = Tag::selectRaw('`tag_id`, `hash_tag`, count(*) as `hash_tag_count`')
-            ->join('post_tags', 'tag_id', '=', 'tags.id')
-            ->where('hash_tag', 'LIKE', "%{$query}%")
-            ->groupBy('tag_id')
-            ->orderBy('hash_tag_count', 'desc')
-            ->limit($limit)
-            ->get();
-
-        //        $tags = Tag::where('hash_tag', 'LIKE', "%{$query}%")
-        //            ->limit($limit)
-        //            ->get();
-
-        return response()->json([
-            'posts' => $posts,
-            'accounts' => $accounts,
-            'tags' => $tags,
-        ]);
-    }
-
-    public function v2(SearchRequest $request, $type = null)
+    public function index(SearchRequest $request, $type = null)
     {
 
         if (is_null($type)) {
@@ -145,17 +98,17 @@ class SearchController extends Controller
 
     public function posts(SearchRequest $request)
     {
-        return $this->v2($request, 'posts');
+        return $this->index($request, 'posts');
     }
 
     public function accounts(SearchRequest $request)
     {
-        return $this->v2($request, 'accounts');
+        return $this->index($request, 'accounts');
     }
 
     public function tags(SearchRequest $request)
     {
-        return $this->v2($request, 'tags');
+        return $this->index($request, 'tags');
     }
 
     private function post(SearchRequest $request)

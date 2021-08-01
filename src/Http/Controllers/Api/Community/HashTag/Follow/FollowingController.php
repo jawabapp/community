@@ -39,23 +39,7 @@ class FollowingController extends Controller
     public function index($accountId, Request $request): JsonResponse
     {
 
-        $account = Account::find($accountId);
-
-        if (!$account) {
-            throw ValidationException::withMessages([
-                'id' => [trans('Account id is not valid!')],
-            ]);
-        }
-
-        return response()->json([
-            'result' => $account->followingTag()->with('tag')->get()
-        ]);
-    }
-
-    public function v2($accountId, Request $request): JsonResponse
-    {
-
-        $account = Account::find($accountId);
+        $account = config('community.account_class')::find($accountId);
 
         if (!$account) {
             throw ValidationException::withMessages([

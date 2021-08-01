@@ -8,6 +8,4 @@ namespace Jawabapp\Community\Traits;
         return auth()->id();
      }
 
-
-
  }

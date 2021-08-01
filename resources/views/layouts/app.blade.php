@@ -24,7 +24,7 @@
         <div class="d-flex align-items-center py-4 header">
 
             <a href="/">
-                <h4 class="mb-0 ml-3"><strong>JawabApp</strong> Community {{ config('app.name') ? ' - ' . config('app.name') : '' }}</h4>
+                <h4 class="mb-0 ml-3"><strong>JawabApp</strong> Community</h4>
             </a>
 
         </div>
