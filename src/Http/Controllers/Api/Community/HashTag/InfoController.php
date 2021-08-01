@@ -2,11 +2,11 @@
 
 namespace JawabApp\Community\Http\Controllers\Api\Community\HashTag;
 
-use JawabApp\Community\Http\Controllers\Controller;
-use JawabApp\Community\Models\Tag;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use JawabApp\Community\Models\Tag;
 use Illuminate\Validation\ValidationException;
+use JawabApp\Community\Http\Controllers\Controller;
 
 /**
  * @group  Community management

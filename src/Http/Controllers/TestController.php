@@ -1,8 +1,6 @@
 <?php
 
-
 namespace JawabApp\Community\Http\Controllers;
-
 
 class TestController extends Controller
 {

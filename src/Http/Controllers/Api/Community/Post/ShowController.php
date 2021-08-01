@@ -2,12 +2,12 @@
 
 namespace JawabApp\Community\Http\Controllers\Api\Community\Post;
 
-use JawabApp\Community\Http\Controllers\Controller;
-use JawabApp\Community\Models\Post;
-use JawabApp\Community\Models\PostInteraction;
 use Illuminate\Http\JsonResponse;
+use JawabApp\Community\Models\Post;
 use Illuminate\Support\Facades\Request;
+use JawabApp\Community\Models\PostInteraction;
 use Illuminate\Validation\ValidationException;
+use JawabApp\Community\Http\Controllers\Controller;
 
 /**
  * @group  Community management

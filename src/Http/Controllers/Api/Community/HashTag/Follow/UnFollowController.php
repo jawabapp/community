@@ -2,12 +2,12 @@
 
 namespace JawabApp\Community\Http\Controllers\Api\Community\HashTag\Follow;
 
-use JawabApp\Community\Http\Controllers\Controller;
-use JawabApp\Community\Http\Requests\Community\Tag\Follow\UnFollowRequest;
+use Illuminate\Http\JsonResponse;
 use JawabApp\Community\Models\Tag;
 use JawabApp\Community\Models\TagFollower;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
+use JawabApp\Community\Http\Controllers\Controller;
+use JawabApp\Community\Http\Requests\Community\Tag\Follow\UnFollowRequest;
 
 /**
  * @group  Community management

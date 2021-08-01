@@ -2,17 +2,13 @@
 
 namespace JawabApp\Community\Http\Controllers\Web\Admin;
 
+use App\Models\Account;
+use Illuminate\Http\Request;
+use JawabApp\Community\Models\Post;
+use Illuminate\Support\Facades\Session;
 use JawabApp\Community\Http\Controllers\Controller;
-
 use Jawabapp\Community\Http\Requests\Post\CreateRequest;
 use Jawabapp\Community\Http\Requests\Post\UpdateRequest;
-
-use App\Models\Account;
-use JawabApp\Community\Models\Post;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 
 class PostsController extends Controller
 {
