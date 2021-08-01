@@ -1,11 +1,11 @@
 <?php
 
-namespace JawabApp\Community\Http\Controllers\Api\Community\Post;
+namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 
-use JawabApp\Community\Http\Controllers\Controller;
+use Jawabapp\Community\Http\Controllers\Controller;
 use App\Http\Requests\Community\Post\CreateRequest;
-use JawabApp\Community\Models\Post;
-use JawabApp\Community\Plugins\CommonPlugin;
+use Jawabapp\Community\Models\Post;
+use Jawabapp\Community\Plugins\CommonPlugin;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;

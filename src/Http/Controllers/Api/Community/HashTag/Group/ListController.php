@@ -1,11 +1,11 @@
 <?php
 
-namespace JawabApp\Community\Http\Controllers\Api\Community\HashTag\Group;
+namespace Jawabapp\Community\Http\Controllers\Api\Community\HashTag\Group;
 
-use JawabApp\Community\Http\Controllers\Controller;
+use Jawabapp\Community\Http\Controllers\Controller;
 use App\Http\Requests\Community\TagGroup\Follow\FollowRequest;
-use JawabApp\Community\Models\TagGroup;
-use JawabApp\Community\Models\TagGroupFollower;
+use Jawabapp\Community\Models\TagGroup;
+use Jawabapp\Community\Models\TagGroupFollower;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 

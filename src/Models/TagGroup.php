@@ -1,6 +1,6 @@
 <?php
 
-namespace JawabApp\Community\Models;
+namespace Jawabapp\Community\Models;
 
 use App\Scopes\TagGroup\CountryCodeScope;
 use App\Scopes\TagGroup\PublishedScope;

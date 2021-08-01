@@ -2,4 +2,6 @@
 
 @section('content')
     test
+{{--    {{ \Jawabapp\Community\Models\Post::first()->id }}--}}
+    {{ app('community')->getAccountClass() }}
 @endsection

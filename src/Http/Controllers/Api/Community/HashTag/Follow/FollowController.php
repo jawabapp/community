@@ -1,11 +1,11 @@
 <?php
 
-namespace JawabApp\Community\Http\Controllers\Api\Community\HashTag\Follow;
+namespace Jawabapp\Community\Http\Controllers\Api\Community\HashTag\Follow;
 
-use JawabApp\Community\Http\Controllers\Controller;
-use JawabApp\Community\Http\Requests\Community\Tag\Follow\FollowRequest;
-use JawabApp\Community\Models\Tag;
-use JawabApp\Community\Models\TagFollower;
+use Jawabapp\Community\Http\Controllers\Controller;
+use Jawabapp\Community\Http\Requests\Community\Tag\Follow\FollowRequest;
+use Jawabapp\Community\Models\Tag;
+use Jawabapp\Community\Models\TagFollower;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 

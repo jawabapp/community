@@ -1,7 +1,7 @@
 <?php
 
 
-namespace JawabApp\Community\Scopes\TagGroup;
+namespace Jawabapp\Community\Scopes\TagGroup;
 
 use App\Models\TagGroup;
 use Illuminate\Database\Eloquent\Builder;

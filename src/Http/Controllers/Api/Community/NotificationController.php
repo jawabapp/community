@@ -1,12 +1,12 @@
 <?php
 
-namespace JawabApp\Community\Http\Controllers\Api\Community;
+namespace Jawabapp\Community\Http\Controllers\Api\Community;
 
 
-use JawabApp\Community\Http\Controllers\Controller;
+use Jawabapp\Community\Http\Controllers\Controller;
 use App\Models\Account;
-use JawabApp\Community\Models\Post;
-use JawabApp\Community\Models\Tag;
+use Jawabapp\Community\Models\Post;
+use Jawabapp\Community\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 

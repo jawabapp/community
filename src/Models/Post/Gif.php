@@ -1,6 +1,6 @@
 <?php
 
-namespace JawabApp\Community\Models\Post;
+namespace Jawabapp\Community\Models\Post;
 
 use App\Models\Post;
 use Illuminate\Http\UploadedFile;

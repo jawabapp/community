@@ -1,9 +1,9 @@
 <?php
 
-namespace JawabApp\Community\Http\Controllers\Api\Community\HashTag;
+namespace Jawabapp\Community\Http\Controllers\Api\Community\HashTag;
 
-use JawabApp\Community\Http\Controllers\Controller;
-use JawabApp\Community\Models\Tag;
+use Jawabapp\Community\Http\Controllers\Controller;
+use Jawabapp\Community\Models\Tag;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;

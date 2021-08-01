@@ -1,7 +1,7 @@
 <?php
 
 
-namespace JawabApp\Community\Http\Controllers;
+namespace Jawabapp\Community\Http\Controllers;
 
 
 class TestController extends Controller

@@ -1,6 +1,6 @@
 <?php
 
-namespace JawabApp\Community\Models;
+namespace Jawabapp\Community\Models;
 
 use App\Services\DeepLinkBuilder;
 use Illuminate\Database\Eloquent\Model;

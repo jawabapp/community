@@ -1,14 +1,14 @@
 <?php
 
 
-namespace JawabApp\Community\Http\Controllers\Web\Admin;
+namespace Jawabapp\Community\Http\Controllers\Web\Admin;
 
 
-use JawabApp\Community\Http\Controllers\Controller;
+use Jawabapp\Community\Http\Controllers\Controller;
 use Jawabapp\Community\Http\Requests\TagGroup\CreateRequest;
 use Jawabapp\Community\Http\Requests\TagGroup\UpdateRequest;
-use JawabApp\Community\Models\Tag;
-use JawabApp\Community\Models\TagGroup;
+use Jawabapp\Community\Models\Tag;
+use Jawabapp\Community\Models\TagGroup;
 use App\Plugins\ImagePlugin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;

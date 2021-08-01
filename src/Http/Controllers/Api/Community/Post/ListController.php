@@ -1,12 +1,12 @@
 <?php
 
-namespace JawabApp\Community\Http\Controllers\Api\Community\Post;
+namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 
-use JawabApp\Community\Http\Controllers\Controller;
+use Jawabapp\Community\Http\Controllers\Controller;
 use Jawabapp\Community\Http\Requests\Community\Post\ListRequest;
 use App\Models\Account;
-use JawabApp\Community\Models\Post;
-use JawabApp\Community\Models\PostInteraction;
+use Jawabapp\Community\Models\Post;
+use Jawabapp\Community\Models\PostInteraction;
 use App\Services\Caching;
 
 /**

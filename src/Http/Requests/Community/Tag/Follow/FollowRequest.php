@@ -1,6 +1,6 @@
 <?php
 
-namespace JawabApp\Community\Http\Requests\Community\Tag\Follow;
+namespace Jawabapp\Community\Http\Requests\Community\Tag\Follow;
 
 use Illuminate\Foundation\Http\FormRequest;
 

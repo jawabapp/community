@@ -1,9 +1,9 @@
 <?php
 
-namespace JawabApp\Community\Http\Controllers\Api\Community\Post;
+namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 
-use JawabApp\Community\Http\Controllers\Controller;
-use JawabApp\Community\Models\Post;
+use Jawabapp\Community\Http\Controllers\Controller;
+use Jawabapp\Community\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Validation\ValidationException;
