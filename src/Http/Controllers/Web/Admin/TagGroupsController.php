@@ -5,8 +5,8 @@ namespace JawabApp\Community\Http\Controllers\Web\Admin;
 
 
 use JawabApp\Community\Http\Controllers\Controller;
-use App\Http\Requests\TagGroup\CreateRequest;
-use App\Http\Requests\TagGroup\UpdateRequest;
+use Jawabapp\Community\Http\Requests\TagGroup\CreateRequest;
+use Jawabapp\Community\Http\Requests\TagGroup\UpdateRequest;
 use JawabApp\Community\Models\Tag;
 use JawabApp\Community\Models\TagGroup;
 use App\Plugins\ImagePlugin;

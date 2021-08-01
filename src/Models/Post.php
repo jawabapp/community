@@ -41,7 +41,6 @@ class Post extends Model
 
     protected $appends = [
         'type',
-
         'account_interaction',
         'is_subscribed'
     ];

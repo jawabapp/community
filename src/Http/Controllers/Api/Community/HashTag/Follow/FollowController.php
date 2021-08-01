@@ -3,7 +3,7 @@
 namespace JawabApp\Community\Http\Controllers\Api\Community\HashTag\Follow;
 
 use JawabApp\Community\Http\Controllers\Controller;
-use App\Http\Requests\Community\Tag\Follow\FollowRequest;
+use JawabApp\Community\Http\Requests\Community\Tag\Follow\FollowRequest;
 use JawabApp\Community\Models\Tag;
 use JawabApp\Community\Models\TagFollower;
 use Illuminate\Http\JsonResponse;

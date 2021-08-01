@@ -4,8 +4,8 @@ namespace JawabApp\Community\Http\Controllers\Web\Admin;
 
 use JawabApp\Community\Http\Controllers\Controller;
 
-use App\Http\Requests\Post\CreateRequest;
-use App\Http\Requests\Post\UpdateRequest;
+use Jawabapp\Community\Http\Requests\Post\CreateRequest;
+use Jawabapp\Community\Http\Requests\Post\UpdateRequest;
 
 use App\Models\Account;
 use JawabApp\Community\Models\Post;

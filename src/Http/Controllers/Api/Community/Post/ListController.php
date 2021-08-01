@@ -3,7 +3,7 @@
 namespace JawabApp\Community\Http\Controllers\Api\Community\Post;
 
 use JawabApp\Community\Http\Controllers\Controller;
-use App\Http\Requests\Community\Post\ListRequest;
+use Jawabapp\Community\Http\Requests\Community\Post\ListRequest;
 use App\Models\Account;
 use JawabApp\Community\Models\Post;
 use JawabApp\Community\Models\PostInteraction;

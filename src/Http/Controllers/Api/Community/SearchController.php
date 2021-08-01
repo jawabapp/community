@@ -3,7 +3,7 @@
 namespace JawabApp\Community\Http\Controllers\Api\Community;
 
 use JawabApp\Community\Http\Controllers\Controller;
-use App\Http\Requests\Community\SearchRequest;
+use Jawabapp\Community\Http\Requests\Community\SearchRequest;
 use App\Models\Account;
 use JawabApp\Community\Models\Post;
 use JawabApp\Community\Models\Tag;
