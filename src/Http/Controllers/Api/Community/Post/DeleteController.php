@@ -3,7 +3,7 @@
 namespace JawabApp\Community\Http\Controllers\Api\Community\Post;
 
 use JawabApp\Community\Http\Controllers\Controller;
-use App\Http\Requests\Community\Post\DeleteRequest;
+use JawabApp\Community\Http\Requests\Community\Post\DeleteRequest;
 use JawabApp\Community\Models\Post;
 use Illuminate\Validation\ValidationException;
 
