@@ -106,7 +106,7 @@ class CommunityServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes()
     {
-        Route::prefix('api')
+        Route::prefix('api/'. config('community.route.prefix'))
             ->middleware('api')
             ->namespace($this->namespace)
             ->group(__DIR__ . '/../routes/api.php');
