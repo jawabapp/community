@@ -1,6 +1,6 @@
 <?php
 /**
- * @var $item \App\Models\StaticPage
+ * @var $item \Jawabapp\Community\Models\StaticPage
  */
 ?>
 <div class="form-group row">
@@ -34,6 +34,6 @@
         <button type="submit" class="btn btn-primary">
             Save
         </button>
-        <a href="{{route('posts.index')}}" class="btn btn-default">Cancel</a>
+        <a href="{{route('community.posts.index')}}" class="btn btn-default">Cancel</a>
     </div>
 </div>

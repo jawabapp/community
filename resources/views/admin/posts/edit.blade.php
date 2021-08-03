@@ -7,7 +7,7 @@
         </div>
 
         <div class="card-body">
-            <form method="POST" action="{{ route('posts.update', $item->id) }}" class="form-horizontal">
+            <form method="POST" action="{{ route('community.posts.update', $item->id) }}" class="form-horizontal">
                 <input type="hidden" name="_method" value="put" />
                 <input type="hidden" name="id" value="{{ $item->id }}" />
                 @csrf

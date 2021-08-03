@@ -2,7 +2,7 @@
 
 namespace Jawabapp\Community\Models\Post;
 
-use App\Models\Account;
+use Jawabapp\Community\Models\Account;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\Tag;
 use App\Plugins\CommonPlugin;

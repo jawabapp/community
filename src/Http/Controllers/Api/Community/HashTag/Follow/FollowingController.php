@@ -2,7 +2,7 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Community\HashTag\Follow;
 
-use App\Models\Account;
+use Jawabapp\Community\Models\Account;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;

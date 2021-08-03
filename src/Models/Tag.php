@@ -2,7 +2,7 @@
 
 namespace Jawabapp\Community\Models;
 
-use App\Services\DeepLinkBuilder;
+use Jawabapp\Community\Services\DeepLinkBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;

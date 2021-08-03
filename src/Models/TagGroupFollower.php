@@ -2,7 +2,7 @@
 
 namespace Jawabapp\Community\Models;
 
-use App\Services\Caching;
+use Jawabapp\Community\Services\Caching;
 use Illuminate\Database\Eloquent\Model;
 
 class TagGroupFollower extends Model

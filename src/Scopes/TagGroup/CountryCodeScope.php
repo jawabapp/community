@@ -3,7 +3,7 @@
 
 namespace Jawabapp\Community\Scopes\TagGroup;
 
-use App\Models\TagGroup;
+use Jawabapp\Community\Models\TagGroup;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;

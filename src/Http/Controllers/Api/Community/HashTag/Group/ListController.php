@@ -63,7 +63,7 @@ class ListController extends Controller
         \Log::info('Follow Tag Groups', $request->all());
 
         $user = $request->user();
-        /** @var \App\Models\User $user */
+        /** @var \Jawabapp\Community\Models\User $user */
 
         $account = $user->getAccount($accountId);
 

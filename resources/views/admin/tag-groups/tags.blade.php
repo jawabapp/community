@@ -1,7 +1,7 @@
 <?php
 /**
  * @var $data Illuminate\Pagination\LengthAwarePaginator
- * @var $item \App\Models\TagGroup
+ * @var $item \Jawabapp\Community\Models\TagGroup
  */
 ?>
 @extends('community::layouts.app')
