@@ -31,9 +31,7 @@ class PostsController extends Controller
      */
     public function index(Request $request)
     {
-        #TODO: Handel account
-        $query = $this->repository->select('posts.*')->whereNull('related_post_id');
-//        $query = $this->repository->with('account')->select('posts.*')->whereNull('related_post_id');
+        $query = $this->repository->with('account')->select('posts.*')->whereNull('related_post_id');
 
         if ($request->has('parent_post_id')) {
             $query->whereParentPostId($request->get('parent_post_id'));
@@ -42,12 +40,12 @@ class PostsController extends Controller
             $query->whereNull('parent_post_id');
         }
 
-//        if ($request->get('slug')) {
-//            $account = Account::where('slug', 'like', "%{$request->get('slug')}%")->first();
-//            if ($account) {
-//                $query->where('posts.account_id', $account->id);
-//            }
-//        }
+        if ($request->get('slug')) {
+            $account = Account::where('slug', 'like', "%{$request->get('slug')}%")->first();
+            if ($account) {
+                $query->where('posts.account_id', $account->id);
+            }
+        }
 
         $join = false;
 
