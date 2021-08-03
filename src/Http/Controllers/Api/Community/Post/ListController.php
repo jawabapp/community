@@ -2,8 +2,8 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 
-use App\Models\Account;
-use App\Services\Caching;
+use Jawabapp\Community\Models\Account;
+use Jawabapp\Community\Services\Caching;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\PostInteraction;
 use Jawabapp\Community\Http\Controllers\Controller;

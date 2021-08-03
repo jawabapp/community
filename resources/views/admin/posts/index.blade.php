@@ -1,7 +1,7 @@
 <?php
 /**
  * @var $data Illuminate\Pagination\LengthAwarePaginator
- * @var $item \App\Models\Post
+ * @var $item \Jawabapp\Community\Models\Post
  */
 ?>
 @extends('community::layouts.app')
@@ -20,7 +20,7 @@
                                 <label class="mr-sm-2 sr-only" for="report">Reports</label>
                                 <select class="custom-select mr-sm-2" name="report" id="report">
                                     <option value="">No Reports ...</option>
-                                    @foreach(\App\Models\PostReport::REPORT_TYPES as $type => $report)
+                                    @foreach(\Jawabapp\Community\Models\PostReport::REPORT_TYPES as $type => $report)
                                         <option value="{{ $type }}" {{ request('report') == $type ? 'selected' : '' }}>{{ $report }}</option>
                                     @endforeach
                                 </select>
@@ -34,7 +34,7 @@
                         </div>
                     </div>
                     <div class="col text-right">
-                        <a href="{{route('posts.index')}}" class="btn btn-default">Cancel</a>
+                        <a href="{{route('community.posts.index')}}" class="btn btn-default">Cancel</a>
                         <button class="btn btn-info"><i class="fa fa-search"></i> Search</button>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
     @if(request('parent_post_id'))
         <div class="card mb-3">
             <div class="card-body">
-                @php($post = App\Models\Post::find(request('parent_post_id')))
+                @php($post = Jawabapp\Community\Models\Post::find(request('parent_post_id')))
 
                 <div class="row mb-3">
                     <div class="col-6">{!! $post->draw() !!}</div>
@@ -56,13 +56,13 @@
                                 <li>{{ $interaction }} : <strong>{{ $value }}</strong></li>
                             @endforeach
                             @foreach($post->getReports() as $report => $value)
-                                <li>{{ App\Models\PostReport::REPORT_TYPES[$report] }} : <strong>{{ $value }}</strong></li>
+                                <li>{{ Jawabapp\Community\Models\PostReport::REPORT_TYPES[$report] }} : <strong>{{ $value }}</strong></li>
                             @endforeach
                         </ul>
                     </div>
                 </div>
 
-                <a href="{{route('posts.index', ['parent_post_id' => $post->parent_post_id])}}" class="btn btn-outline-primary">Back</a>
+                <a href="{{route('community.posts.index', ['parent_post_id' => $post->parent_post_id])}}" class="btn btn-outline-primary">Back</a>
             </div>
         </div>
     @endif
@@ -91,16 +91,16 @@
                                     <li>{{ $interaction }} : <strong>{{ $value }}</strong></li>
                                 @endforeach
                                 @foreach($item->getReports() as $report => $value)
-                                    <li>{{ App\Models\PostReport::REPORT_TYPES[$report] }} : <strong>{{ $value }}</strong></li>
+                                    <li>{{ Jawabapp\Community\Models\PostReport::REPORT_TYPES[$report] }} : <strong>{{ $value }}</strong></li>
                                 @endforeach
                             </ul>
                         </td>
                         <td class="text-center">
-                            <form action="{{ route('posts.destroy', $item->id) }}" method="POST">
+                            <form action="{{ route('community.posts.destroy', $item->id) }}" method="POST">
                                 <input type="hidden" name="_method" value="DELETE">
                                 @csrf
                                 <a href="{{ $item->deep_link }}" target="_blank" class='btn btn-warning btn-sm'><i class="fa fa-eye"></i> View</a>
-                                <a href="{!! route('posts.edit', [$item->id]) !!}" class='btn btn-primary btn-sm'><i class="fa fa-edit"></i> Edit</a>
+                                <a href="{!! route('community.posts.edit', [$item->id]) !!}" class='btn btn-primary btn-sm'><i class="fa fa-edit"></i> Edit</a>
                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');"><i class="fa fa-trash"></i> Delete</button>
                             </form>
                         </td>

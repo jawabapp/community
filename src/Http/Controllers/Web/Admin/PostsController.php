@@ -2,7 +2,7 @@
 
 namespace Jawabapp\Community\Http\Controllers\Web\Admin;
 
-use App\Models\Account;
+use Jawabapp\Community\Models\Account;
 use Illuminate\Http\Request;
 use Jawabapp\Community\Models\Post;
 use Illuminate\Support\Facades\Session;
@@ -65,7 +65,7 @@ class PostsController extends Controller
 
         $data = $query->latest()->paginate(10);
 
-        return view('admin.posts.index')->with('data', $data);
+        return view('community::admin.posts.index')->with('data', $data);
     }
 
     /**
@@ -75,7 +75,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-        //        return view('admin.posts.create');
+               return view('community::admin.posts.create');
     }
 
     /**
@@ -86,14 +86,14 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        //        $item = $this->repository->find($id);
-        //
-        //        if (!$item->id) {
-        //            Session::flash('flash_message', ['type' => 'error', 'message' => 'Invalid Resource']);
-        //            return redirect(route('posts.index'));
-        //        }
-        //
-        //        return view('admin.posts.show')->with('item', $item);
+               $item = $this->repository->find($id);
+        
+               if (!$item->id) {
+                   Session::flash('flash_message', ['type' => 'error', 'message' => 'Invalid Resource']);
+                   return redirect(route('community.posts.index'));
+               }
+        
+               return view('community::admin.posts.show')->with('item', $item);
     }
 
     /**
@@ -108,10 +108,10 @@ class PostsController extends Controller
 
         if (!$item->id) {
             Session::flash('flash_message', ['type' => 'error', 'message' => 'Invalid Resource']);
-            return redirect(route('posts.index'));
+            return redirect(route('community.posts.index'));
         }
 
-        return view('admin.posts.edit')->with('item', $item);
+        return view('community::admin.posts.edit')->with('item', $item);
     }
 
     /**
@@ -127,13 +127,13 @@ class PostsController extends Controller
 
         if (!$item->id) {
             Session::flash('flash_message', ['type' => 'error', 'message' => 'Invalid Resource']);
-            return redirect(route('posts.index'));
+            return redirect(route('community.posts.index'));
         }
 
         $item->delete($id);
 
         Session::flash('flash_message', ['type' => 'warning', 'message' => 'Deleted Successfully']);
-        return redirect(route('posts.index', ['parent_post_id' => $item->parent_post_id]));
+        return redirect(route('community.posts.index', ['parent_post_id' => $item->parent_post_id]));
     }
 
     /**
@@ -163,12 +163,12 @@ class PostsController extends Controller
 
         if (!$item->id) {
             Session::flash('flash_message', ['type' => 'error', 'message' => 'Invalid Resource']);
-            return redirect(route('posts.index'));
+            return redirect(route('community.posts.index'));
         }
 
         $item->tags()->sync($request->get('hashtags'));
 
         Session::flash('flash_message', ['type' => 'notice', 'message' => 'Updated Successfully']);
-        return redirect(route('posts.index'));
+        return redirect(route('community.posts.index'));
     }
 }

@@ -23,7 +23,7 @@ class DeleteController extends Controller
     public function index($id, DeleteRequest $request)
     {
 
-        /** @var \App\Models\User $user */
+        /** @var \Jawabapp\Community\Models\User $user */
         $user = $request->user();
 
         if ($user->is_anonymous) {

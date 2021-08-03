@@ -2,9 +2,9 @@
 
 namespace Jawabapp\Community\Models;
 
-use App\Jobs\AccountAutoFollowTagJob;
-use App\Services\DeepLinkBuilder;
-use App\Services\Slug;
+// use App\Jobs\AccountAutoFollowTagJob;
+use Jawabapp\Community\Services\DeepLinkBuilder;
+use Jawabapp\Community\Services\Slug;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -157,9 +157,9 @@ class Account extends Model
     {
         parent::boot();
 
-        static::created(function (self $node) {
-            AccountAutoFollowTagJob::dispatch($node);
-        });
+        // static::created(function (self $node) {
+        //     AccountAutoFollowTagJob::dispatch($node);
+        // });
 
         static::saving(function(self $node) {
             if(empty($node->getAttribute('nickname')) || $node->isDirty('nickname')) {

@@ -26,7 +26,7 @@ class CreateController extends Controller
 
     public function create(CreateRequest $request): JsonResponse
     {
-        /** @var \App\Models\User $user */
+        /** @var \Jawabapp\Community\Models\User $user */
         $user = $request->user();
 
         if ($user->is_anonymous) {

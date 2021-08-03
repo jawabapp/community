@@ -1,6 +1,6 @@
 <?php
 /**
- * @var $item \App\Models\StaticPage
+ * @var $item \Jawabapp\Community\Models\StaticPage
  */
 ?>
 @extends('community::layouts.app')

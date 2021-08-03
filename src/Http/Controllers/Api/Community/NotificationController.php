@@ -2,7 +2,7 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Community;
 
-use App\Models\Account;
+use Jawabapp\Community\Models\Account;
 use Illuminate\Http\Request;
 use Jawabapp\Community\Models\Tag;
 use Jawabapp\Community\Models\Post;

@@ -2,8 +2,8 @@
 
 namespace Jawabapp\Community\Models;
 
-use App\Services\Caching;
-use App\Services\DeepLinkBuilder;
+use Jawabapp\Community\Services\Caching;
+use Jawabapp\Community\Services\DeepLinkBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;

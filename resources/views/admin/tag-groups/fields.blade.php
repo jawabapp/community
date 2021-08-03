@@ -1,6 +1,6 @@
 <?php
 /**
- * @var $item \App\Models\TagGroup
+ * @var $item \Jawabapp\Community\Models\TagGroup
  */
 ?>
 <div class="form-group row">
@@ -9,7 +9,7 @@
     <div class="col-md-8">
         <select id="parent_id" class="form-control {{ $errors->has('parent_id') ? 'is-invalid' : '' }}" name="parent_id">
             <option value="">Select One</option>
-            @foreach(\App\Models\TagGroup::whereNull('parent_id')->get() as $tagGroup)
+            @foreach(\Jawabapp\Community\Models\TagGroup::whereNull('parent_id')->get() as $tagGroup)
             <option value="{{$tagGroup->id}}" {{ $tagGroup->id == old('parent_id', $item->parent_id ?? null) ? 'selected' : '' }}>{{$tagGroup->name[config('app.locale')] ?? '-'}}</option>
             @endforeach
         </select>
@@ -93,7 +93,7 @@
     <div class="col-md-8">
         <select id="country_code" class="form-control {{ $errors->has('country_code') ? 'is-invalid' : '' }}" name="country_code">
             <option value="">Global</option>
-            @foreach(\App\Models\User::distinct()->select('phone_country')->where('phone_country', '!=', '')->get()->pluck('phone_country')->all() as $phoneCountry)
+            @foreach(\Jawabapp\Community\Models\User::distinct()->select('phone_country')->where('phone_country', '!=', '')->get()->pluck('phone_country')->all() as $phoneCountry)
                 <option value="{{$phoneCountry}}" {{ $phoneCountry == old('country_code', $item->country_code ?? null) ? 'selected' : '' }}>{{$phoneCountry}}</option>
             @endforeach
         </select>

@@ -2,7 +2,7 @@
     <div class="mb-3">
         <span>{{ $post->content }}</span>
         <div>
-            <a href="{{ route('posts.index', ['parent_post_id' => $post->id]) }}">
+            <a href="{{ route('community.posts.index', ['parent_post_id' => $post->id]) }}">
                 comments : <strong>{{ $post->children_count }}</strong>
             </a>
         </div>

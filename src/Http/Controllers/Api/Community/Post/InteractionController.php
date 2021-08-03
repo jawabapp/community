@@ -27,7 +27,7 @@ class InteractionController extends Controller
     {
 
         $user = $request->user();
-        /** @var \App\Models\User $user */
+        /** @var \Jawabapp\Community\Models\User $user */
 
         if ($user->is_anonymous && $request->get('type') == 'viewed') {
             throw ValidationException::withMessages([
