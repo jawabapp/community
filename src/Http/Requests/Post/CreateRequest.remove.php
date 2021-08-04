@@ -2,12 +2,10 @@
 
 namespace Jawabapp\Community\Http\Requests\Post;
 
-use Jawabapp\Community\Models\PostInteraction;
 use Illuminate\Foundation\Http\FormRequest;
 
-class InteractionRequest extends FormRequest
+class CreateRequestRemove extends FormRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -26,9 +24,10 @@ class InteractionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'account_id' => 'required|integer',
-            'type' => 'required|string|in:' . implode(',', PostInteraction::TYPES),
-            'isRemove' => 'nullable|boolean'
+            'name'    => 'required|string',
+            'slug'    => "required|unique:static_pages,slug,{$this->id},id,language_code,{$this->language_code}",
+            'language_code'  => 'required|string|max:2',
+            'html'  => 'required|string',
         ];
     }
 }

@@ -5,7 +5,7 @@ namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 use Jawabapp\Community\Models\Post;
 use Illuminate\Validation\ValidationException;
 use Jawabapp\Community\Http\Controllers\Controller;
-use Jawabapp\Community\Http\Requests\Community\Post\DeleteRequest;
+use Jawabapp\Community\Http\Requests\Post\DeleteRequest;
 
 /**
  * @group  Community management

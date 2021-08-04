@@ -23,11 +23,26 @@ class CreateRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name'    => 'required|string',
-            'slug'    => "required|unique:static_pages,slug,{$this->id},id,language_code,{$this->language_code}",
-            'language_code'  => 'required|string|max:2',
-            'html'  => 'required|string',
+        $rules = [
+            'account_id' => 'required|integer',
+            'parent_post_id' => 'nullable|integer',
+            'post' => 'required_without_all:attachment_type|nullable|string',
+            'attachment_type' => 'required_without_all:post|nullable|string|in:image,gif,video',
+            'attachments' => 'required_with:attachment_type',
         ];
+
+        switch ($this->attachment_type) {
+            case 'image':
+                $rules['attachments.*'] = 'required|image|mimetypes:' . config('mimetypes.image') . '|max:' . (env('MAX_FILE_SIZE_IMAGE') * 1024);
+                break;
+            case 'gif':
+                $rules['attachments.*'] = 'required|image|mimetypes:' . config('mimetypes.gif') . '|max:' . (env('MAX_FILE_SIZE_IMAGE') * 1024);
+                break;
+            case 'video':
+                $rules['attachments.*'] = 'required|file|mimetypes:' . config('mimetypes.video') . '|max:' . (env('MAX_FILE_SIZE_VIDEO') * 1024);
+                break;
+        }
+
+        return $rules;
     }
 }

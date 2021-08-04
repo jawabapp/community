@@ -8,7 +8,7 @@ use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Plugins\CommonPlugin;
 use Illuminate\Validation\ValidationException;
 use Jawabapp\Community\Http\Controllers\Controller;
-use Jawabapp\Community\Http\Requests\Community\Post\CreateRequest;
+use Jawabapp\Community\Http\Requests\Post\CreateRequest;
 
 /**
  * @group  Community management

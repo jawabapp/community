@@ -6,7 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Jawabapp\Community\Models\Post;
 use Illuminate\Validation\ValidationException;
 use Jawabapp\Community\Http\Controllers\Controller;
-use Jawabapp\Community\Http\Requests\Community\Post\EditRequest;
+use Jawabapp\Community\Http\Requests\Post\EditRequest;
 
 /**
  * @group  Community management
@@ -20,7 +20,7 @@ class EditController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api');
+        // $this->middleware('auth:api');
     }
 
     public function edit($id, EditRequest $request): JsonResponse
