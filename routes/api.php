@@ -24,7 +24,7 @@ Route::group(['prefix' => 'community'], function () {
         });
     });
 
-    Route::group(['middleware' => 'auth:api'], function () {
+    // Route::group(['middleware' => 'auth:api'], function () {
 
         Route::get('subscribe-notification/{type}/{id}/{account_id}', 'Api\Community\NotificationController@subscribe');
         Route::get('unsubscribe-notification/{type}/{id}/{account_id}', 'Api\Community\NotificationController@unSubscribe');
@@ -49,5 +49,5 @@ Route::group(['prefix' => 'community'], function () {
                 Route::post('follow/{accountId}', 'Api\Community\HashTag\Group\ListController@follow');
             });
         });
-    });
+    // });
 });

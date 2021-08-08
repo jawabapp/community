@@ -18,11 +18,11 @@ class ListController extends Controller
 {
     public function __construct()
     {
-        if (request()->server('HTTP_AUTHORIZATION')) {
-            $this->middleware('auth:api');
-        } else {
-            $this->middleware('guest');
-        }
+        // if (request()->server('HTTP_AUTHORIZATION')) {
+        //     $this->middleware('auth:api');
+        // } else {
+        //     $this->middleware('guest');
+        // }
     }
 
     public function index(ListRequest $request)

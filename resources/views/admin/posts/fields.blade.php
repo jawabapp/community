@@ -12,12 +12,12 @@
 </div>
 
 <div class="form-group row">
-    <label for="post_tags" class="col-md-2 col-form-label">Post Tags</label>
+    <label for="post_tags" class="col-md-2 col-form-label">Post Tagss</label>
 
     <div class="col-md-8">
         <community-multiple-select
-            api-search="/admin/api/search-tags"
-            api-selected="/admin/api/selected-tags"
+            api-search="/{{config('community.route.prefix')}}/admin/api/search-tags"
+            api-selected="/{{config('community.route.prefix')}}/admin/api/selected-tags"
             label="Hash-Tags"
             name="hashtags"
             preselect="{{$item->tags->pluck('id')}}"

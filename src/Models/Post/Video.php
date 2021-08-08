@@ -59,6 +59,6 @@ class Video extends Post
 
     public function draw()
     {
-        return view('admin.posts.types.video')->with('post', $this);
+        return view('community::admin.posts.types.video')->with('post', $this);
     }
 }

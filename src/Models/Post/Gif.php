@@ -42,6 +42,6 @@ class Gif extends Post
 
     public function draw()
     {
-        return view('admin.posts.types.gif')->with('post', $this);
+        return view('community::admin.posts.types.gif')->with('post', $this);
     }
 }

@@ -9,7 +9,7 @@
 namespace Jawabapp\Community\Services;
 
 
-use App\Models\Account;
+use Jawabapp\Community\Models\Account;
 use Illuminate\Support\Str;
 use Random;
 

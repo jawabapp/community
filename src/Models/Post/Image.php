@@ -60,6 +60,6 @@ class Image extends Post
 
     public function draw()
     {
-        return view('admin.posts.types.image')->with('post', $this);
+        return view('community::admin.posts.types.image')->with('post', $this);
     }
 }

@@ -8,21 +8,11 @@
     "homepage": "https://github.com/jawabapp/community",
     "license": "MIT",
     "type": "library",
-    "authors": [
-        {
-            "name": "Ibraheem Qanah",
-            "email": "i.qanah@gmail.com",
-            "role": "Developer"
-        }
-    ],
-    "require": {
-        "php": "^7.2|^8.0",
-        "illuminate/support": "^8.52"
-    },
-    "require-dev": {
-        "orchestra/testbench": "^6.0",
-        "phpunit/phpunit": "^9.0"
-    },
+    "authors": [{
+        "name": "Ibraheem Qanah",
+        "email": "i.qanah@gmail.com",
+        "role": "Developer"
+    }],
     "autoload": {
         "psr-4": {
             "Jawabapp\\Community\\": "src"
@@ -32,11 +22,6 @@
         "psr-4": {
             "Jawabapp\\Community\\Tests\\": "tests"
         }
-    },
-    "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-
     },
     "config": {
         "sort-packages": true

@@ -63,7 +63,7 @@ class Text extends Post
 
     public function draw()
     {
-        return view('admin.posts.types.text')->with('post', $this);
+        return view('community::admin.posts.types.text')->with('post', $this);
     }
 
     private static function getHashTags($string)

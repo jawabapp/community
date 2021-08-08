@@ -137,6 +137,7 @@ class Post extends Model
 
     private function updatePostAccountCount()
     {
+        if($this->account)
         $this->account->update([
             'post_count' => $this->account->getPostCount()
         ]);
@@ -186,7 +187,7 @@ class Post extends Model
 
     public function resetCache()
     {
-        Caching::deleteCacheByTags('posts');
+        // Caching::deleteCacheByTags('posts');
     }
 
     public function account()
