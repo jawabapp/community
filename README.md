@@ -1,10 +1,4 @@
-# Very short description of the package
-
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/jawabapp/community.svg?style=flat-square)](https://packagist.org/packages/jawabapp/community)
-[![Total Downloads](https://img.shields.io/packagist/dt/jawabapp/community.svg?style=flat-square)](https://packagist.org/packages/jawabapp/community)
-![GitHub Actions](https://github.com/jawabapp/community/actions/workflows/main.yml/badge.svg)
-
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
+# JawabApp Community
 
 ## Installation
 
@@ -16,14 +10,62 @@ composer require jawabapp/community
 
 ## Usage
 
+###### User.php Model
+
 ```php
-// Usage description here
+USE Jawabapp\Community\Contracts\CommunityAccount;
+use Jawabapp\Community\Traits\HasCommunityAccount;
+
+class User extends Authenticatable implements CommunityAccount
+{
+	use HasCommunityAccount;
+	//...
+}
 ```
 
-### Testing
+implement those methods from CommunityAccount interface.
 
-```bash
-composer test
+```php
+
+use Illuminate\Database\Eloquent\Builder;
+
+class User extends Authenticatable implements CommunityAccount
+{
+    public function getDefaultAccount()
+    {
+        //...
+    }
+    public function getAccount($account_id)
+    {
+        //...
+    }
+}
+```
+
+---
+
+##### Publish Package assets
+
+###### Run follwoing command on Terminal
+
+```php
+
+php artisan vendor:publish --provider=Jawabapp\Community\CommunityServiceProvider
+
+```
+
+###### alter community.php config file adding user class and route prefix
+
+```php
+[
+    'user_class' => \App\User::class, // user class
+    'route' => [
+        'prefix' => 'package', // route prefix
+        'middleware' => 'web', // route middlware
+    ]
+,
+	//...
+]
 ```
 
 ### Changelog
@@ -36,17 +78,13 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ### Security
 
-If you discover any security related issues, please email i.qanah@gmail.com instead of using the issue tracker.
+If you discover any security related issues, please email trmdy@hotmail.com instead of using the issue tracker.
 
 ## Credits
 
--   [Ibraheem Qanah](https://github.com/jawabapp)
--   [All Contributors](../../contributors)
+- [Ibrahim Qana](https://github.com/jawab)
+- [All Contributors](../../contributors)
 
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-## Laravel Package Boilerplate
-
-This package was generated using the [Laravel Package Boilerplate](https://laravelpackageboilerplate.com).

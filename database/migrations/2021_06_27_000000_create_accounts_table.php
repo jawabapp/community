@@ -24,6 +24,8 @@ class CreateAccountsTable extends Migration
             $table->boolean('is_private');
             $table->string('deep_link')->nullable();
             $table->json('extra_info')->nullable();
+            $table->string('topic')->nullable();
+
             $table->timestamps();
             $table->softDeletes();
 
