@@ -2,7 +2,7 @@
 
 namespace Jawabapp\Community\Http\Controllers\Web\Admin;
 
-use App\Plugins\ImagePlugin;
+use Jawabapp\Community\Plugins\ImagePlugin;
 use Illuminate\Http\Request;
 use Jawabapp\Community\Models\Tag;
 use Jawabapp\Community\Models\TagGroup;
@@ -43,7 +43,7 @@ class TagGroupsController extends Controller
 
         $data = $query->oldest('order')->paginate(10);
 
-        return view('admin.tag-groups.index')->with('data', $data);
+        return view('community::admin.tag-groups.index')->with('data', $data);
     }
 
     /**
@@ -53,7 +53,7 @@ class TagGroupsController extends Controller
      */
     public function create()
     {
-        return view('admin.tag-groups.create');
+        return view('community::admin.tag-groups.create');
     }
 
     /**
@@ -66,12 +66,12 @@ class TagGroupsController extends Controller
     {
         $item = $this->repository->find($id);
 
-        if (!$item->id) {
+        if (!$item || !$item->id) {
             Session::flash('flash_message', ['type' => 'error', 'message' => 'Invalid Resource']);
-            return redirect(route('tag-groups.index'));
+            return redirect(route('community.tag-groups.index'));
         }
 
-        return view('admin.tag-groups.show')->with('item', $item);
+        return view('community::admin.tag-groups.show')->with('item', $item);
     }
 
     /**
@@ -86,10 +86,10 @@ class TagGroupsController extends Controller
 
         if (!$item->id) {
             Session::flash('flash_message', ['type' => 'error', 'message' => 'Invalid Resource']);
-            return redirect(route('tag-groups.index'));
+            return redirect(route('community.tag-groups.index'));
         }
 
-        return view('admin.tag-groups.edit')->with('item', $item);
+        return view('community::admin.tag-groups.edit')->with('item', $item);
     }
 
     /**
@@ -105,13 +105,13 @@ class TagGroupsController extends Controller
 
         if (!$item->id) {
             Session::flash('flash_message', ['type' => 'error', 'message' => 'Invalid Resource']);
-            return redirect(route('tag-groups.index'));
+            return redirect(route('community.tag-groups.index'));
         }
 
         $item->delete($id);
 
         Session::flash('flash_message', ['type' => 'warning', 'message' => 'Deleted Successfully']);
-        return redirect(route('tag-groups.index'));
+        return redirect(route('community.tag-groups.index'));
     }
 
     /**
@@ -135,7 +135,7 @@ class TagGroupsController extends Controller
         }
 
         Session::flash('flash_message', ['type' => 'notice', 'message' => 'Saved Successfully']);
-        return redirect(route('tag-groups.index'));
+        return redirect(route('community.tag-groups.index'));
     }
 
     /**
@@ -151,7 +151,7 @@ class TagGroupsController extends Controller
 
         if (!$item->id) {
             Session::flash('flash_message', ['type' => 'error', 'message' => 'Invalid Resource']);
-            return redirect(route('tag-groups.index'));
+            return redirect(route('community.tag-groups.index'));
         }
 
         $item->update($request->all());
@@ -175,7 +175,7 @@ class TagGroupsController extends Controller
         }
 
         Session::flash('flash_message', ['type' => 'notice', 'message' => 'Updated Successfully']);
-        return redirect(route('tag-groups.index'));
+        return redirect(route('community.tag-groups.index'));
     }
 
     public function tags()
@@ -192,7 +192,7 @@ class TagGroupsController extends Controller
 
         $data = $query->latest()->paginate(10);
 
-        return view('admin.tag-groups.tags')->with('data', $data)->with('tagGroups', TagGroup::get());
+        return view('community::admin.tag-groups.tags')->with('data', $data)->with('tagGroups', TagGroup::get());
     }
 
     public function assign(Request $request)

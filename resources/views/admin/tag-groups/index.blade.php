@@ -10,8 +10,8 @@
     <div class="card">
         <div class="card-header clearfix">
             <span class="card-title">Tag Groups</span>
-            <a href="{{ route('tag-groups.create') }}" class="btn btn-sm btn-success pull-right flip"><i class="fa fa-plus"></i> Add</a>
-            <a href="{{ route('tag-groups.tags') }}" class="btn btn-sm btn-info pull-right flip">Tags</a>
+            <a href="{{ route('community.tag-groups.create') }}" class="btn btn-sm btn-success pull-right flip"><i class="fa fa-plus"></i> Add</a>
+            <a href="{{ route('community.tag-groups.tags') }}" class="btn btn-sm btn-info pull-right flip">Tags</a>
         </div>
 
         <div class="card-body pb-0">
@@ -19,7 +19,7 @@
                 <div class="jumbotron m-0 p-4">
                     <input type="text" class="form-control mb-2" name="name" value="{{ request('name') }}" placeholder="Name">
                     <div class="text-right mt-2">
-                        <a href="{{route('tag-groups.index')}}" class="btn btn-default">Cancel</a>
+                        <a href="{{route('community.tag-groups.index')}}" class="btn btn-default">Cancel</a>
                         <button class="btn btn-info"><i class="fa fa-search"></i> Search</button>
                     </div>
                 </div>
@@ -52,11 +52,11 @@
                         <td>{{ $item->order }}</td>
                         <td>{{ $item->tags->count() }}</td>
                         <td class="text-center">
-                            <form action="{{ route('tag-groups.destroy', $item->id) }}" method="POST">
+                            <form action="{{ route('community.tag-groups.destroy', $item->id) }}" method="POST">
                                 <input type="hidden" name="_method" value="DELETE">
-                                @csrf
-                                <a href="{!! route('tag-groups.show', [$item->id]) !!}" class='btn btn-warning btn-sm'><i class="fa fa-eye"></i> View</a>
-                                <a href="{!! route('tag-groups.edit', [$item->id]) !!}" class='btn btn-primary btn-sm'><i class="fa fa-edit"></i> Edit</a>
+                                {{ csrf_field() }}
+                                <a href="{!! route('community.tag-groups.show', [$item->id]) !!}" class='btn btn-warning btn-sm'><i class="fa fa-eye"></i> View</a>
+                                <a href="{!! route('community.tag-groups.edit', [$item->id]) !!}" class='btn btn-primary btn-sm'><i class="fa fa-edit"></i> Edit</a>
                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');"><i class="fa fa-trash"></i> Delete</button>
                             </form>
                         </td>
@@ -75,11 +75,11 @@
                                 <td>{{ $child->order }}</td>
                                 <td>{{ $child->tags->count() }}</td>
                                 <td class="text-center">
-                                    <form action="{{ route('tag-groups.destroy', $child->id) }}" method="POST">
+                                    <form action="{{ route('community.tag-groups.destroy', $child->id) }}" method="POST">
                                         <input type="hidden" name="_method" value="DELETE">
-                                        @csrf
-                                        <a href="{!! route('tag-groups.show', [$child->id]) !!}" class='btn btn-warning btn-sm'><i class="fa fa-eye"></i> View</a>
-                                        <a href="{!! route('tag-groups.edit', [$child->id]) !!}" class='btn btn-primary btn-sm'><i class="fa fa-edit"></i> Edit</a>
+                                        {{ csrf_field() }}
+                                        <a href="{!! route('community.tag-groups.show', [$child->id]) !!}" class='btn btn-warning btn-sm'><i class="fa fa-eye"></i> View</a>
+                                        <a href="{!! route('community.tag-groups.edit', [$child->id]) !!}" class='btn btn-primary btn-sm'><i class="fa fa-edit"></i> Edit</a>
                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');"><i class="fa fa-trash"></i> Delete</button>
                                     </form>
                                 </td>

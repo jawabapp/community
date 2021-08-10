@@ -93,7 +93,7 @@
     <div class="col-md-8">
         <select id="country_code" class="form-control {{ $errors->has('country_code') ? 'is-invalid' : '' }}" name="country_code">
             <option value="">Global</option>
-            @foreach(config('community.user_class')::distinct()->select('phone_country')->where('phone_country', '!=', '')->get()->pluck('phone_country')->all() as $phoneCountry)
+            @foreach(config('community.user_class')::distinct()->select('country_code')->where('country_code', '!=', '')->get()->pluck('phone_country')->all() as $phoneCountry)
                 <option value="{{$phoneCountry}}" {{ $phoneCountry == old('country_code', $item->country_code ?? null) ? 'selected' : '' }}>{{$phoneCountry}}</option>
             @endforeach
         </select>
@@ -141,6 +141,6 @@
         <button type="submit" class="btn btn-primary">
             Save
         </button>
-        <a href="{{route('tag-groups.index')}}" class="btn btn-default">Cancel</a>
+        <a href="{{route('community.tag-groups.index')}}" class="btn btn-default">Cancel</a>
     </div>
 </div>

@@ -98,7 +98,7 @@
                         <td class="text-center">
                             <form action="{{ route('community.posts.destroy', $item->id) }}" method="POST">
                                 <input type="hidden" name="_method" value="DELETE">
-                                @csrf
+                                {{ csrf_field() }}
                                 <a href="{{ $item->deep_link }}" target="_blank" class='btn btn-warning btn-sm'><i class="fa fa-eye"></i> View</a>
                                 <a href="{!! route('community.posts.edit', [$item->id]) !!}" class='btn btn-primary btn-sm'><i class="fa fa-edit"></i> Edit</a>
                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');"><i class="fa fa-trash"></i> Delete</button>

@@ -10,7 +10,7 @@
             <form method="POST" action="{{ route('community.posts.update', $item->id) }}" class="form-horizontal">
                 <input type="hidden" name="_method" value="put" />
                 <input type="hidden" name="id" value="{{ $item->id }}" />
-                @csrf
+                {{ csrf_field() }}
                 @include('community::admin.posts.fields')
             </form>
         </div>

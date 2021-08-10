@@ -7,10 +7,10 @@
         </div>
 
         <div class="card-body">
-            <form method="POST" action="{{ route('tag-groups.update', $item->id) }}" class="form-horizontal" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('community.tag-groups.update', $item->id) }}" class="form-horizontal" enctype="multipart/form-data">
                 <input type="hidden" name="_method" value="put" />
                 <input type="hidden" name="id" value="{{ $item->id }}" />
-                @csrf
+                {{ csrf_field() }}
                 @include('community::admin.tag-groups.fields')
             </form>
         </div>

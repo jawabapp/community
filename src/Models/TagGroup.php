@@ -2,9 +2,9 @@
 
 namespace Jawabapp\Community\Models;
 
-use App\Scopes\TagGroup\CountryCodeScope;
-use App\Scopes\TagGroup\PublishedScope;
-use App\Scopes\TagGroup\ServiceScope;
+use Jawabapp\Community\Scopes\TagGroup\CountryCodeScope;
+use Jawabapp\Community\Scopes\TagGroup\PublishedScope;
+use Jawabapp\Community\Scopes\TagGroup\ServiceScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 

@@ -10,15 +10,16 @@
     <div class="card">
         <div class="card-header clearfix">
             <span class="card-title">Tags</span>
-            <a href="{{ route('tag-groups.index') }}" class="btn btn-sm btn-warning pull-right flip">Tag Groups</a>
+            <a href="{{ route('community.tag-groups.index') }}" class="btn btn-sm btn-warning pull-right flip">Tag Groups</a>
         </div>
 
         <div class="card-body pb-0">
             <form>
+                {{ csrf_field() }}
                 <div class="jumbotron m-0 p-4">
                     <input type="text" class="form-control mb-2" name="hash_tag" value="{{ request('hash_tag') }}" placeholder="Name">
                     <div class="text-right mt-2">
-                        <a href="{{route('tag-groups.index')}}" class="btn btn-default">Cancel</a>
+                        <a href="{{route('community.tag-groups.index')}}" class="btn btn-default">Cancel</a>
                         <button class="btn btn-info"><i class="fa fa-search"></i> Search</button>
                     </div>
                 </div>

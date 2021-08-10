@@ -7,8 +7,8 @@
         </div>
 
         <div class="card-body">
-            <form method="POST" action="{{ route('tag-groups.store') }}" class="form-horizontal" enctype="multipart/form-data">
-                @csrf
+            <form method="POST" action="{{ route('community.tag-groups.store') }}" class="form-horizontal" enctype="multipart/form-data">
+                {{ csrf_field() }}
                 @include('community::admin.tag-groups.fields')
             </form>
         </div>

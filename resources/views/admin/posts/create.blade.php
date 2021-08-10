@@ -8,7 +8,7 @@
 
         <div class="card-body">
             <form method="POST" action="{{ route('community.posts.store') }}" class="form-horizontal">
-                @csrf
+                {{ csrf_field() }}
                 @include('community::admin.posts.fields')
             </form>
         </div>
