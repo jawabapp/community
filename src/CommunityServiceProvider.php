@@ -27,7 +27,7 @@ class CommunityServiceProvider extends ServiceProvider
          */
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'community');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'community');
-        // $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
         $this->registerRoutes();
 
