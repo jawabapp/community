@@ -16,6 +16,9 @@ Route::resource('posts', 'Web\Admin\PostsController', [
     ]
 ]);
 
+Route::get('tag-groups/tags', 'Web\Admin\TagGroupsController@tags')->name('community.tag-groups.tags');
+
+
 Route::resource('tag-groups', 'Web\Admin\TagGroupsController', [
     'names' => [
         'index' => 'community.tag-groups.index',
@@ -27,11 +30,6 @@ Route::resource('tag-groups', 'Web\Admin\TagGroupsController', [
         'show' => 'community.tag-groups.show'
     ]
 ]);
-
-Route::get('tag-groups/tags', 'Web\Admin\TagGroupsController@tags')->name('community.tag-groups.tags');
-
-
-// Route::resource('tag-groups', 'Web\Admin\TagGroupsController');
 
 
 Route::group(['prefix' => 'admin'], function () {

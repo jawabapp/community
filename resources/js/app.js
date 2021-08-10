@@ -14,6 +14,7 @@ if (token) {
 
 Vue.component("vue-json-pretty", VueJsonPretty);
 Vue.component('community-multiple-select', require('./components/MultipleSelectComponent').default);
+Vue.component('community-assign-tag-group', require('./components/AssignTagGroupComponent').default);
 
 new Vue({
     el: "#community"

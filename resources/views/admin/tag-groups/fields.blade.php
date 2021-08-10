@@ -93,13 +93,13 @@
     <div class="col-md-8">
         <select id="country_code" class="form-control {{ $errors->has('country_code') ? 'is-invalid' : '' }}" name="country_code">
             <option value="">Global</option>
-            @foreach(config('community.user_class')::distinct()->select('country_code')->where('country_code', '!=', '')->get()->pluck('phone_country')->all() as $phoneCountry)
-                <option value="{{$phoneCountry}}" {{ $phoneCountry == old('country_code', $item->country_code ?? null) ? 'selected' : '' }}>{{$phoneCountry}}</option>
+            @foreach(config('community.user_class')::distinct()->select(config('community.country_code_field_name'))->where(config('community.country_code_field_name'), '!=', '')->get()->pluck(config('community.country_code_field_name'))->all() as $phoneCountry)
+                <option value="{{$phoneCountry}}" {{ $phoneCountry == old(config('community.country_code_field_name'), $item->country_code ?? null) ? 'selected' : '' }}>{{$phoneCountry}}</option>
             @endforeach
         </select>
 
-        @if ($errors->has('country_code'))
-            <span class="invalid-feedback"><strong>{{ $errors->first('country_code') }}</strong></span>
+        @if ($errors->has(config('community.country_code_field_name')))
+            <span class="invalid-feedback"><strong>{{ $errors->first(config('community.country_code_field_name')) }}</strong></span>
         @endif
     </div>
 </div>

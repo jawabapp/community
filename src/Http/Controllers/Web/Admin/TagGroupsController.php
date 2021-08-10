@@ -66,7 +66,7 @@ class TagGroupsController extends Controller
     {
         $item = $this->repository->find($id);
 
-        if (!$item || !$item->id) {
+        if (empty($item->id)) {
             Session::flash('flash_message', ['type' => 'error', 'message' => 'Invalid Resource']);
             return redirect(route('community.tag-groups.index'));
         }
@@ -182,7 +182,7 @@ class TagGroupsController extends Controller
     {
         $sub = 'SELECT `tag_id`, COUNT(*) AS `post_counts` FROM `post_tags` GROUP BY `tag_id`';
 
-        $query = Tag::selectRaw('tags.*')->joinSub($sub, 'tpc', function ($join) {
+        $query = Tag::selectRaw('tags.*')->join(\DB::raw("({$sub}) as tpc"), function ($join) {
             $join->on('tags.id', '=', 'tpc.tag_id');
         })->latest('post_counts');
 

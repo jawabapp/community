@@ -42,12 +42,12 @@
                         <td>{{ $item->hash_tag }}</td>
                         <td>{{ $item->posts_count }}</td>
                         <td class="text-center">
-                            <assign-tag-group
+                            <community-assign-tag-group
                                 tag-id="{{$item->id}}"
                                 tag-group-id="{{$item->tag_group_id}}"
                                 tag-groups="{{$tagGroups}}"
                                 lang="{{config('app.locale')}}"
-                            ></assign-tag-group>
+                            ></community-assign-tag-group>
                         </td>
                     </tr>
                     @endforeach
