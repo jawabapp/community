@@ -187,7 +187,7 @@ class Post extends Model
 
     public function resetCache()
     {
-        // Caching::deleteCacheByTags('posts');
+         Caching::deleteCacheByTags('posts');
     }
 
     public function account()
