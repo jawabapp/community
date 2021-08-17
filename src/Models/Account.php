@@ -101,12 +101,12 @@ class Account extends Model
     }
 
     public static function getActiveAccountId() {
-        if(auth()->check()) {
+        if(auth('api')->check()) {
 
             static $defaultAccountId;
 
             if(is_null($defaultAccountId)) {
-                $defaultAccountId = auth()->user()->getDefaultAccount()->id ?? false;
+                $defaultAccountId = auth('api')->user()->getDefaultAccount()->id ?? false;
             }
 
             $activeAccount = request()->get('active_account', $defaultAccountId);

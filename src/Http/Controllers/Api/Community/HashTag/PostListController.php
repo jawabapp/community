@@ -36,11 +36,11 @@ class PostListController extends Controller
                 'tag' => [trans('The tag is not valid!')],
             ]);
         }
-
+        
         $query = $tag->posts()
             ->whereNull('related_post_id')
             ->whereNull('parent_post_id')
-            ->with(['related', 'account']);
+            ->with(['related', 'account', 'tags']);
 
         return response()->json($query->latest()->paginate(10));
     }
