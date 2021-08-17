@@ -55,24 +55,6 @@
     </div>
 </div>
 
-<div class="form-group row">
-    <label for="post_tags" class="col-md-2 col-form-label">Services</label>
-
-    <div class="col-md-8">
-        <multiple-select
-            api-search="/admin/api/search-services"
-            api-selected="/admin/api/selected-services"
-            label="Services"
-            name="services"
-            preselect="{{ json_encode(old('services', $item->services ?? [])) }}"
-        ></multiple-select>
-
-        @if ($errors->has('services'))
-            <span class="invalid-feedback"><strong>{{ $errors->first('services') }}</strong></span>
-        @endif
-    </div>
-</div>
-
 <hr>
 
 <div class="form-group row">
@@ -83,23 +65,6 @@
 
         @if ($errors->has('order'))
             <span class="invalid-feedback"><strong>{{ $errors->first('order') }}</strong></span>
-        @endif
-    </div>
-</div>
-
-<div class="form-group row">
-    <label for="country_code" class="col-md-2 col-form-label">Country</label>
-
-    <div class="col-md-8">
-        <select id="country_code" class="form-control {{ $errors->has('country_code') ? 'is-invalid' : '' }}" name="country_code">
-            <option value="">Global</option>
-            @foreach(config('community.user_class')::distinct()->select(config('community.country_code_field_name'))->where(config('community.country_code_field_name'), '!=', '')->get()->pluck(config('community.country_code_field_name'))->all() as $phoneCountry)
-                <option value="{{$phoneCountry}}" {{ $phoneCountry == old(config('community.country_code_field_name'), $item->country_code ?? null) ? 'selected' : '' }}>{{$phoneCountry}}</option>
-            @endforeach
-        </select>
-
-        @if ($errors->has(config('community.country_code_field_name')))
-            <span class="invalid-feedback"><strong>{{ $errors->first(config('community.country_code_field_name')) }}</strong></span>
         @endif
     </div>
 </div>

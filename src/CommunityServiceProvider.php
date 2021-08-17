@@ -4,6 +4,7 @@ namespace Jawabapp\Community;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Jawabapp\Community\Models\Tag;
 
 class CommunityServiceProvider extends ServiceProvider
 {
@@ -68,6 +69,14 @@ class CommunityServiceProvider extends ServiceProvider
         $this->app->singleton('community', function () {
             return new Community;
         });
+
+        foreach (config('community.relations') as $class => $relations) {
+            foreach ($relations as $relation_name => $relation_callback) {
+                if(method_exists($class, 'addDynamicRelation')) {
+                    $class::addDynamicRelation($relation_name, $relation_callback);
+                }
+            }
+        }
     }
 
     /**

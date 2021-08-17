@@ -55,6 +55,15 @@ class Account extends Model
         'account_is_blocked',
     ];
 
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = [
+        'user'
+    ];
+
     public function getSlugWithoutAtAttribute() {
         return str_replace('@', '', $this->slug);
     }
