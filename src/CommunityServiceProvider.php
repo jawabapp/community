@@ -4,6 +4,7 @@ namespace Jawabapp\Community;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Jawabapp\Community\Console\SetupExtraFields;
 
 class CommunityServiceProvider extends ServiceProvider
 {
@@ -32,6 +33,11 @@ class CommunityServiceProvider extends ServiceProvider
         $this->registerRoutes();
 
         if ($this->app->runningInConsole()) {
+
+            $this->commands([
+                SetupExtraFields::class,
+            ]);
+
             $this->publishes([
                 __DIR__ . '/../config/config.php' => config_path('community.php'),
             ], 'config');
