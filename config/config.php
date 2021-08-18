@@ -1,5 +1,7 @@
 <?php
 
+use Jawabapp\Community\Models\Tag;
+
 /*
  * You can place your custom package configuration in here.
  */
@@ -10,15 +12,11 @@ return [
         'middleware' => 'web',
     ],
     'relations' => [
-        \Jawabapp\Community\Models\Tag::class => [
-            'user' => function () {
-
-            }
+        Tag::class => [
+            'user' => function (Tag $model) {}
         ],
     ],
     'with' => [
-        'tag' => [
-            'user'
-        ],
+        Tag::class => ['doa']
     ]
 ];

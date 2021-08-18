@@ -4,7 +4,7 @@ namespace Jawabapp\Community;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use Jawabapp\Community\Models\Tag;
+use Illuminate\Database\Eloquent\Builder;
 
 class CommunityServiceProvider extends ServiceProvider
 {
@@ -70,11 +70,19 @@ class CommunityServiceProvider extends ServiceProvider
             return new Community;
         });
 
-        foreach (config('community.relations') as $class => $relations) {
+        foreach (config('community.relations', []) as $class => $relations) {
             foreach ($relations as $relation_name => $relation_callback) {
                 if(method_exists($class, 'addDynamicRelation')) {
                     $class::addDynamicRelation($relation_name, $relation_callback);
                 }
+            }
+        }
+
+        foreach (config('community.with', []) as $class => $withs) {
+            foreach ($withs as $with) {
+                $class::addGlobalScope('with_'. $with, function (Builder $builder) use ($with) {
+                    $builder->with($with);
+                });
             }
         }
     }
