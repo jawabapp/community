@@ -34,21 +34,21 @@ class Text extends Post
 
                 if ($mentions) {
                     foreach ($mentions as $mention) {
-                        $account = Account::where('slug', $mention)->first();
+                        $account = config('community.user_class')::where('slug', $mention)->first();
 
                         if ($account) {
 
                             $rootPost = $node->getRootPost();
 
-                            CommonPlugin::mqttPublish($account->id, 'usr/community/' . $account->getAccountUser()->id, [
-                                'type' => 'mention',
-                                'content' => trans('notification.post_mention', ['nickname' => $node->account->slug], $account->user->language),
-                                'deeplink' => $rootPost->deep_link,
-                                'post_id' => $rootPost->id,
-                                'account_sender_nickname' => $node->account->slug,
-                                'account_sender_avatar' => $node->account->avatar['100*100'] ?? '',
-                                'account_sender_id' => $node->account->id
-                            ]);
+                            // CommonPlugin::mqttPublish($account->id, 'usr/community/' . $account->getAccountUser()->id, [
+                            //     'type' => 'mention',
+                            //     'content' => trans('notification.post_mention', ['nickname' => $node->account->slug], $account->getAccountUser()->language),
+                            //     'deeplink' => $rootPost->deep_link,
+                            //     'post_id' => $rootPost->id,
+                            //     'account_sender_nickname' => $node->account->slug,
+                            //     'account_sender_avatar' => $node->account->avatar['100*100'] ?? '',
+                            //     'account_sender_id' => $node->account->id
+                            // ]);
                         }
                     }
                 }

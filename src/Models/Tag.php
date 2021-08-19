@@ -41,7 +41,7 @@ class Tag extends Model
 
     public function getIsSubscribedAttribute()
     {
-        $activeAccountId = Account::getActiveAccountId();
+        $activeAccountId = config('community.user_class')::getActiveAccountId();
         if ($activeAccountId) {
             return $this->subscribedAccounts()->where('account_id', $activeAccountId)->exists();
         }
@@ -70,12 +70,12 @@ class Tag extends Model
 
     public function followers()
     {
-        return $this->belongsToMany(Account::class, 'tag_followers', 'tag_id', 'account_id');
+        return $this->belongsToMany(config('community.user_class'), 'tag_followers', 'tag_id', 'account_id');
     }
 
     public function isAccountFollowingBy()
     {
-        $activeAccountId = Account::getActiveAccountId();
+        $activeAccountId = config('community.user_class')::getActiveAccountId();
 
         if ($activeAccountId) {
             return TagFollower::whereAccountId($activeAccountId)
@@ -126,6 +126,6 @@ class Tag extends Model
 
     public function subscribedAccounts()
     {
-        return $this->morphToMany(Account::class, 'notifiable', 'account_notifications')->withTimestamps();
+        return $this->morphToMany(config('community.user_class'), 'notifiable', 'account_notifications', null, 'account_id')->withTimestamps();
     }
 }

@@ -68,7 +68,7 @@ class NotificationController extends Controller
                 break;
 
             case 'account':
-                $notifiable = Account::find($id);
+                $notifiable = config('community.user_class')::find($id);
                 if (!$notifiable) {
                     throw ValidationException::withMessages([
                         'id' => [trans("Invalid {$type} id")],
@@ -152,7 +152,7 @@ class NotificationController extends Controller
                 break;
 
             case 'account':
-                $notifiable = Account::find($id);
+                $notifiable = config('community.user_class')::find($id);
                 if (!$notifiable) {
                     throw ValidationException::withMessages([
                         'id' => [trans("Invalid {$type} id")],

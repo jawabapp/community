@@ -66,7 +66,7 @@ class PostInteraction extends Model
     {
 
         if (is_null($accountId)) {
-            $accountId = Account::getActiveAccountId();
+            $accountId = config('community.user_class')::getActiveAccountId();
         }
 
         $post = Post::find($postId);

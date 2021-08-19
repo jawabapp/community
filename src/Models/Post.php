@@ -52,7 +52,7 @@ class Post extends Model
 
     public function getAccountInteractionAttribute()
     {
-        $activeAccountId = Account::getActiveAccountId();
+        $activeAccountId = config('community.user_class')::getActiveAccountId();
 
         if ($activeAccountId) {
             return PostInteraction::wherePostId($this->getKey())
@@ -66,7 +66,7 @@ class Post extends Model
 
     public function getIsSubscribedAttribute()
     {
-        $activeAccountId = Account::getActiveAccountId();
+        $activeAccountId = config('community.user_class')::getActiveAccountId();
         if ($activeAccountId) {
             return $this->subscribedAccounts()->where('account_id', $activeAccountId)->exists();
         }
@@ -91,7 +91,7 @@ class Post extends Model
 
         static::addGlobalScope('active_account', function (Builder $builder) {
 
-            $activeAccountId = Account::getActiveAccountId();
+            $activeAccountId = config('community.user_class')::getActiveAccountId();
 
             if ($activeAccountId) {
                 $builder->whereNotIn('posts.id', function ($q) use ($activeAccountId) {
@@ -292,7 +292,7 @@ class Post extends Model
     public static function getUserFilteredData(Builder $builder)
     {
 
-        $activeAccountId = Account::getActiveAccountId();
+        $activeAccountId = config('community.user_class')::getActiveAccountId();
         if ($activeAccountId) {
 
             $tagGroupFollower = TagGroupFollower::where('account_id', $activeAccountId)->count();
@@ -366,6 +366,6 @@ class Post extends Model
 
     public function subscribedAccounts()
     {
-        return $this->morphToMany(Account::class, 'notifiable', 'account_notifications')->withTimestamps();
+        return $this->morphToMany(config('community.user_class'), 'notifiable', 'account_notifications', null, 'account_id')->withTimestamps();
     }
 }

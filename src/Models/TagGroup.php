@@ -76,7 +76,7 @@ class TagGroup extends Model
 
     public function isAccountFollowingBy()
     {
-        $activeAccountId = Account::getActiveAccountId();
+        $activeAccountId = config('community.user_class')::getActiveAccountId();
 
         if ($activeAccountId) {
             return TagGroupFollower::whereAccountId($activeAccountId)

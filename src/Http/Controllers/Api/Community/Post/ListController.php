@@ -30,7 +30,7 @@ class ListController extends Controller
         $page = intval($request->get('page'));
         $accountId = intval($request->get('account_id'));
         $parentPostId = intval($request->get('parent_post_id'));
-        $activeAccountId = intval(Account::getActiveAccountId());
+        $activeAccountId = intval(config('community.user_class')::getActiveAccountId());
 
         $ttl = now()->addDay();
 

@@ -347,12 +347,12 @@ class Account extends Model
 
     public function subscribedAccounts()
     {
-        return $this->morphToMany(Account::class, 'notifiable', 'account_notifications')->withTimestamps();
+        return $this->morphToMany(config('community.user_class'), 'notifiable', 'account_notifications')->withTimestamps();
     }
 
     public function subscribeAccounts()
     {
-        return $this->morphedByMany(Account::class, 'notifiable', 'account_notifications')->withTimestamps();
+        return $this->morphedByMany(config('community.user_class'), 'notifiable', 'account_notifications')->withTimestamps();
     }
 
     public function subscribePosts()

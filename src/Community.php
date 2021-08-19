@@ -7,12 +7,14 @@ use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Plugins\CommonPlugin;
 use Illuminate\Validation\ValidationException;
 use Jawabapp\Community\Http\Requests\Post\CreateRequest;
+
 class Community
 {
     // Build your next great package.
-    public function createPost(CreateRequest $request) {
-      // creatre posts
-      
+    public function createPost(CreateRequest $request)
+    {
+        // creatre posts
+
         /** @var \Jawabapp\Community\Models\User $user */
         $user = $request->user();
 
@@ -77,23 +79,23 @@ class Community
         if ($post->parent_post_id) {
             $parentPost = Post::whereId($post->parent_post_id)->first();
 
-            if ($account->user_id != $parentPost->account->user->id) {
+            if ($account->user_id != $parentPost->account->getAccountUser()->id) {
 
                 $rootPost = $post->getRootPost();
 
-                CommonPlugin::mqttPublish($parentPost->account->id, 'usr/community/' . $parentPost->account->user->id, [
-                    'type' => 'reply',
-                    'content' => trans('notification.post_reply', ['nickname' => $account->slug], $parentPost->account->user->language),
-                    'deeplink' => $rootPost->deep_link,
-                    'post_id' => $rootPost->id,
-                    'account_sender_nickname' => $account->slug,
-                    'account_sender_avatar' => $account->avatar['100*100'] ?? '',
-                    'account_sender_id' => $account->id
-                ]);
+                // CommonPlugin::mqttPublish($parentPost->account->id, 'usr/community/' . $parentPost->account->getAccountUser()->id, [
+                //     'type' => 'reply',
+                //     'content' => trans('notification.post_reply', ['nickname' => $account->slug], $parentPost->account->getAccountUser()->language),
+                //     'deeplink' => $rootPost->deep_link,
+                //     'post_id' => $rootPost->id,
+                //     'account_sender_nickname' => $account->slug,
+                //     'account_sender_avatar' => $account->avatar['100*100'] ?? '',
+                //     'account_sender_id' => $account->id
+                // ]);
             }
         }
 
         return $post;
     }
-
+    
 }
