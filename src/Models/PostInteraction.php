@@ -59,7 +59,7 @@ class PostInteraction extends Model
 
     public function post()
     {
-        return $this->belongsTo(config('community.user_class'), 'post_id');
+        return $this->belongsTo(Post::class);
     }
 
     public static function assignInteractionToAccount($interaction, $postId, $root = true, $accountId = null)
