@@ -20,7 +20,7 @@ class AccountBlock extends Model
      */
     public function account()
     {
-        return $this->belongsTo(Account::class, 'account_id');
+        return $this->belongsTo(config('community.user_class'), 'account_id');
     }
 
     /**
@@ -28,6 +28,6 @@ class AccountBlock extends Model
      */
     public function block()
     {
-        return $this->belongsTo(Account::class, 'block_account_id');
+        return $this->belongsTo(config('community.user_class'), 'block_account_id');
     }
 }

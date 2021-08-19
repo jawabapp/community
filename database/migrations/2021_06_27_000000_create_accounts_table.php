@@ -25,6 +25,10 @@ class CreateAccountsTable extends Migration
             $table->string('deep_link')->nullable();
             $table->json('extra_info')->nullable();
             $table->string('topic')->nullable();
+            $table->integer('post_count')->default(0);
+            $table->integer('followers_count')->default(0);
+            $table->integer('following_count')->default(0);
+            $table->integer('mutual_follower_count')->default(0);
 
             $table->timestamps();
             $table->softDeletes();

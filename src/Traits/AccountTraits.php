@@ -1,69 +1,9 @@
 <?php
 
-namespace Jawabapp\Community\Models;
+namespace Jawabapp\Community\Traits;
 
-// use App\Jobs\AccountAutoFollowTagJob;
-use Jawabapp\Community\Services\DeepLinkBuilder;
-use Jawabapp\Community\Services\Slug;
-use Exception;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-
-class Account extends Model
+trait AccountTraits
 {
-    use SoftDeletes;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'user_id',
-        'nickname',
-        'avatar',
-        'status',
-        'default',
-        'is_private',
-        'slug',
-        'deep_link',
-        'extra_info',
-        'topic',
-
-        'post_count',
-        'followers_count',
-        'following_count',
-        'mutual_follower_count',
-    ];
-
-    protected $casts = [
-        'avatar' => 'array',
-        'extra_info' => 'array'
-    ];
-
-    protected $hidden = [
-        'created_at', 'updated_at', 'deleted_at', 'extra_info'
-    ];
-
-    protected $appends = [
-        'slug_without_at',
-
-        'is_subscribed',
-        'account_following',
-        'account_is_blocked',
-    ];
-
-    /**
-     * The relationships that should always be loaded.
-     *
-     * @var array
-     */
-    // protected $with = [
-    //     'user'
-    // ];
-
     public function getSlugWithoutAtAttribute()
     {
         return str_replace('@', '', $this->slug);
@@ -134,7 +74,7 @@ class Account extends Model
         $followerAccountId = $this->getKey();
 
         if ($activeAccountId && $activeAccountId != $followerAccountId) {
-            return AccountFollower::whereAccountId($activeAccountId)
+            return \Jawabapp\Community\Models\AccountFollower::whereAccountId($activeAccountId)
                 ->whereIn('follower_account_id', function ($query) use ($followerAccountId) {
                     $query->select('follower_account_id')
                         ->from('account_followers')
@@ -150,7 +90,7 @@ class Account extends Model
         $activeAccountId = self::getActiveAccountId();
 
         if ($activeAccountId) {
-            return AccountFollower::whereAccountId($activeAccountId)
+            return \Jawabapp\Community\Models\AccountFollower::whereAccountId($activeAccountId)
                 ->whereFollowerAccountId($this->getKey())
                 ->exists();
         }
@@ -163,36 +103,12 @@ class Account extends Model
         $activeAccountId = self::getActiveAccountId();
 
         if ($activeAccountId) {
-            return AccountBlock::whereAccountId($activeAccountId)
+            return \Jawabapp\Community\Models\AccountBlock::whereAccountId($activeAccountId)
                 ->whereBlockAccountId($this->getKey())
                 ->exists();
         }
 
         return false;
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        // static::created(function (self $node) {
-        //     AccountAutoFollowTagJob::dispatch($node);
-        // });
-
-        static::saving(function (self $node) {
-            if (empty($node->getAttribute('nickname')) || $node->isDirty('nickname')) {
-
-                if (empty($node->getAttribute('nickname'))) {
-                    $nickname = Str::random(16);
-                } else {
-                    $nickname = $node->getAttribute('nickname');
-                }
-
-                $node->setAttribute('slug', app(Slug::class)->createSlug($nickname, $node->getKey()));
-                $node->setAttribute('deep_link', $node->generateDeepLink(true));
-            }
-            $node->setAttribute('topic', 'notifications/accounts/' . $node->id);
-        });
     }
 
     public function generateDeepLink($returnOnly = false)
@@ -204,7 +120,7 @@ class Account extends Model
 
             $slug = ($this->slug_without_at);
 
-            $deep_link = DeepLinkBuilder::generate(new Request([
+            $deep_link = \Jawabapp\Community\Models\DeepLinkBuilder::generate(new Request([
                 'link' => "https://trends.jawab.app/{$slug}?mode=account&slug={$slug}",
                 'analyticsUtmSource' => "jawabchat",
                 'analyticsUtmMedium' => "account",
@@ -235,7 +151,7 @@ class Account extends Model
      */
     public function blocks()
     {
-        return $this->hasMany(AccountBlock::class, 'account_id');
+        return $this->hasMany(\Jawabapp\Community\Models\AccountBlock::class, 'account_id');
     }
 
     /**
@@ -243,7 +159,7 @@ class Account extends Model
      */
     public function friends()
     {
-        return $this->hasMany(AccountFriend::class, 'account_id');
+        return $this->hasMany(\Jawabapp\Community\Models\AccountFriend::class, 'account_id');
     }
 
     /**
@@ -251,7 +167,7 @@ class Account extends Model
      */
     public function followers()
     {
-        return $this->hasMany(AccountFollower::class, 'account_id');
+        return $this->hasMany(\Jawabapp\Community\Models\AccountFollower::class, 'account_id');
     }
 
     /**
@@ -259,12 +175,12 @@ class Account extends Model
      */
     public function following()
     {
-        return $this->hasMany(AccountFollower::class, 'follower_account_id');
+        return $this->hasMany(\Jawabapp\Community\Models\AccountFollower::class, 'follower_account_id');
     }
 
     public function followingTag()
     {
-        return $this->hasMany(TagFollower::class, 'account_id');
+        return $this->hasMany(\Jawabapp\Community\Models\TagFollower::class, 'account_id');
     }
 
     /**
@@ -272,7 +188,7 @@ class Account extends Model
      */
     public function posts()
     {
-        return $this->hasMany(Post::class, 'account_id');
+        return $this->hasMany(\Jawabapp\Community\Models\Post::class, 'account_id');
     }
 
     /**
@@ -280,7 +196,7 @@ class Account extends Model
      */
     public function groups()
     {
-        return $this->belongsToMany(AccountGroup::class, 'account_group_members', 'account_id', 'account_group_id');
+        return $this->belongsToMany(\Jawabapp\Community\Models\AccountGroup::class, 'account_group_members', 'account_id', 'account_group_id');
     }
 
     /**
@@ -328,46 +244,24 @@ class Account extends Model
         return $followers[$followerId];
     }
 
-    public function getBroadcastAccounts()
-    {
-
-        if ($this->user->created_by === 'broadcast') {
-            if ($this->extra_info['channel']['target'] ?? false) {
-
-                $usersQuery = User::getTargetAudience($this->extra_info['channel']['target'], false, true);
-
-                return self::select('accounts.*')->joinSub($usersQuery, 'users', function ($join) {
-                    $join->on('users.id', '=', 'accounts.user_id');
-                })->get();
-            }
-        }
-
-        return collect();
-    }
-
     public function subscribedAccounts()
     {
-        return $this->morphToMany(Account::class, 'notifiable', 'account_notifications')->withTimestamps();
+        return $this->morphToMany(config('community.user_class'), 'notifiable', 'account_notifications')->withTimestamps();
     }
 
     public function subscribeAccounts()
     {
-        return $this->morphedByMany(Account::class, 'notifiable', 'account_notifications')->withTimestamps();
+        return $this->morphedByMany(config('community.user_class'), 'notifiable', 'account_notifications')->withTimestamps();
     }
 
     public function subscribePosts()
     {
-        return $this->morphedByMany(Post::class, 'notifiable', 'account_notifications')->withTimestamps();
+        return $this->morphedByMany(\Jawabapp\Community\Models\Post::class, 'notifiable', 'account_notifications')->withTimestamps();
     }
 
     public function subscribeTags()
     {
-        return $this->morphedByMany(Tag::class, 'notifiable', 'account_notifications')->withTimestamps();
-    }
-
-    public function getAccountUser()
-    {
-        return $this->user()->first();
+        return $this->morphedByMany(\Jawabapp\Community\Models\Tag::class, 'notifiable', 'account_notifications')->withTimestamps();
     }
 
     public function followCounts()

@@ -17,6 +17,7 @@ class SetupExtraFields extends Command
     protected $signature = 'build:extra-fields';
 
     private $extra_fields = [
+        'slug',
         'deep_link',
         'extra_info',
         'topic',
@@ -60,8 +61,8 @@ class SetupExtraFields extends Command
 
                 foreach ($this->extra_fields as $field) {
                     if (!Schema::hasColumn($userObject->getTable(), $field)) {
-                        Schema::table('users', function (Blueprint $table) use ($field) {
-                            $table->string($field)->nullable();;
+                        Schema::table($userObject->getTable(), function (Blueprint $table) use ($field) {
+                            $table->string($field)->nullable();
                         });
                         echo "column " . $field . " is added to  " . $userObject->getTable() . " table successfully ...\n";
                     } else {

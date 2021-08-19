@@ -137,10 +137,10 @@ class Post extends Model
 
     private function updatePostAccountCount()
     {
-        if($this->account)
-        $this->account->update([
-            'post_count' => $this->account->getPostCount()
-        ]);
+        if ($this->account)
+            $this->account->update([
+                'post_count' => $this->account->getPostCount()
+            ]);
     }
 
     private function updatePostTagsCount()
@@ -187,12 +187,12 @@ class Post extends Model
 
     public function resetCache()
     {
-         Caching::deleteCacheByTags('posts');
+        Caching::deleteCacheByTags('posts');
     }
 
     public function account()
     {
-        return $this->belongsTo(Account::class, 'account_id');
+        return $this->belongsTo(config('community.user_class'), 'account_id');
     }
 
     public function interactions()

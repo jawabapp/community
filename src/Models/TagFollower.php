@@ -20,7 +20,7 @@ class TagFollower extends Model
      */
     public function account()
     {
-        return $this->belongsTo(Account::class, 'account_id');
+        return $this->belongsTo(config('community.user_class'), 'account_id');
     }
 
     /**

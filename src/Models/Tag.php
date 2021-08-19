@@ -6,10 +6,11 @@ use Jawabapp\Community\Services\DeepLinkBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
+use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class Tag extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasDynamicRelation;
 
     protected $fillable = [
         'hash_tag',

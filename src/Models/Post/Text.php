@@ -40,7 +40,7 @@ class Text extends Post
 
                             $rootPost = $node->getRootPost();
 
-                            CommonPlugin::mqttPublish($account->id, 'usr/community/' . $account->user->id, [
+                            CommonPlugin::mqttPublish($account->id, 'usr/community/' . $account->getAccountUser()->id, [
                                 'type' => 'mention',
                                 'content' => trans('notification.post_mention', ['nickname' => $node->account->slug], $account->user->language),
                                 'deeplink' => $rootPost->deep_link,
