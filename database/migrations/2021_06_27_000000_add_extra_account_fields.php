@@ -21,8 +21,8 @@ class AddExtraAccountFields extends Migration
      */
     public function up()
     {
-        Schema::create($this->table_name, function (Blueprint $table) {
-            $table->string('slug')->unique();
+        Schema::table($this->table_name, function (Blueprint $table) {
+            $table->string('slug')->nullable();
             $table->string('deep_link')->nullable();
             $table->json('extra_info')->nullable();
             $table->string('topic')->nullable();
