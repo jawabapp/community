@@ -3,9 +3,11 @@
 namespace Jawabapp\Community\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class TagFollower extends Model
 {
+    use HasDynamicRelation;
     /**
      * The attributes that are mass assignable.
      *

@@ -6,10 +6,11 @@ use Jawabapp\Community\Models\Account;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\Tag;
 use App\Plugins\CommonPlugin;
+use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class Text extends Post
 {
-
+    use HasDynamicRelation;
     protected static function boot()
     {
         parent::boot();

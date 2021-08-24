@@ -3,9 +3,11 @@
 namespace Jawabapp\Community\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class PostReport extends Model
 {
+    use HasDynamicRelation;
 
     const This_Is_A_Repost = 1;
     const I_Dont_Like_This  = 2;

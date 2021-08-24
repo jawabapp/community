@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
+use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class Post extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasDynamicRelation;
 
     protected $table = 'posts';
 

@@ -5,10 +5,11 @@ namespace Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\Post;
 use Illuminate\Http\UploadedFile;
 use Storage;
+use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class Gif extends Post
 {
-
+    use HasDynamicRelation;
     public static $post_path =  'post' . DIRECTORY_SEPARATOR . 'gif';
 
     protected static function boot()

@@ -7,10 +7,11 @@ use Jawabapp\Community\Scopes\TagGroup\PublishedScope;
 use Jawabapp\Community\Scopes\TagGroup\ServiceScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class TagGroup extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasDynamicRelation;
 
     static $enableGlobalScope = true;
 
