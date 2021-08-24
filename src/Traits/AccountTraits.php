@@ -246,22 +246,22 @@ trait AccountTraits
 
     public function subscribedAccounts()
     {
-        return $this->morphToMany(config('community.user_class'), 'notifiable', 'account_notifications', null, 'account_id')->withTimestamps();
+        return $this->morphToMany(config('community.user_class'), 'notifiable', 'account_notifications', 'notifiable_id', 'account_id')->withTimestamps();
     }
 
     public function subscribeAccounts()
     {
-        return $this->morphedByMany(config('community.user_class'), 'notifiable', 'account_notifications', null, 'account_id')->withTimestamps();
+        return $this->morphedByMany(config('community.user_class'), 'notifiable', 'account_notifications', 'notifiable_id', 'account_id')->withTimestamps();
     }
 
     public function subscribePosts()
     {
-        return $this->morphedByMany(\Jawabapp\Community\Models\Post::class, 'notifiable', 'account_notifications', null, 'account_id')->withTimestamps();
+        return $this->morphedByMany(\Jawabapp\Community\Models\Post::class, 'notifiable', 'account_notifications', 'notifiable_id', 'account_id')->withTimestamps();
     }
 
     public function subscribeTags()
     {
-        return $this->morphedByMany(\Jawabapp\Community\Models\Tag::class, 'notifiable', 'account_notifications', null, 'account_id')->withTimestamps();
+        return $this->morphedByMany(\Jawabapp\Community\Models\Tag::class, 'notifiable', 'account_notifications', 'notifiable_id', 'account_id')->withTimestamps();
     }
 
     public function followCounts()
