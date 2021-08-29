@@ -81,16 +81,16 @@ class CommunityServiceProvider extends ServiceProvider
 
         foreach (config('community.with', []) as $class => $withs) {
             foreach ($withs as $with => $callback) {
-                if(!is_callable($callback)) {
-                    $with = $callback;
+                $with = is_callable($callback) ? $with : $callback;
+                if(is_string($with)) {
+                    $class::addGlobalScope('with_' . $with, function (Builder $builder) use ($with, $callback) {
+                        if(is_callable($callback)) {
+                            $builder->with([$with => $callback]);
+                        } else {
+                            $builder->with($with);
+                        }
+                    });
                 }
-                $class::addGlobalScope('with_' . $with, function (Builder $builder) use ($with, $callback) {
-                    if(is_callable($callback)) {
-                        $builder->with([$with => $callback]);
-                    } else {
-                        $builder->with($with);
-                    }
-                });
             }
         }
     }
