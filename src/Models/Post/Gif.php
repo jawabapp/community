@@ -9,7 +9,7 @@ use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class Gif extends Post
 {
-    use HasDynamicRelation;
+
     public static $post_path =  'post' . DIRECTORY_SEPARATOR . 'gif';
 
     protected static function boot()

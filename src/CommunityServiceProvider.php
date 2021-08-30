@@ -5,6 +5,8 @@ namespace Jawabapp\Community;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class CommunityServiceProvider extends ServiceProvider
 {
@@ -80,16 +82,24 @@ class CommunityServiceProvider extends ServiceProvider
         }
 
         foreach (config('community.with', []) as $class => $withs) {
-            foreach ($withs as $with => $callback) {
-                $with = is_callable($callback) ? $with : $callback;
-                if(is_string($with)) {
-                    $class::addGlobalScope('with_' . $with, function (Builder $builder) use ($with, $callback) {
-                        if(is_callable($callback)) {
-                            $builder->with([$with => $callback]);
+            foreach ($withs as $with_name => $with_callback) {
+                $with_name = is_callable($with_callback) ? $with_name : $with_callback;
+                if(is_string($with_name)) {
+                    $class::addGlobalScope('with_' . $with_name, function (Builder $builder) use ($with_name, $with_callback) {
+                        if(is_callable($with_callback)) {
+                            $builder->with([$with_name => $with_callback]);
                         } else {
-                            $builder->with($with);
+                            $builder->with($with_name);
                         }
                     });
+                }
+            }
+        }
+
+        foreach (config('community.appends', []) as $class => $appends) {
+            foreach ($appends as $append_name => $append_callback) {
+                if (method_exists($class, 'addDynamicAppend')) {
+                    $class::addDynamicAppend($append_name, $append_callback);
                 }
             }
         }

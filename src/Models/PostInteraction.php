@@ -8,6 +8,7 @@ use Jawabapp\Community\Traits\HasDynamicRelation;
 class PostInteraction extends Model
 {
     use HasDynamicRelation;
+
     protected $fillable = [
         'post_id',
         'account_id',

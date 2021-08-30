@@ -10,7 +10,7 @@ use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class Text extends Post
 {
-    use HasDynamicRelation;
+
     protected static function boot()
     {
         parent::boot();

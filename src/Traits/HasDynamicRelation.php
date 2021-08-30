@@ -2,6 +2,8 @@
 
 namespace Jawabapp\Community\Traits;
 
+use Illuminate\Support\Str;
+
 trait HasDynamicRelation
 {
     /**
@@ -9,7 +11,9 @@ trait HasDynamicRelation
      *
      * @var array
      */
-    private static $dynamic_relations = [];
+    protected static $dynamic_relations = [];
+    protected static $dynamic_appends = [];
+    protected static $dynamic_appends_actions = [];
 
     /**
      * Add a new relation
@@ -35,6 +39,59 @@ trait HasDynamicRelation
     }
 
     /**
+     * Add a new append
+     *
+     * @param $name
+     * @param $closure
+     */
+    public static function addDynamicAppend($name, $closure)
+    {
+        $action = 'get' . Str::studly($name) . 'Attribute';
+
+        static::$dynamic_appends_actions[$action] = $closure;
+        static::$dynamic_appends[$name] = $action;
+    }
+
+    /**
+     * Determine if a relation exists in dynamic relationships list
+     *
+     * @param $name
+     *
+     * @return bool
+     */
+    public static function hasDynamicAppend($name)
+    {
+        return array_key_exists($name, static::$dynamic_appends);
+    }
+
+    /**
+     * Determine if a relation exists in dynamic relationships list
+     *
+     * @param $name
+     *
+     * @return bool
+     */
+    public static function hasDynamicAppendAction($name)
+    {
+        return array_key_exists($name, static::$dynamic_appends_actions);
+    }
+
+    /**
+     * Get all of the appendable values that are arrayable.
+     *
+     * @return array
+     */
+    protected function getArrayableAppends()
+    {
+
+        if(array_keys(static::$dynamic_appends)) {
+            $this->appends = array_unique(array_merge(array_keys(static::$dynamic_appends), $this->appends ?? []));
+        }
+
+        return parent::getArrayableAppends();
+    }
+
+    /**
      * If the key exists in relations then
      * return call to relation or else
      * return the call to the parent
@@ -55,6 +112,10 @@ trait HasDynamicRelation
             return $this->getRelationshipFromMethod($name);
         }
 
+        if (static::hasDynamicAppend($name)) {
+            return call_user_func(static::$dynamic_appends_actions[static::$dynamic_appends[$name]], $this);
+        }
+
         return parent::__get($name);
     }
 
@@ -72,6 +133,10 @@ trait HasDynamicRelation
     {
         if (static::hasDynamicRelation($name)) {
             return call_user_func(static::$dynamic_relations[$name], $this);
+        }
+
+        if (static::hasDynamicAppendAction($name)) {
+            return call_user_func(static::$dynamic_appends_actions[$name], $this);
         }
 
         return parent::__call($name, $arguments);

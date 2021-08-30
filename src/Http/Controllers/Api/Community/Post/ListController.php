@@ -41,14 +41,14 @@ class ListController extends Controller
             $cacheTags[] = "posts-{$activeAccountId}";
         }
 
-        $data = Caching::doCache($cacheTags, $cacheKey, function () use ($accountId, $parentPostId) {
+//        $data = Caching::doCache($cacheTags, $cacheKey, function () use ($accountId, $parentPostId) {
 
             $query = Post::whereNull('related_post_id')
                 ->with(['related', 'account']);
 
             if (empty($accountId) && empty($parentPostId)) {
                 // Get user's filtered home data
-                Post::getUserFilteredData($query);
+                //Post::getUserFilteredData($query);
             }
 
             if ($parentPostId) {
@@ -68,8 +68,10 @@ class ListController extends Controller
                 PostInteraction::assignInteractionToAccount('viewed', $parentPostId);
             }
 
-            return $query->paginate(20);
-        }, $ttl);
+//            \DB::enableQueryLog();
+            $data = $query->paginate(20);
+//        dd(\DB::getQueryLog());
+//        }, $ttl);
 
         return response()->json($data);
     }

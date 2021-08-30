@@ -8,6 +8,7 @@ use Jawabapp\Community\Traits\HasDynamicRelation;
 class AccountBlock extends Model
 {
     use HasDynamicRelation;
+
     /**
      * The attributes that are mass assignable.
      *

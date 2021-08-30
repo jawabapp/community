@@ -10,7 +10,7 @@ use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class Video extends Post
 {
-    use HasDynamicRelation;
+
     public static $post_path =  'post' . DIRECTORY_SEPARATOR . 'video';
 
     protected static function boot()
