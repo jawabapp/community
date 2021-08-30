@@ -41,7 +41,7 @@ class ListController extends Controller
             $cacheTags[] = "posts-{$activeAccountId}";
         }
 
-//        $data = Caching::doCache($cacheTags, $cacheKey, function () use ($accountId, $parentPostId) {
+        $data = Caching::doCache($cacheTags, $cacheKey, function () use ($accountId, $parentPostId) {
 
             $query = Post::whereNull('related_post_id')
                 ->with(['related', 'account']);
@@ -68,10 +68,8 @@ class ListController extends Controller
                 PostInteraction::assignInteractionToAccount('viewed', $parentPostId);
             }
 
-//            \DB::enableQueryLog();
-            $data = $query->paginate(20);
-//        dd(\DB::getQueryLog());
-//        }, $ttl);
+            return $query->paginate(20);
+        }, $ttl);
 
         return response()->json($data);
     }
