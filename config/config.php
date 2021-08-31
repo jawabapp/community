@@ -38,19 +38,19 @@ return [
         'class' => null,
         'action' => 'generate',
         'account' => [
-            'url' => null,
+            'url_prefix' => null,
             'utm_source' => null,
             'utm_medium' => null,
             'utm_campaign' => null,
         ],
         'post' => [
-            'url' => null,
+            'url_prefix' => null,
             'utm_source' => null,
             'utm_medium' => null,
             'utm_campaign' => null,
         ],
         'tag' => [
-            'url' => null,
+            'url_prefix' => null,
             'utm_source' => null,
             'utm_medium' => null,
             'utm_campaign' => null,
