@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
-use Jawabapp\Community\Services\Caching;
 use Jawabapp\Community\Services\DeepLinkBuilder;
 use Jawabapp\Community\Traits\HasDynamicRelation;
 
@@ -188,7 +187,7 @@ class Post extends Model
 
     public function resetCache()
     {
-        Caching::deleteCacheByTags('posts');
+        //
     }
 
     public function account()

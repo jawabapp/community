@@ -3,7 +3,6 @@
 namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 
 use Jawabapp\Community\Models\Account;
-use Jawabapp\Community\Services\Caching;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\PostInteraction;
 use Jawabapp\Community\Http\Controllers\Controller;
@@ -27,50 +26,34 @@ class ListController extends Controller
 
     public function index(ListRequest $request)
     {
-        $page = intval($request->get('page'));
         $accountId = intval($request->get('account_id'));
         $parentPostId = intval($request->get('parent_post_id'));
-        $activeAccountId = intval(config('community.user_class')::getActiveAccountId());
 
-        $ttl = now()->addDay();
+        $query = Post::whereNull('related_post_id')
+            ->with(['related', 'account']);
 
-        $cacheKey = "{$page}_{$accountId}_{$parentPostId}_{$activeAccountId}";
-
-        $cacheTags = ['posts'];
-        if ($activeAccountId) {
-            $cacheTags[] = "posts-{$activeAccountId}";
+        if (empty($accountId) && empty($parentPostId)) {
+            // Get user's filtered home data
+            Post::getUserFilteredData($query);
         }
 
-        $data = Caching::doCache($cacheTags, $cacheKey, function () use ($accountId, $parentPostId) {
+        if ($parentPostId) {
+            $query->whereParentPostId($parentPostId);
+            //$query->orderBy('children_count', 'desc');
+            $query->oldest();
+        } else {
+            $query->whereNull('parent_post_id');
+            $query->latest();
+        }
 
-            $query = Post::whereNull('related_post_id')
-                ->with(['related', 'account']);
+        if ($accountId) {
+            $query->whereAccountId($accountId);
+        }
 
-            if (empty($accountId) && empty($parentPostId)) {
-                // Get user's filtered home data
-                //Post::getUserFilteredData($query);
-            }
+        if ($parentPostId) {
+            PostInteraction::assignInteractionToAccount('viewed', $parentPostId);
+        }
 
-            if ($parentPostId) {
-                $query->whereParentPostId($parentPostId);
-                //$query->orderBy('children_count', 'desc');
-                $query->oldest();
-            } else {
-                $query->whereNull('parent_post_id');
-                $query->latest();
-            }
-
-            if ($accountId) {
-                $query->whereAccountId($accountId);
-            }
-
-            if ($parentPostId) {
-                PostInteraction::assignInteractionToAccount('viewed', $parentPostId);
-            }
-
-            return $query->paginate(20);
-        }, $ttl);
-
-        return response()->json($data);
+        return response()->json($query->paginate(20));
     }
 }
