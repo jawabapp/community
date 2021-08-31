@@ -6,25 +6,25 @@ use Carbon\Carbon;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Plugins\CommonPlugin;
 use Illuminate\Validation\ValidationException;
-use Jawabapp\Community\Http\Requests\Post\CreateRequest;
+use Illuminate\Http\Request;
 
 class Community
 {
     // Build your next great package.
-    public function createPost(CreateRequest $request)
+    public function createPost(Request $request)
     {
         // creatre posts
 
         /** @var \Jawabapp\Community\Models\User $user */
-        $user = $request->user();
+        $user = auth('api')->user();
 
-        if ($user->is_anonymous) {
+        if (!empty($user->is_anonymous)) {
             throw ValidationException::withMessages([
                 'id' => [trans('User is anonymous')],
             ]);
         }
 
-        if (Carbon::parse($user->block_until)->isFuture()) {
+        if (!empty($user->block_until) && Carbon::parse($user->block_until)->isFuture()) {
             throw ValidationException::withMessages([
                 'account_id' => [trans('Account is blocked until') . ' ' . $user->block_until],
             ]);
@@ -51,7 +51,7 @@ class Community
             ]);
         }
 
-        if ($request->has('attachment_type')) {
+        if (!empty($request->get('attachment_type'))) {
 
             $postClass = Post::class . '\\' . ucfirst($request->get('attachment_type'));
 
@@ -97,5 +97,4 @@ class Community
 
         return $post;
     }
-    
 }
