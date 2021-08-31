@@ -127,6 +127,16 @@ trait AccountTraits
                 'analyticsUtmCampaign' => "{$slug}",
             ]), 'https://account.jawab.app');
 
+//            $deep_link = \Jawabapp\Community\Models\DeepLinkBuilder::generate([
+//                'mode' => 'account',
+//                'slug' => $slug,
+//            ],[
+//                'domain-uri-prefix' => config(),
+//                'utm-source' => config(),
+//                'utm-medium' => config(),
+//                'utm-campaign' => config(),
+//            ]));
+
             if (!$returnOnly) {
                 $this->update([
                     'deep_link' => $deep_link
