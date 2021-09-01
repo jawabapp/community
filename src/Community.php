@@ -7,6 +7,7 @@ use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Plugins\CommonPlugin;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
+use Jawabapp\Community\Models\Tag;
 
 class Community
 {
@@ -96,5 +97,18 @@ class Community
         }
 
         return $post;
+    }
+
+    public function createPostWithTag(Request $request)
+    {
+        $post = $this->createPost($request);
+        $this->linkPostWithTag($post, $request->get('hash_tag'));
+    }
+
+    public function linkPostWithTag($post, $hash_tag)
+    {
+        $tag = Tag::firstOrCreate(['hash_tag' => $hash_tag]);
+
+        $post->tags()->attach([$tag->id]);
     }
 }

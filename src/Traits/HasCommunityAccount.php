@@ -2,6 +2,9 @@
 
 namespace Jawabapp\Community\Traits;
 
+use Jawabapp\Community\Models;
+use Jawabapp\Community\Services\DeepLinkBuilder;
+
 trait HasCommunityAccount
 {
     // protected $fillable = ['slug', 'deep_link', 'extra_info', 'topic', 'post_count', 'followers_count', 'following_count', 'mutual_follower_count'];
@@ -20,6 +23,7 @@ trait HasCommunityAccount
     {
         return $this->user()->first();
     }
+
     public function getSlugWithoutAtAttribute()
     {
         return str_replace('@', '', $this->slug);
@@ -90,7 +94,7 @@ trait HasCommunityAccount
         $followerAccountId = $this->getKey();
 
         if ($activeAccountId && $activeAccountId != $followerAccountId) {
-            return \Jawabapp\Community\Models\AccountFollower::whereAccountId($activeAccountId)
+            return Models\AccountFollower::whereAccountId($activeAccountId)
                 ->whereIn('follower_account_id', function ($query) use ($followerAccountId) {
                     $query->select('follower_account_id')
                         ->from('account_followers')
@@ -106,7 +110,7 @@ trait HasCommunityAccount
         $activeAccountId = self::getActiveAccountId();
 
         if ($activeAccountId) {
-            return \Jawabapp\Community\Models\AccountFollower::whereAccountId($activeAccountId)
+            return Models\AccountFollower::whereAccountId($activeAccountId)
                 ->whereFollowerAccountId($this->getKey())
                 ->exists();
         }
@@ -119,7 +123,7 @@ trait HasCommunityAccount
         $activeAccountId = self::getActiveAccountId();
 
         if ($activeAccountId) {
-            return \Jawabapp\Community\Models\AccountBlock::whereAccountId($activeAccountId)
+            return Models\AccountBlock::whereAccountId($activeAccountId)
                 ->whereBlockAccountId($this->getKey())
                 ->exists();
         }
@@ -129,27 +133,28 @@ trait HasCommunityAccount
 
     public function generateDeepLink($returnOnly = false)
     {
+        $slug = ($this->slug_without_at);
 
-        $deep_link = '';
 
-        try {
+        $deep_link = DeepLinkBuilder::generate(
+            [
+                'mode' => 'account',
+                'slug' => $slug,
+            ],
+            [
+                'domain-uri-prefix' => config('community.deep_link.account.url_prefix'),
+                'utm-source' => config('community.deep_link.account.utm_source'),
+                'utm-medium' => config('community.deep_link.account.utm_medium'),
+                'utm-campaign' => config('community.deep_link.account.utm_campaign') ?? "{$slug}",
+            ]
+        );
 
-            $slug = ($this->slug_without_at);
-
-            $deep_link = \Jawabapp\Community\Models\DeepLinkBuilder::generate(new Request([
-                'link' => "https://trends.jawab.app/{$slug}?mode=account&slug={$slug}",
-                'analyticsUtmSource' => "jawabchat",
-                'analyticsUtmMedium' => "account",
-                'analyticsUtmCampaign' => "{$slug}",
-            ]), 'https://account.jawab.app');
-
-            if (!$returnOnly) {
-                $this->update([
-                    'deep_link' => $deep_link
-                ]);
-            }
-        } catch (Exception $e) {
+        if ($deep_link && !$returnOnly) {
+            $this->update([
+                'deep_link' => $deep_link
+            ]);
         }
+
 
         return $deep_link;
     }
@@ -167,7 +172,7 @@ trait HasCommunityAccount
      */
     public function blocks()
     {
-        return $this->hasMany(\Jawabapp\Community\Models\AccountBlock::class, 'account_id');
+        return $this->hasMany(Models\AccountBlock::class, 'account_id');
     }
 
     /**
@@ -175,7 +180,7 @@ trait HasCommunityAccount
      */
     public function friends()
     {
-        return $this->hasMany(\Jawabapp\Community\Models\AccountFriend::class, 'account_id');
+        return $this->hasMany(Models\AccountFriend::class, 'account_id');
     }
 
     /**
@@ -183,7 +188,7 @@ trait HasCommunityAccount
      */
     public function followers()
     {
-        return $this->hasMany(\Jawabapp\Community\Models\AccountFollower::class, 'account_id');
+        return $this->hasMany(Models\AccountFollower::class, 'account_id');
     }
 
     /**
@@ -191,12 +196,12 @@ trait HasCommunityAccount
      */
     public function following()
     {
-        return $this->hasMany(\Jawabapp\Community\Models\AccountFollower::class, 'follower_account_id');
+        return $this->hasMany(Models\AccountFollower::class, 'follower_account_id');
     }
 
     public function followingTag()
     {
-        return $this->hasMany(\Jawabapp\Community\Models\TagFollower::class, 'account_id');
+        return $this->hasMany(Models\TagFollower::class, 'account_id');
     }
 
     /**
@@ -204,7 +209,7 @@ trait HasCommunityAccount
      */
     public function posts()
     {
-        return $this->hasMany(\Jawabapp\Community\Models\Post::class, 'account_id');
+        return $this->hasMany(Models\Post::class, 'account_id');
     }
 
     /**
@@ -212,7 +217,12 @@ trait HasCommunityAccount
      */
     public function groups()
     {
-        return $this->belongsToMany(\Jawabapp\Community\Models\AccountGroup::class, 'account_group_members', 'account_id', 'account_group_id');
+        return $this->belongsToMany(
+            Models\AccountGroup::class,
+            'account_group_members',
+            'account_id',
+            'account_group_id'
+        );
     }
 
     /**
@@ -272,12 +282,18 @@ trait HasCommunityAccount
 
     public function subscribePosts()
     {
-        return $this->morphedByMany(\Jawabapp\Community\Models\Post::class, 'notifiable', 'account_notifications', 'notifiable_id', 'account_id')->withTimestamps();
+        return $this->morphedByMany(
+            Models\Post::class,
+            'notifiable',
+            'account_notifications',
+            'notifiable_id',
+            'account_id'
+        )->withTimestamps();
     }
 
     public function subscribeTags()
     {
-        return $this->morphedByMany(\Jawabapp\Community\Models\Tag::class, 'notifiable', 'account_notifications', 'notifiable_id', 'account_id')->withTimestamps();
+        return $this->morphedByMany(Models\Tag::class, 'notifiable', 'account_notifications', 'notifiable_id', 'account_id')->withTimestamps();
     }
 
     public function followCounts()

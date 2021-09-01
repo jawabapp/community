@@ -13,26 +13,26 @@ return [
         'middleware' => 'web',
     ],
     'relations' => [
-//        Models\Tag::class => [
-//            'doa' => function (Models\Tag $model) {
-//                return $model->hasOne(DoaExperience::class, 'hash_tag', 'hash_tag');
-//            }
-//        ],
-//        Models\Post::class => [
-//            'tags_doa' => function (Models\Post $model) {
-//                return $model->tags()->with('doa')->join('doa_experiences', 'tags.hash_tag', '=', 'doa_experiences.hash_tag')->latest();
-//            }
-//        ],
+        //        Models\Tag::class => [
+        //            'doa' => function (Models\Tag $model) {
+        //                return $model->hasOne(DoaExperience::class, 'hash_tag', 'hash_tag');
+        //            }
+        //        ],
+        //        Models\Post::class => [
+        //            'tags_doa' => function (Models\Post $model) {
+        //                return $model->tags()->with('doa')->join('doa_experiences', 'tags.hash_tag', '=', 'doa_experiences.hash_tag')->latest();
+        //            }
+        //        ],
     ],
     'with' => [
-//        Models\Post::class => ['tags_doa'],
+        //        Models\Post::class => ['tags_doa'],
     ],
     'appends' => [
-//        Models\Post::class => [
-//            'tag_doa' => function(Models\Post $model) {
-//                return $model->tags_doa->first();
-//            },
-//        ],
+        //        Models\Post::class => [
+        //            'tag_doa' => function(Models\Post $model) {
+        //                return $model->tags_doa->first();
+        //            },
+        //        ],
     ],
     'deep_link' => [
         'class' => null,
@@ -54,6 +54,18 @@ return [
             'utm_source' => null,
             'utm_medium' => null,
             'utm_campaign' => null,
+        ],
+        'hashtag' => [
+            'url_prefix' => null,
+            'utm_source' => null,
+            'utm_medium' => null,
+            'utm_campaign' => null,
         ]
+    ],
+    'listeners' => [
+        'post_reply' => [],
+        'post_interaction' => [],
+        'post_mention' => []
     ]
+
 ];

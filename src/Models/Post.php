@@ -5,7 +5,6 @@ namespace Jawabapp\Community\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Http\Request;
 use Jawabapp\Community\Services\DeepLinkBuilder;
 use Jawabapp\Community\Traits\HasDynamicRelation;
 
@@ -254,24 +253,27 @@ class Post extends Model
     public function generateDeepLink()
     {
 
-        $deep_link = '';
+        $slug = ($this->account->slug_without_at);
+        $hash = ($this->hash);
 
-        try {
+        $deep_link = DeepLinkBuilder::generate(
+            [
+                'mode' => 'post',
+                'slug' => $slug,
+                'hash' => $hash,
+            ],
+            [
+                'domain-uri-prefix' => config('community.deep_link.post.url_prefix'),
+                'utm-source' => config('community.deep_link.post.utm_source'),
+                'utm-medium' => config('community.deep_link.post.utm_medium'),
+                'utm-campaign' => config('community.deep_link.post.utm_campaign') ?? "{$slug}-{$hash}",
+            ]
+        );
 
-            $slug = ($this->account->slug_without_at);
-            $hash = ($this->hash);
-
-            $deep_link = DeepLinkBuilder::generate(new Request([
-                'link' => "https://trends.jawab.app/{$slug}/post/{$hash}?mode=post&hash={$hash}",
-                'analyticsUtmSource' => "jawabchat",
-                'analyticsUtmMedium' => "post",
-                'analyticsUtmCampaign' => "{$slug}-{$hash}",
-            ]), 'https://post.jawab.app');
-
+        if ($deep_link) {
             $this->update([
                 'deep_link' => $deep_link
             ]);
-        } catch (\Exception $e) {
         }
 
         return $deep_link;
