@@ -13,6 +13,9 @@
         "email": "i.qanah@gmail.com",
         "role": "Developer"
     }],
+    "require": {
+        "intervention/image": "^2.6"
+    },
     "autoload": {
         "psr-4": {
             "Jawabapp\\Community\\": "src"

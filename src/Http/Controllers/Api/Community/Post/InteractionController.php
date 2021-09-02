@@ -7,6 +7,7 @@ use App\Plugins\CommonPlugin;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\PostInteraction;
 use Illuminate\Validation\ValidationException;
+use Jawabapp\Community\Events\PostInteraction as EventsPostInteraction;
 use Jawabapp\Community\Http\Controllers\Controller;
 use Jawabapp\Community\Http\Requests\Post\InteractionRequest;
 
@@ -82,19 +83,13 @@ class InteractionController extends Controller
                     ]);
 
                     if ($request->get('type') == 'vote_up' && $account->getAccountUser()->id != $post->account->getAccountUser()->id) {
-
                         $rootPost = $post->getRootPost();
-
-                        // CommonPlugin::mqttPublish($post->account->id, 'usr/community/' . $post->account->getAccountUser()->id, [
-                        //     'type' => 'interaction',
-                        //     'interaction' => $request->get('type'),
-                        //     'content' => trans('notification.post_like', ['nickname' => $account->slug], $post->account->getAccountUser()->language),
-                        //     'deeplink' => $rootPost->deep_link,
-                        //     'post_id' => $rootPost->id,
-                        //     'account_sender_nickname' => $account->slug,
-                        //     'account_sender_avatar' => $account->avatar['100*100'] ?? '',
-                        //     'account_sender_id' => $account->id
-                        // ]);
+                        event(new EventsPostInteraction([
+                            'interaction' => $request->get('type'),
+                            'deeplink' => $rootPost->deep_link,
+                            'post_id' => $rootPost->id,
+                            'sender_id' => $account->id
+                        ]));
                     }
                 }
             }

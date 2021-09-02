@@ -68,6 +68,8 @@ class CommunityServiceProvider extends ServiceProvider
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'community');
 
+        $this->app->register(EventServiceProvider::class);
+
         // Register the main class to use with the facade
         $this->app->singleton('community', function () {
             return new Community;
@@ -84,9 +86,9 @@ class CommunityServiceProvider extends ServiceProvider
         foreach (config('community.with', []) as $class => $withs) {
             foreach ($withs as $with_name => $with_callback) {
                 $with_name = is_callable($with_callback) ? $with_name : $with_callback;
-                if(is_string($with_name)) {
+                if (is_string($with_name)) {
                     $class::addGlobalScope('with_' . $with_name, function (Builder $builder) use ($with_name, $with_callback) {
-                        if(is_callable($with_callback)) {
+                        if (is_callable($with_callback)) {
                             $builder->with([$with_name => $with_callback]);
                         } else {
                             $builder->with($with_name);
