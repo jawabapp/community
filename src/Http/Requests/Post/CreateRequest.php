@@ -33,13 +33,13 @@ class CreateRequest extends FormRequest
 
         switch ($this->attachment_type) {
             case 'image':
-                $rules['attachments.*'] = 'required|image|mimetypes:' . config('mimetypes.image') . '|max:' . (env('MAX_FILE_SIZE_IMAGE') * 1024);
+                $rules['attachments.*'] = 'required|image|mimetypes:' . config('community.mimetypes.image') . '|max:' . (env('MAX_FILE_SIZE_IMAGE') * 1024);
                 break;
             case 'gif':
-                $rules['attachments.*'] = 'required|image|mimetypes:' . config('mimetypes.gif') . '|max:' . (env('MAX_FILE_SIZE_IMAGE') * 1024);
+                $rules['attachments.*'] = 'required|image|mimetypes:' . config('community.mimetypes.gif') . '|max:' . (env('MAX_FILE_SIZE_IMAGE') * 1024);
                 break;
             case 'video':
-                $rules['attachments.*'] = 'required|file|mimetypes:' . config('mimetypes.video') . '|max:' . (env('MAX_FILE_SIZE_VIDEO') * 1024);
+                $rules['attachments.*'] = 'required|file|mimetypes:' . config('community.mimetypes.video') . '|max:' . (env('MAX_FILE_SIZE_VIDEO') * 1024);
                 break;
         }
 

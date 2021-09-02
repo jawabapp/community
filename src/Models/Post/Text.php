@@ -2,11 +2,9 @@
 
 namespace Jawabapp\Community\Models\Post;
 
-use Jawabapp\Community\Models\Account;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\Tag;
-use App\Plugins\CommonPlugin;
-use Jawabapp\Community\Traits\HasDynamicRelation;
+use Jawabapp\Community\Events\PostMention;
 
 class Text extends Post
 {
@@ -41,15 +39,11 @@ class Text extends Post
 
                             $rootPost = $node->getRootPost();
 
-                            // CommonPlugin::mqttPublish($account->id, 'usr/community/' . $account->getAccountUser()->id, [
-                            //     'type' => 'mention',
-                            //     'content' => trans('notification.post_mention', ['nickname' => $node->account->slug], $account->getAccountUser()->language),
-                            //     'deeplink' => $rootPost->deep_link,
-                            //     'post_id' => $rootPost->id,
-                            //     'account_sender_nickname' => $node->account->slug,
-                            //     'account_sender_avatar' => $node->account->avatar['100*100'] ?? '',
-                            //     'account_sender_id' => $node->account->id
-                            // ]);
+                            event(new PostMention([
+                                'deeplink' => $rootPost->deep_link,
+                                'post_id' => $rootPost->id,
+                                'sender_id' => $node->account->id
+                            ]));
                         }
                     }
                 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: qanah
@@ -13,7 +14,8 @@ use Illuminate\Support\Facades\Storage;
 class VideoPlugin
 {
 
-    public static function compress($videoUrl, $with_thumbnail = false) {
+    public static function compress($videoUrl, $with_thumbnail = false)
+    {
 
         $path_parts = pathinfo($videoUrl);
 
@@ -26,26 +28,26 @@ class VideoPlugin
 
         $path = str_replace($bucketUrl, '', $dirname);
 
-        $original = $path .'/'. $basename;
+        $original = $path . '/' . $basename;
 
-//        $compress = $path . "/compress/{$filename}.mkv";
-//
-//        \FFMpeg::fromDisk('minio')
-//            ->open($original)
-//            ->export()
-//            ->toDisk('minio')
-//            ->inFormat(new \FFMpeg\Format\Video\X264('libmp3lame', 'libx264'))
-//            ->save($compress);
+        //        $compress = $path . "/compress/{$filename}.mkv";
+        //
+        //        \FFMpeg::fromDisk('minio')
+        //            ->open($original)
+        //            ->export()
+        //            ->toDisk('minio')
+        //            ->inFormat(new \FFMpeg\Format\Video\X264('libmp3lame', 'libx264'))
+        //            ->save($compress);
 
-        if($with_thumbnail) {
+        if ($with_thumbnail) {
             $thumbnail = $path . "/thumbnails/{$filename}.png";
 
-            \FFMpeg::fromDisk('minio')
-                ->open($original)
-                ->getFrameFromSeconds(1)
-                ->export()
-                ->toDisk('minio')
-                ->save($thumbnail);
+            // \FFMpeg::fromDisk('minio')
+            //     ->open($original)
+            //     ->getFrameFromSeconds(1)
+            //     ->export()
+            //     ->toDisk('minio')
+            //     ->save($thumbnail);
 
             $image = \Image::make(Storage::url($thumbnail));
 
@@ -61,5 +63,4 @@ class VideoPlugin
             Storage::url($original) // Storage::url($compress)
         ];
     }
-
 }

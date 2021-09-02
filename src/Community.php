@@ -3,11 +3,11 @@
 namespace Jawabapp\Community;
 
 use Carbon\Carbon;
-use Jawabapp\Community\Models\Post;
-use Jawabapp\Community\Plugins\CommonPlugin;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
-use Jawabapp\Community\Models\Tag;
+use Jawabapp\Community\Models;
+use Jawabapp\Community\Models\Post;
+use Jawabapp\Community\Events\PostReply;
+use Illuminate\Validation\ValidationException;
 
 class Community
 {
@@ -39,11 +39,11 @@ class Community
             ]);
         }
 
-        if ($request->has('parent_post_id')) {
+        if ($request->parent_post_id) {
             $parent_post = Post::find($request->get('parent_post_id'));
         }
 
-        if ($request->has('post')) {
+        if ($request->post) {
             $this->post = Post\Text::create([
                 'account_id' => $account->id,
                 'parent_post_id' => $parent_post->id ?? null,
@@ -66,7 +66,7 @@ class Community
                         'is_status' => false
                     ]);
 
-                    if (is_null($this->post)) {
+                    if (empty($this->post) || is_null($this->post)) {
                         $this->post = $post;
                     }
                 }
@@ -84,15 +84,11 @@ class Community
 
                 $rootPost = $post->getRootPost();
 
-                // CommonPlugin::mqttPublish($parentPost->account->id, 'usr/community/' . $parentPost->account->getAccountUser()->id, [
-                //     'type' => 'reply',
-                //     'content' => trans('notification.post_reply', ['nickname' => $account->slug], $parentPost->account->getAccountUser()->language),
-                //     'deeplink' => $rootPost->deep_link,
-                //     'post_id' => $rootPost->id,
-                //     'account_sender_nickname' => $account->slug,
-                //     'account_sender_avatar' => $account->avatar['100*100'] ?? '',
-                //     'account_sender_id' => $account->id
-                // ]);
+                event(new PostReply([
+                    'deeplink' => $rootPost->deep_link,
+                    'post_id' => $rootPost->id,
+                    'sender_id' => $account->id
+                ]));
             }
         }
 

@@ -33,7 +33,7 @@ class CreateController extends Controller
             'parent_post_id' => $request->get('parent_post_id'),
             'post' => $request->get('post'),
             'attachment_type' => $request->get('attachment_type'),
-            'attachments' => $request->get('attachments'),
+            'attachments' => $request->attachments,
         ]));
 
         return response()->json([

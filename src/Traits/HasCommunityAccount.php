@@ -7,7 +7,14 @@ use Jawabapp\Community\Services\DeepLinkBuilder;
 
 trait HasCommunityAccount
 {
-    // protected $fillable = ['slug', 'deep_link', 'extra_info', 'topic', 'post_count', 'followers_count', 'following_count', 'mutual_follower_count'];
+    protected $dynamic_fillable = ['slug', 'deep_link', 'extra_info', 'topic', 'post_count', 'followers_count', 'following_count', 'mutual_follower_count'];
+
+    public function getFillable()
+    {
+        $this->fillable = array_unique(array_merge($this->dynamic_fillable, $this->fillable ?? []));
+
+        return parent::getFillable();
+    }
 
     public function getDefaultAccount()
     {

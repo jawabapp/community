@@ -2,11 +2,10 @@
 
 namespace Jawabapp\Community\Models\Post;
 
-use App\Jobs\CompressVideoJob;
+use Jawabapp\Community\Jobs\CompressVideoJob;
 use Jawabapp\Community\Models\Post;
 use Illuminate\Http\UploadedFile;
 use Storage;
-use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class Video extends Post
 {
