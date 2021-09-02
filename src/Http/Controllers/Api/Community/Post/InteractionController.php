@@ -81,20 +81,20 @@ class InteractionController extends Controller
                         'type' => $request->get('type')
                     ]);
 
-                    if ($request->get('type') == 'vote_up' && $account->user_id != $post->account->user->id) {
+                    if ($request->get('type') == 'vote_up' && $account->getAccountUser()->id != $post->account->getAccountUser()->id) {
 
                         $rootPost = $post->getRootPost();
 
-                        CommonPlugin::mqttPublish($post->account->id, 'usr/community/' . $post->account->user->id, [
-                            'type' => 'interaction',
-                            'interaction' => $request->get('type'),
-                            'content' => trans('notification.post_like', ['nickname' => $account->slug], $post->account->user->language),
-                            'deeplink' => $rootPost->deep_link,
-                            'post_id' => $rootPost->id,
-                            'account_sender_nickname' => $account->slug,
-                            'account_sender_avatar' => $account->avatar['100*100'] ?? '',
-                            'account_sender_id' => $account->id
-                        ]);
+                        // CommonPlugin::mqttPublish($post->account->id, 'usr/community/' . $post->account->getAccountUser()->id, [
+                        //     'type' => 'interaction',
+                        //     'interaction' => $request->get('type'),
+                        //     'content' => trans('notification.post_like', ['nickname' => $account->slug], $post->account->getAccountUser()->language),
+                        //     'deeplink' => $rootPost->deep_link,
+                        //     'post_id' => $rootPost->id,
+                        //     'account_sender_nickname' => $account->slug,
+                        //     'account_sender_avatar' => $account->avatar['100*100'] ?? '',
+                        //     'account_sender_id' => $account->id
+                        // ]);
                     }
                 }
             }

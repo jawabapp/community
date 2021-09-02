@@ -2,9 +2,9 @@
 
 namespace Jawabapp\Community\Http\Resources\Api;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\Resource;
 
-class FollowingTagResource extends JsonResource
+class FollowingTagResource extends Resource
 {
     /**
      * Transform the resource into an array.

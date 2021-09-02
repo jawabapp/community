@@ -25,6 +25,7 @@ class CreateTagsTable extends Migration
             $table->softDeletes();
 
             $table->index('tag_group_id');
+            $table->index('hash_tag');
         });
     }
 

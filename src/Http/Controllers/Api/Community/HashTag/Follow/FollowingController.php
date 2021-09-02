@@ -39,7 +39,7 @@ class FollowingController extends Controller
     public function index($accountId, Request $request): JsonResponse
     {
 
-        $account = Account::find($accountId);
+        $account = config('community.user_class')::find($accountId);
 
         if (!$account) {
             throw ValidationException::withMessages([

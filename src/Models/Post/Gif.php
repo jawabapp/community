@@ -5,6 +5,7 @@ namespace Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\Post;
 use Illuminate\Http\UploadedFile;
 use Storage;
+use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class Gif extends Post
 {

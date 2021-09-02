@@ -6,9 +6,11 @@ use App\Jobs\CompressVideoJob;
 use Jawabapp\Community\Models\Post;
 use Illuminate\Http\UploadedFile;
 use Storage;
+use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class Video extends Post
 {
+
     public static $post_path =  'post' . DIRECTORY_SEPARATOR . 'video';
 
     protected static function boot()

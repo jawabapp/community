@@ -41,7 +41,7 @@ class PostsController extends Controller
         }
 
         if ($request->get('slug')) {
-            $account = Account::where('slug', 'like', "%{$request->get('slug')}%")->first();
+            $account = config('community.user_class')::where('slug', 'like', "%{$request->get('slug')}%")->first();
             if ($account) {
                 $query->where('posts.account_id', $account->id);
             }
@@ -75,7 +75,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-               return view('community::admin.posts.create');
+        return view('community::admin.posts.create');
     }
 
     /**
@@ -86,14 +86,14 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-               $item = $this->repository->find($id);
-        
-               if (!$item->id) {
-                   Session::flash('flash_message', ['type' => 'error', 'message' => 'Invalid Resource']);
-                   return redirect(route('community.posts.index'));
-               }
-        
-               return view('community::admin.posts.show')->with('item', $item);
+        $item = $this->repository->find($id);
+
+        if (!$item->id) {
+            Session::flash('flash_message', ['type' => 'error', 'message' => 'Invalid Resource']);
+            return redirect(route('community.posts.index'));
+        }
+
+        return view('community::admin.posts.show')->with('item', $item);
     }
 
     /**

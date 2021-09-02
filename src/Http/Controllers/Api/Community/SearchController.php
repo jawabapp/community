@@ -140,7 +140,7 @@ class SearchController extends Controller
         $keyword = preg_replace('/\s+/', ' ', $keyword);
         $keyword = trim($keyword);
 
-        return Account::where('slug', 'LIKE', "%{$query}%")
+        return config('community.user_class')::where('slug', 'LIKE', "%{$query}%")
             ->orWhere('nickname', 'LIKE', "%{$keyword}%")
             ->orWhere('status', 'LIKE', "%{$keyword}%")
             ->paginate(10);

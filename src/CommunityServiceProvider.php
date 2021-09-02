@@ -5,6 +5,8 @@ namespace Jawabapp\Community;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class CommunityServiceProvider extends ServiceProvider
 {
@@ -33,6 +35,7 @@ class CommunityServiceProvider extends ServiceProvider
         $this->registerRoutes();
 
         if ($this->app->runningInConsole()) {
+
             $this->publishes([
                 __DIR__ . '/../config/config.php' => config_path('community.php'),
             ], 'config');
@@ -72,17 +75,32 @@ class CommunityServiceProvider extends ServiceProvider
 
         foreach (config('community.relations', []) as $class => $relations) {
             foreach ($relations as $relation_name => $relation_callback) {
-                if(method_exists($class, 'addDynamicRelation')) {
+                if (method_exists($class, 'addDynamicRelation')) {
                     $class::addDynamicRelation($relation_name, $relation_callback);
                 }
             }
         }
 
         foreach (config('community.with', []) as $class => $withs) {
-            foreach ($withs as $with) {
-                $class::addGlobalScope('with_'. $with, function (Builder $builder) use ($with) {
-                    $builder->with($with);
-                });
+            foreach ($withs as $with_name => $with_callback) {
+                $with_name = is_callable($with_callback) ? $with_name : $with_callback;
+                if(is_string($with_name)) {
+                    $class::addGlobalScope('with_' . $with_name, function (Builder $builder) use ($with_name, $with_callback) {
+                        if(is_callable($with_callback)) {
+                            $builder->with([$with_name => $with_callback]);
+                        } else {
+                            $builder->with($with_name);
+                        }
+                    });
+                }
+            }
+        }
+
+        foreach (config('community.appends', []) as $class => $appends) {
+            foreach ($appends as $append_name => $append_callback) {
+                if (method_exists($class, 'addDynamicAppend')) {
+                    $class::addDynamicAppend($append_name, $append_callback);
+                }
             }
         }
     }

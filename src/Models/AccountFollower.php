@@ -3,9 +3,12 @@
 namespace Jawabapp\Community\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class AccountFollower extends Model
 {
+    use HasDynamicRelation;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -20,7 +23,7 @@ class AccountFollower extends Model
      */
     public function account()
     {
-        return $this->belongsTo(Account::class, 'account_id');
+        return $this->belongsTo(config('community.user_class'), 'account_id');
     }
 
     /**
@@ -28,7 +31,6 @@ class AccountFollower extends Model
      */
     public function follower()
     {
-        return $this->belongsTo(Account::class, 'follower_account_id');
+        return $this->belongsTo(config('community.user_class'), 'follower_account_id');
     }
-
 }

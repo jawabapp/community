@@ -2,10 +2,9 @@
 
 namespace Jawabapp\Community\Models;
 
-use Jawabapp\Community\Services\DeepLinkBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Http\Request;
+use Jawabapp\Community\Services\DeepLinkBuilder;
 use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class Tag extends Model
@@ -41,7 +40,7 @@ class Tag extends Model
 
     public function getIsSubscribedAttribute()
     {
-        $activeAccountId = Account::getActiveAccountId();
+        $activeAccountId = config('community.user_class')::getActiveAccountId();
         if ($activeAccountId) {
             return $this->subscribedAccounts()->where('account_id', $activeAccountId)->exists();
         }
@@ -70,12 +69,12 @@ class Tag extends Model
 
     public function followers()
     {
-        return $this->belongsToMany(Account::class, 'tag_followers', 'tag_id', 'account_id');
+        return $this->belongsToMany(config('community.user_class'), 'tag_followers', 'tag_id', 'account_id');
     }
 
     public function isAccountFollowingBy()
     {
-        $activeAccountId = Account::getActiveAccountId();
+        $activeAccountId = config('community.user_class')::getActiveAccountId();
 
         if ($activeAccountId) {
             return TagFollower::whereAccountId($activeAccountId)
@@ -101,24 +100,25 @@ class Tag extends Model
 
     public function generateDeepLink()
     {
+        $hash_tag = (str_replace('#', '', $this->hash_tag));
 
-        $deep_link = '';
+        $deep_link = DeepLinkBuilder::generate(
+            [
+                'mode' => 'hashtag',
+                'hashtag' => $hash_tag,
+            ],
+            [
+                'domain-uri-prefix' => config('community.deep_link.hashtag.url_prefix'),
+                'utm-source' => config('community.deep_link.hashtag.utm_source'),
+                'utm-medium' => config('community.deep_link.hashtag.utm_medium'),
+                'utm-campaign' => config('community.deep_link.hashtag.utm_campaign') ?? "{$hash_tag}",
+            ]
+        );
 
-        try {
-
-            $hash_tag = (str_replace('#', '', $this->hash_tag));
-
-            $deep_link = DeepLinkBuilder::generate(new Request([
-                'link' => "https://trends.jawab.app/hashtag/{$hash_tag}?mode=hashtag&hashtag={$hash_tag}",
-                'analyticsUtmSource' => "jawabchat",
-                'analyticsUtmMedium' => "hashtag",
-                'analyticsUtmCampaign' => "{$hash_tag}",
-            ]), 'https://hashtag.jawab.app');
-
+        if ($deep_link) {
             $this->update([
                 'deep_link' => $deep_link
             ]);
-        } catch (\Exception $e) {
         }
 
         return $deep_link;
@@ -126,6 +126,6 @@ class Tag extends Model
 
     public function subscribedAccounts()
     {
-        return $this->morphToMany(Account::class, 'notifiable', 'account_notifications')->withTimestamps();
+        return $this->morphToMany(config('community.user_class'), 'notifiable', 'account_notifications', null, 'account_id')->withTimestamps();
     }
 }

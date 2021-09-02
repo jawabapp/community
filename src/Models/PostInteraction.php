@@ -3,9 +3,12 @@
 namespace Jawabapp\Community\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class PostInteraction extends Model
 {
+    use HasDynamicRelation;
+
     protected $fillable = [
         'post_id',
         'account_id',
@@ -54,19 +57,19 @@ class PostInteraction extends Model
 
     public function account()
     {
-        return $this->belongsTo(Account::class, 'account_id');
+        return $this->belongsTo(config('community.user_class'), 'account_id');
     }
 
     public function post()
     {
-        return $this->belongsTo(Post::class, 'post_id');
+        return $this->belongsTo(Post::class);
     }
 
     public static function assignInteractionToAccount($interaction, $postId, $root = true, $accountId = null)
     {
 
         if (is_null($accountId)) {
-            $accountId = Account::getActiveAccountId();
+            $accountId = config('community.user_class')::getActiveAccountId();
         }
 
         $post = Post::find($postId);

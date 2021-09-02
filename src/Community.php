@@ -6,23 +6,26 @@ use Carbon\Carbon;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Plugins\CommonPlugin;
 use Illuminate\Validation\ValidationException;
-use Jawabapp\Community\Http\Requests\Post\CreateRequest;
+use Illuminate\Http\Request;
+use Jawabapp\Community\Models\Tag;
+
 class Community
 {
     // Build your next great package.
-    public function createPost(CreateRequest $request) {
-      // creatre posts
-      
-        /** @var \Jawabapp\Community\Models\User $user */
-        $user = $request->user();
+    public function createPost(Request $request)
+    {
+        // creatre posts
 
-        if ($user->is_anonymous) {
+        /** @var \Jawabapp\Community\Models\User $user */
+        $user = auth('api')->user();
+
+        if (!empty($user->is_anonymous)) {
             throw ValidationException::withMessages([
                 'id' => [trans('User is anonymous')],
             ]);
         }
 
-        if (Carbon::parse($user->block_until)->isFuture()) {
+        if (!empty($user->block_until) && Carbon::parse($user->block_until)->isFuture()) {
             throw ValidationException::withMessages([
                 'account_id' => [trans('Account is blocked until') . ' ' . $user->block_until],
             ]);
@@ -49,7 +52,7 @@ class Community
             ]);
         }
 
-        if ($request->has('attachment_type')) {
+        if (!empty($request->get('attachment_type'))) {
 
             $postClass = Post::class . '\\' . ucfirst($request->get('attachment_type'));
 
@@ -77,23 +80,35 @@ class Community
         if ($post->parent_post_id) {
             $parentPost = Post::whereId($post->parent_post_id)->first();
 
-            if ($account->user_id != $parentPost->account->user->id) {
+            if ($account->user_id != $parentPost->account->getAccountUser()->id) {
 
                 $rootPost = $post->getRootPost();
 
-                CommonPlugin::mqttPublish($parentPost->account->id, 'usr/community/' . $parentPost->account->user->id, [
-                    'type' => 'reply',
-                    'content' => trans('notification.post_reply', ['nickname' => $account->slug], $parentPost->account->user->language),
-                    'deeplink' => $rootPost->deep_link,
-                    'post_id' => $rootPost->id,
-                    'account_sender_nickname' => $account->slug,
-                    'account_sender_avatar' => $account->avatar['100*100'] ?? '',
-                    'account_sender_id' => $account->id
-                ]);
+                // CommonPlugin::mqttPublish($parentPost->account->id, 'usr/community/' . $parentPost->account->getAccountUser()->id, [
+                //     'type' => 'reply',
+                //     'content' => trans('notification.post_reply', ['nickname' => $account->slug], $parentPost->account->getAccountUser()->language),
+                //     'deeplink' => $rootPost->deep_link,
+                //     'post_id' => $rootPost->id,
+                //     'account_sender_nickname' => $account->slug,
+                //     'account_sender_avatar' => $account->avatar['100*100'] ?? '',
+                //     'account_sender_id' => $account->id
+                // ]);
             }
         }
 
         return $post;
     }
 
+    public function createPostWithTag(Request $request)
+    {
+        $post = $this->createPost($request);
+        $this->linkPostWithTag($post, $request->get('hash_tag'));
+    }
+
+    public function linkPostWithTag($post, $hash_tag)
+    {
+        $tag = Tag::firstOrCreate(['hash_tag' => $hash_tag]);
+
+        $post->tags()->attach([$tag->id]);
+    }
 }

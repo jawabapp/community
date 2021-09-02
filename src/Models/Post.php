@@ -2,16 +2,15 @@
 
 namespace Jawabapp\Community\Models;
 
-use Jawabapp\Community\Services\Caching;
-use Jawabapp\Community\Services\DeepLinkBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Http\Request;
+use Jawabapp\Community\Services\DeepLinkBuilder;
+use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class Post extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasDynamicRelation;
 
     protected $table = 'posts';
 
@@ -52,7 +51,7 @@ class Post extends Model
 
     public function getAccountInteractionAttribute()
     {
-        $activeAccountId = Account::getActiveAccountId();
+        $activeAccountId = config('community.user_class')::getActiveAccountId();
 
         if ($activeAccountId) {
             return PostInteraction::wherePostId($this->getKey())
@@ -66,7 +65,7 @@ class Post extends Model
 
     public function getIsSubscribedAttribute()
     {
-        $activeAccountId = Account::getActiveAccountId();
+        $activeAccountId = config('community.user_class')::getActiveAccountId();
         if ($activeAccountId) {
             return $this->subscribedAccounts()->where('account_id', $activeAccountId)->exists();
         }
@@ -91,7 +90,7 @@ class Post extends Model
 
         static::addGlobalScope('active_account', function (Builder $builder) {
 
-            $activeAccountId = Account::getActiveAccountId();
+            $activeAccountId = config('community.user_class')::getActiveAccountId();
 
             if ($activeAccountId) {
                 $builder->whereNotIn('posts.id', function ($q) use ($activeAccountId) {
@@ -137,10 +136,10 @@ class Post extends Model
 
     private function updatePostAccountCount()
     {
-        if($this->account)
-        $this->account->update([
-            'post_count' => $this->account->getPostCount()
-        ]);
+        if ($this->account)
+            $this->account->update([
+                'post_count' => $this->account->getPostCount()
+            ]);
     }
 
     private function updatePostTagsCount()
@@ -187,12 +186,12 @@ class Post extends Model
 
     public function resetCache()
     {
-         Caching::deleteCacheByTags('posts');
+        //
     }
 
     public function account()
     {
-        return $this->belongsTo(Account::class, 'account_id');
+        return $this->belongsTo(config('community.user_class'), 'account_id');
     }
 
     public function interactions()
@@ -254,24 +253,27 @@ class Post extends Model
     public function generateDeepLink()
     {
 
-        $deep_link = '';
+        $slug = ($this->account->slug_without_at);
+        $hash = ($this->hash);
 
-        try {
+        $deep_link = DeepLinkBuilder::generate(
+            [
+                'mode' => 'post',
+                'slug' => $slug,
+                'hash' => $hash,
+            ],
+            [
+                'domain-uri-prefix' => config('community.deep_link.post.url_prefix'),
+                'utm-source' => config('community.deep_link.post.utm_source'),
+                'utm-medium' => config('community.deep_link.post.utm_medium'),
+                'utm-campaign' => config('community.deep_link.post.utm_campaign') ?? "{$slug}-{$hash}",
+            ]
+        );
 
-            $slug = ($this->account->slug_without_at);
-            $hash = ($this->hash);
-
-            $deep_link = DeepLinkBuilder::generate(new Request([
-                'link' => "https://trends.jawab.app/{$slug}/post/{$hash}?mode=post&hash={$hash}",
-                'analyticsUtmSource' => "jawabchat",
-                'analyticsUtmMedium' => "post",
-                'analyticsUtmCampaign' => "{$slug}-{$hash}",
-            ]), 'https://post.jawab.app');
-
+        if ($deep_link) {
             $this->update([
                 'deep_link' => $deep_link
             ]);
-        } catch (\Exception $e) {
         }
 
         return $deep_link;
@@ -292,7 +294,7 @@ class Post extends Model
     public static function getUserFilteredData(Builder $builder)
     {
 
-        $activeAccountId = Account::getActiveAccountId();
+        $activeAccountId = config('community.user_class')::getActiveAccountId();
         if ($activeAccountId) {
 
             $tagGroupFollower = TagGroupFollower::where('account_id', $activeAccountId)->count();
@@ -366,6 +368,6 @@ class Post extends Model
 
     public function subscribedAccounts()
     {
-        return $this->morphToMany(Account::class, 'notifiable', 'account_notifications')->withTimestamps();
+        return $this->morphToMany(config('community.user_class'), 'notifiable', 'account_notifications', null, 'account_id')->withTimestamps();
     }
 }

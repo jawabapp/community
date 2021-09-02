@@ -2,11 +2,13 @@
 
 namespace Jawabapp\Community\Models;
 
-use Jawabapp\Community\Services\Caching;
 use Illuminate\Database\Eloquent\Model;
+use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class TagGroupFollower extends Model
 {
+    use HasDynamicRelation;
+
     protected $fillable = [
         'tag_group_id',
         'account_id',
@@ -27,6 +29,6 @@ class TagGroupFollower extends Model
 
     public function resetCache()
     {
-        Caching::deleteCacheByTags("posts-{$this->account_id}");
+        //
     }
 }

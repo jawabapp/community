@@ -7,6 +7,7 @@ use App\Plugins\ImagePlugin;
 use Illuminate\Http\UploadedFile;
 use Storage;
 use Image as FacadeImage;
+use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class Image extends Post
 {
