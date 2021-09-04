@@ -4,7 +4,6 @@ namespace Jawabapp\Community;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Jawabapp\Community\Models;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Events\PostReply;
 use Illuminate\Validation\ValidationException;
@@ -79,7 +78,7 @@ class Community
         if ($post->parent_post_id) {
             $parentPost = Post::whereId($post->parent_post_id)->first();
 
-            if ($account->user_id != $parentPost->account->getAccountUser()->id) {
+            if ($account->id != $parentPost->account->id) {
 
                 $rootPost = $post->getRootPost();
 

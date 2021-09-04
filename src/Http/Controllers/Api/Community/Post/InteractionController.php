@@ -81,8 +81,10 @@ class InteractionController extends Controller
                         'type' => $request->get('type')
                     ]);
 
-                    if ($request->get('type') == 'vote_up' && $account->getAccountUser()->id != $post->account->getAccountUser()->id) {
+                    if ($request->get('type') == 'vote_up' && $account->id != $post->account->id) {
+
                         $rootPost = $post->getRootPost();
+
                         event(new EventsPostInteraction([
                             'interaction' => $request->get('type'),
                             'deeplink' => $rootPost->deep_link,

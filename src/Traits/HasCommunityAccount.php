@@ -18,17 +18,12 @@ trait HasCommunityAccount
 
     public function getDefaultAccount()
     {
-        return null;
+        return $this;
     }
 
     public function getAccount($account_id)
     {
-        return null;
-    }
-
-    public function getAccountUser()
-    {
-        return null;
+        return $this;
     }
 
     public function getSlugWithoutAtAttribute()
