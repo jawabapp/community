@@ -18,17 +18,17 @@ trait HasCommunityAccount
 
     public function getDefaultAccount()
     {
-        return $this->accounts()->where('accounts.default', '=', 1)->first();
+        return null;
     }
 
     public function getAccount($account_id)
     {
-        return $account_id;
+        return null;
     }
 
     public function getAccountUser()
     {
-        return $this->user()->first();
+        return null;
     }
 
     public function getSlugWithoutAtAttribute()
@@ -77,12 +77,12 @@ trait HasCommunityAccount
 
     public static function getActiveAccountId()
     {
-        if (auth('api')->check()) {
+        if (auth()->check()) {
 
             static $defaultAccountId;
 
             if (is_null($defaultAccountId)) {
-                $defaultAccountId = auth('api')->user()->getDefaultAccount()->id ?? false;
+                $defaultAccountId = auth()->user()->getDefaultAccount()->id ?? false;
             }
 
             $activeAccount = request()->get('active_account', $defaultAccountId);

@@ -24,7 +24,6 @@ class FollowController extends Controller
     public function index($accountId, FollowRequest $request): JsonResponse
     {
         $user = $request->user();
-        /** @var \Jawabapp\Community\Models\User $user */
 
         if ($user->is_anonymous) {
             throw ValidationException::withMessages([

@@ -25,7 +25,7 @@ class EditController extends Controller
 
     public function edit($id, EditRequest $request): JsonResponse
     {
-        /** @var \Jawabapp\Community\Models\User $user */
+
         $user = $request->user();
 
         if ($user->is_anonymous) {

@@ -16,8 +16,7 @@ class Community
     {
         // creatre posts
 
-        /** @var \Jawabapp\Community\Models\User $user */
-        $user = auth('api')->user();
+        $user = auth()->user();
 
         if (!empty($user->is_anonymous)) {
             throw ValidationException::withMessages([

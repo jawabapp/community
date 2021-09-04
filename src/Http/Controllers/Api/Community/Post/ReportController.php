@@ -35,7 +35,6 @@ class ReportController extends Controller
     public function report($id, ReportRequest $request)
     {
 
-        /** @var \Jawabapp\Community\Models\User $user */
         $user = $request->user();
 
         //        if($user->is_anonymous) {
