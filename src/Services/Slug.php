@@ -10,9 +10,8 @@
 namespace Jawabapp\Community\Services;
 
 
-use Jawabapp\Community\Models\Account;
 use Illuminate\Support\Str;
-use Webcraft\Random\RandomFacade as Random;
+use Random;
 
 class Slug
 {

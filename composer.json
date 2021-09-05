@@ -15,7 +15,7 @@
     }],
     "require": {
         "intervention/image": "^2.6",
-        "webcraft/laravel-random": "^2.1"
+        "webcraft/laravel-random": "2.0.1"
     },
     "autoload": {
         "psr-4": {
