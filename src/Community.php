@@ -5,6 +5,7 @@ namespace Jawabapp\Community;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Jawabapp\Community\Models\Post;
+use Jawabapp\Community\Models\Tag;
 use Jawabapp\Community\Events\PostReply;
 use Illuminate\Validation\ValidationException;
 
