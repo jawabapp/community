@@ -4,6 +4,7 @@ namespace Jawabapp\Community\Traits;
 
 use Jawabapp\Community\Models;
 use Jawabapp\Community\Services\DeepLinkBuilder;
+use Jawabapp\Community\Services\Slug;
 
 trait HasCommunityAccount
 {
@@ -305,5 +306,25 @@ trait HasCommunityAccount
             'followers_count' => $this->getFollowersCount(),
             'mutual_follower_count' => $this->getMutualFollowerCount(),
         ]);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function (self $node) {
+            if (empty($node->getAttribute('name')) || $node->isDirty('name')) {
+
+                if (empty($node->getAttribute('name'))) {
+                    $nickname = \Str::random(16);
+                } else {
+                    $nickname = $node->getAttribute('name');
+                }
+
+                $node->setAttribute('slug', app(Slug::class)->createSlug($nickname, $node->getKey()));
+                $node->setAttribute('deep_link', $node->generateDeepLink(true));
+            }
+            $node->setAttribute('topic', 'notifications/accounts/' . $node->id);
+        });
     }
 }

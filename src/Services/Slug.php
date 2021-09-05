@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ibraheemqanah
@@ -11,7 +12,7 @@ namespace Jawabapp\Community\Services;
 
 use Jawabapp\Community\Models\Account;
 use Illuminate\Support\Str;
-use Random;
+use Webcraft\Random\RandomFacade as Random;
 
 class Slug
 {
@@ -31,14 +32,14 @@ class Slug
         $allSlugs = $this->getRelatedSlugs($slug, $id);
 
         // If we haven't used it before then we are all good.
-        if (! $allSlugs->contains('slug', strtolower($slug))){
+        if (!$allSlugs->contains('slug', strtolower($slug))) {
             return $slug;
         }
 
         // Just append numbers like a savage until we find not used.
         for ($i = 1; $i <= 10; $i++) {
             $newSlug = $slug . '-' . Random::generateString($i, 'abcdefghijklmnopqrstuvwxyz1234567890');
-            if (! $allSlugs->contains('slug', strtolower($newSlug))) {
+            if (!$allSlugs->contains('slug', strtolower($newSlug))) {
                 return $newSlug;
             }
         }
@@ -48,7 +49,7 @@ class Slug
 
     protected function getRelatedSlugs($slug, $id = 0)
     {
-        return Account::select(\DB::raw('LOWER(`slug`) AS slug'))->whereRaw("LOWER(`slug`) like ?", [strtolower($slug) . '%'])
+        return config('community.user_class')::select(\DB::raw('LOWER(`slug`) AS slug'))->whereRaw("LOWER(`slug`) like ?", [strtolower($slug) . '%'])
             ->where('id', '<>', $id)
             ->get();
     }
@@ -60,16 +61,16 @@ class Slug
         // Convert all dashes/underscores into separator
         $flip = $separator === '-' ? '_' : '-';
 
-        $title = preg_replace('!['.preg_quote($flip).']+!u', $separator, $title);
+        $title = preg_replace('![' . preg_quote($flip) . ']+!u', $separator, $title);
 
         // Replace @ with the word 'at'
-        $title = str_replace('@', $separator.'at'.$separator, $title);
+        $title = str_replace('@', $separator . 'at' . $separator, $title);
 
         // Remove all characters that are not the separator, letters, numbers, or whitespace.
-        $title = preg_replace('![^'.preg_quote($separator).'\pL\pN\s]+!u', '', $title);
+        $title = preg_replace('![^' . preg_quote($separator) . '\pL\pN\s]+!u', '', $title);
 
         // Replace all separator characters and whitespace by a single separator
-        $title = preg_replace('!['.preg_quote($separator).'\s]+!u', $separator, $title);
+        $title = preg_replace('![' . preg_quote($separator) . '\s]+!u', $separator, $title);
 
         $title = trim($title, $separator);
 
