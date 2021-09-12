@@ -82,7 +82,7 @@ If you discover any security related issues, please email trmdy@hotmail.com inst
 
 ## Credits
 
-- [Ibrahim Qana](https://github.com/jawab)
+- [Ibraheem Qanah](https://github.com/Qanah)
 - [All Contributors](../../contributors)
 
 ## License
