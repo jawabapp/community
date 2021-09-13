@@ -241,9 +241,8 @@ class Post extends Model
         return $this->interactions()
             ->whereIn('type', PostInteraction::SINGLE_TYPES)
             ->where('account_id', '!=', $this->account_id)
-            ->groupBy('account_id')
             ->limit(3)
-            ->select('account_id')
+            ->selectRaw('distinct(account_id)')
             ->get()
             ->pluck('account_id');
     }

@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\Tag;
-use Jawabapp\Community\Events\PostReply;
+use Jawabapp\Community\Events\CreatePostReply;
 use Illuminate\Validation\ValidationException;
 
 class Community
@@ -80,10 +80,9 @@ class Community
             $parentPost = Post::whereId($post->parent_post_id)->first();
 
             if ($account->id != $parentPost->account->id) {
-
                 $rootPost = $post->getRootPost();
 
-                event(new PostReply([
+                event(new CreatePostReply([
                     'deeplink' => $rootPost->deep_link,
                     'post_id' => $rootPost->id,
                     'sender_id' => $account->id
