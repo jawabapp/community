@@ -24,10 +24,17 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (config('community.listeners.post_reply')) {
+        if (config('community.listeners.create_post_reply')) {
             Event::listen(
-                Events\PostReply::class,
-                config('community.listeners.post_reply')
+                Events\CreatePostReply::class,
+                config('community.listeners.create_post_reply')
+            );
+        }
+
+        if (config('community.listeners.delete_post_reply')) {
+            Event::listen(
+                Events\DeletePostReply::class,
+                config('community.listeners.delete_post_reply')
             );
         }
 

@@ -6,6 +6,7 @@ use Jawabapp\Community\Models\Post;
 use Illuminate\Validation\ValidationException;
 use Jawabapp\Community\Http\Controllers\Controller;
 use Jawabapp\Community\Http\Requests\Post\DeleteRequest;
+use Jawabapp\Community\Events\DeletePostReply;
 
 /**
  * @group  Community management
@@ -47,7 +48,13 @@ class DeleteController extends Controller
             ]);
         }
 
+        $parent_post_id = $post->parent_post_id;
         $post->delete();
+
+        event(new DeletePostReply([
+            'post_id' => $parent_post_id,
+            'sender_id' => $account->id
+        ]));
 
         return response()->json(null, 204);
     }
