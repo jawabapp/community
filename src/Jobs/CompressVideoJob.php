@@ -63,15 +63,16 @@ class CompressVideoJob implements ShouldQueue
 
                 list($compress, $thumbnail, $height, $width) = VideoPlugin::compress($original, true);
 
+                $extra_info = $this->videoPost->extra_info;
+
+                $extra_info['original'] = $original;
+                $extra_info['compress'] = $compress;
+                $extra_info['thumbnail'] = $thumbnail;
+                $extra_info['height'] = $height;
+                $extra_info['width'] = $width;
+
                 $this->videoPost->update([
-                    // 'content' => $compress,
-                    'extra_info' => [
-                        'original' => $original,
-                        'compress' => $compress,
-                        'thumbnail' => $thumbnail,
-                        'height' => $height,
-                        'width' => $width,
-                    ]
+                    'extra_info' => $extra_info
                 ]);
 
                 $this->videoPost->resetCache();

@@ -7,7 +7,8 @@ use App\Plugins\CommonPlugin;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\PostInteraction;
 use Illuminate\Validation\ValidationException;
-use Jawabapp\Community\Events\PostInteraction as EventsPostInteraction;
+use Jawabapp\Community\Events\CreatePostInteraction;
+use Jawabapp\Community\Events\DeletePostInteraction;
 use Jawabapp\Community\Http\Controllers\Controller;
 use Jawabapp\Community\Http\Requests\Post\InteractionRequest;
 
@@ -68,6 +69,13 @@ class InteractionController extends Controller
             if ($request->get('isRemove')) {
                 if ($postInteraction) {
                     $postInteraction->delete();
+
+                    $rootPost = $post->getRootPost();
+                    event(new DeletePostInteraction([
+                        'interaction' => $request->get('type'),
+                        'post_id' => $rootPost->id,
+                        'sender_id' => $account->id
+                    ]));
                 }
             } else {
                 if ($postInteraction) {
@@ -81,11 +89,11 @@ class InteractionController extends Controller
                         'type' => $request->get('type')
                     ]);
 
-                    if ($request->get('type') == 'vote_up' && $account->id != $post->account->id) {
+                    if ($account->id != $post->account->id) {
 
                         $rootPost = $post->getRootPost();
 
-                        event(new EventsPostInteraction([
+                        event(new CreatePostInteraction([
                             'interaction' => $request->get('type'),
                             'deeplink' => $rootPost->deep_link,
                             'post_id' => $rootPost->id,

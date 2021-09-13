@@ -14,25 +14,25 @@ class PostMention
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $data;
+    public $deep_link;
+    public $post_id;
+    public $sender_id;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct(array $data)
     {
-        $this->data = $data;
-    }
-
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
-    public function broadcastOn()
-    {
-        return new PrivateChannel('channel-name');
+        if (!empty($data['deep_link'])) {
+            $this->deep_link = $data['deep_link'];
+        }
+        if (!empty($data['post_id'])) {
+            $this->post_id = $data['post_id'];
+        }
+        if (!empty($data['sender_id'])) {
+            $this->sender_id = $data['sender_id'];
+        }
     }
 }

@@ -31,10 +31,17 @@ class EventServiceProvider extends ServiceProvider
             );
         }
 
-        if (config('community.listeners.post_interaction')) {
+        if (config('community.listeners.create_post_interaction')) {
             Event::listen(
-                Events\PostInteraction::class,
-                config('community.listeners.post_interaction')
+                Events\CreatePostInteraction::class,
+                config('community.listeners.create_post_interaction')
+            );
+        }
+
+        if (config('community.listeners.delete_post_interaction')) {
+            Event::listen(
+                Events\DeletePostInteraction::class,
+                config('community.listeners.delete_post_interaction')
             );
         }
 
