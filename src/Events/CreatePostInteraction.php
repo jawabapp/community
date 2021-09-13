@@ -10,9 +10,9 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class PostReply
+class CreatePostInteraction
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use SerializesModels;
 
     public $interaction;
     public $deep_link;
@@ -26,6 +26,9 @@ class PostReply
      */
     public function __construct(array $data)
     {
+        if (!empty($data['interaction'])) {
+            $this->interaction = $data['interaction'];
+        }
         if (!empty($data['deep_link'])) {
             $this->deep_link = $data['deep_link'];
         }

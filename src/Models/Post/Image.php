@@ -41,11 +41,13 @@ class Image extends Post
 
                     $thumbnail = ImagePlugin::resize($src, $path, 100, 100, $original);
 
-                    $node->setAttribute('extra_info', [
-                        'height' => $image->getHeight(),
-                        'width' => $image->getWidth(),
-                        'thumbnail' => Storage::url($thumbnail),
-                    ]);
+                    $extra_info = $node->getAttribute('extra_info');
+
+                    $extra_info['height'] =  $image->getHeight();
+                    $extra_info['width'] =  $image->getWidth();
+                    $extra_info['thumbnail'] = Storage::url($thumbnail);
+
+                    $node->setAttribute('extra_info', $extra_info);
 
                     $node->setAttribute('content', Storage::url($original));
                 }
