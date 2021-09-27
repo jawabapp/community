@@ -140,10 +140,13 @@ class SearchController extends Controller
         $keyword = preg_replace('/\s+/', ' ', $keyword);
         $keyword = trim($keyword);
 
-        return config('community.user_class')::where('slug', 'LIKE', "%{$query}%")
-            ->orWhere('nickname', 'LIKE', "%{$keyword}%")
-            ->orWhere('status', 'LIKE', "%{$keyword}%")
-            ->paginate(10);
+        $q = config('community.user_class')::query();
+
+        foreach (config('community.user_search_columns') as $column) {
+            $q->orWhere($column, 'LIKE', "%{$query}%");
+        }
+
+        return $q->paginate(10);
     }
 
     private function hashTag(SearchRequest $request)

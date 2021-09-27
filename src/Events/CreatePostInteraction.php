@@ -18,6 +18,7 @@ class CreatePostInteraction
     public $deep_link;
     public $post_id;
     public $sender_id;
+    public $post_user_id;
 
     /**
      * Create a new event instance.
@@ -37,6 +38,9 @@ class CreatePostInteraction
         }
         if (!empty($data['sender_id'])) {
             $this->sender_id = $data['sender_id'];
+        }
+        if (!empty($data['post_user_id'])) {
+            $this->post_user_id = $data['post_user_id'];
         }
     }
 }
