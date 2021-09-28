@@ -88,7 +88,6 @@ class InteractionController extends Controller
                         'account_id' => $request->get('account_id'),
                         'type' => $request->get('type')
                     ]);
-
                     if ($account->id != $post->account->id) {
 
                         $rootPost = $post->getRootPost();
@@ -97,7 +96,8 @@ class InteractionController extends Controller
                             'interaction' => $request->get('type'),
                             'deeplink' => $rootPost->deep_link,
                             'post_id' => $rootPost->id,
-                            'sender_id' => $account->id
+                            'sender_id' => $account->id,
+                            'post_user_id' => $post->account_id
                         ]));
                     }
                 }

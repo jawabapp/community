@@ -85,7 +85,8 @@ class Community
                 event(new CreatePostReply([
                     'deeplink' => $rootPost->deep_link,
                     'post_id' => $rootPost->id,
-                    'sender_id' => $account->id
+                    'sender_id' => $account->id,
+                    'post_user_id' => $rootPost->account_id,
                 ]));
             }
         }
