@@ -23,7 +23,7 @@ class FollowController extends Controller
 
     public function index($accountId, FollowRequest $request): JsonResponse
     {
-        $user = $request->user();
+        $user = config('community.user_class')::getDefaultAccount();
 
         if ($user->is_anonymous) {
             throw ValidationException::withMessages([

@@ -26,7 +26,7 @@ class EditController extends Controller
     public function edit($id, EditRequest $request): JsonResponse
     {
 
-        $user = $request->user();
+        $user = config('community.user_class')::getDefaultAccount();
 
         if ($user->is_anonymous) {
             throw ValidationException::withMessages([

@@ -17,16 +17,6 @@ trait HasCommunityAccount
         return parent::getFillable();
     }
 
-    public function getDefaultAccount()
-    {
-        return $this;
-    }
-
-    public function getAccount($account_id)
-    {
-        return $this;
-    }
-
     public function getSlugWithoutAtAttribute()
     {
         return str_replace('@', '', $this->slug);
@@ -78,7 +68,7 @@ trait HasCommunityAccount
             static $defaultAccountId;
 
             if (is_null($defaultAccountId)) {
-                $defaultAccountId = auth()->user()->getDefaultAccount()->id ?? false;
+                $defaultAccountId = config('community.user_class')::getDefaultAccount()->id ?? false;
             }
 
             $activeAccount = request()->get('active_account', $defaultAccountId);

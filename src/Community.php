@@ -16,7 +16,7 @@ class Community
     {
         // creatre posts
 
-        $user = auth()->user();
+        $user = config('community.user_class')::getDefaultAccount();
 
         if (!empty($user->is_anonymous)) {
             throw ValidationException::withMessages([

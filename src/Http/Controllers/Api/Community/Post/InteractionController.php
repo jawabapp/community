@@ -28,7 +28,7 @@ class InteractionController extends Controller
     public function index($id, InteractionRequest $request)
     {
 
-        $user = $request->user();
+        $user = config('community.user_class')::getDefaultAccount();
 
         if ($user->is_anonymous && $request->get('type') == 'viewed') {
             throw ValidationException::withMessages([

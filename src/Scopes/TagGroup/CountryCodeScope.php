@@ -23,9 +23,9 @@ class CountryCodeScope implements Scope
             $builder->where(function ($query) {
                 $query->whereNull('country_code');
 
-                if (auth()->user()->phone_country ?? false) {
-                    $query->orWhere('country_code', auth()->user()->phone_country);
-                }
+//                if (auth()->user()->phone_country ?? false) {
+//                    $query->orWhere('country_code', auth()->user()->phone_country);
+//                }
             });
         }
     }

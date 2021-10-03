@@ -6,6 +6,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 interface CommunityAccount
 {
-    public function getDefaultAccount();
+    public static function getDefaultAccount();
     public function getAccount($account_id);
 }
