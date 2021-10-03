@@ -50,7 +50,7 @@ class InteractionController extends Controller
             ]);
         }
 
-        $account = $user->getAccount($request->get('account_id'));
+        $account = $user->getAccount();
 
         if (!$account) {
             throw ValidationException::withMessages([
@@ -62,7 +62,7 @@ class InteractionController extends Controller
             PostInteraction::assignInteractionToAccount('viewed', $post->id, false, $account->id);
         } else {
             $postInteraction = PostInteraction::wherePostId($post->id)
-                ->whereAccountId($request->get('account_id'))
+                ->whereAccountId($account->id)
                 ->whereIn('type', PostInteraction::SINGLE_TYPES)
                 ->first();
 
@@ -85,7 +85,7 @@ class InteractionController extends Controller
                 } else {
                     PostInteraction::create([
                         'post_id' => $post->id,
-                        'account_id' => $request->get('account_id'),
+                        'account_id' => $account->id,
                         'type' => $request->get('type')
                     ]);
                     if ($account->id != $post->account->id) {
