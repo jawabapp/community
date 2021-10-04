@@ -142,8 +142,10 @@ class SearchController extends Controller
 
         $q = config('community.user_class')::query();
 
-        foreach (config('community.user_search_columns') as $column) {
-            $q->orWhere($column, 'LIKE', "%{$query}%");
+        if(config('community.user_search_columns')) {
+            foreach (config('community.user_search_columns') as $column) {
+                $q->orWhere($column, 'LIKE', "%{$query}%");
+            }
         }
 
         return $q->paginate(10);

@@ -26,7 +26,7 @@ class DeleteController extends Controller
 
         $user = config('community.user_class')::getDefaultAccount();
 
-        if ($user->is_anonymous) {
+        if (!empty($user->is_anonymous)) {
             throw ValidationException::withMessages([
                 'id' => [trans('User is anonymous')],
             ]);

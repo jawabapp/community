@@ -30,7 +30,7 @@ class InteractionController extends Controller
 
         $user = config('community.user_class')::getDefaultAccount();
 
-        if ($user->is_anonymous && $request->get('type') == 'viewed') {
+        if (!empty($user->is_anonymous) && $request->get('type') == 'viewed') {
             throw ValidationException::withMessages([
                 'id' => [trans('User is anonymous')],
             ]);
@@ -50,7 +50,7 @@ class InteractionController extends Controller
             ]);
         }
 
-        $account = $user->getAccount();
+        $account = $user->getAccount($request->get('account_id'));
 
         if (!$account) {
             throw ValidationException::withMessages([
