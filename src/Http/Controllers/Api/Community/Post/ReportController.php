@@ -35,7 +35,7 @@ class ReportController extends Controller
     public function report($id, ReportRequest $request)
     {
 
-        $user = config('community.user_class')::getDefaultAccount();
+        $user = config('community.user_class')::getLoggedInUser();
 
         //        if($user->is_anonymous) {
         //            throw ValidationException::withMessages([

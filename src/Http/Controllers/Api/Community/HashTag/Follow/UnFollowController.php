@@ -23,7 +23,7 @@ class UnFollowController extends Controller
 
     public function index($accountId, UnFollowRequest $request): JsonResponse
     {
-        $user = config('community.user_class')::getDefaultAccount();
+        $user = config('community.user_class')::getLoggedInUser();
 
         if (!empty($user->is_anonymous)) {
             throw ValidationException::withMessages([

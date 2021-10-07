@@ -31,7 +31,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable implements CommunityAccount
 {
-    public static function getDefaultAccount()
+    public static function getLoggedInUser()
     {
         //...
     }

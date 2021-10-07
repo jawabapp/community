@@ -62,7 +62,7 @@ class ListController extends Controller
 
         \Log::info('Follow Tag Groups', $request->all());
 
-        $user = config('community.user_class')::getDefaultAccount();
+        $user = config('community.user_class')::getLoggedInUser();
 
         $account = $user->getAccount($accountId);
 

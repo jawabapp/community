@@ -24,7 +24,7 @@ class DeleteController extends Controller
     public function index($id, DeleteRequest $request)
     {
 
-        $user = config('community.user_class')::getDefaultAccount();
+        $user = config('community.user_class')::getLoggedInUser();
 
         if (!empty($user->is_anonymous)) {
             throw ValidationException::withMessages([

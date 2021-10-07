@@ -46,7 +46,7 @@ class NotificationController extends Controller
     public function subscribe($type, $id, $account_id, Request $request)
     {
         // POST, Account, HashTag
-        $user = config('community.user_class')::getDefaultAccount();
+        $user = config('community.user_class')::getLoggedInUser();
 
         $account = $user->getAccount($account_id);
 
@@ -130,7 +130,7 @@ class NotificationController extends Controller
     public function unSubscribe($type, $id, $account_id, Request $request)
     {
         // POST, Account, HashTag
-        $user = config('community.user_class')::getDefaultAccount();
+        $user = config('community.user_class')::getLoggedInUser();
 
         $account = $user->getAccount($account_id);
 

@@ -63,20 +63,18 @@ trait HasCommunityAccount
 
     public static function getActiveAccountId()
     {
-        if (auth()->check()) {
+        static $activeAccountId;
 
-            static $defaultAccountId;
-
-            if (is_null($defaultAccountId)) {
-                $defaultAccountId = config('community.user_class')::getDefaultAccount()->id ?? false;
-            }
-
-            $activeAccount = request()->get('active_account', $defaultAccountId);
-
-            if ($activeAccount) {
-                return $activeAccount;
-            }
+        if (is_null($activeAccountId)) {
+            $activeAccountId = config('community.user_class')::getLoggedInUser()->id ?? false;
         }
+
+        $activeAccountId = request()->get('active_account', $activeAccountId);
+
+        if ($activeAccountId) {
+            return $activeAccountId;
+        }
+
         return false;
     }
 
