@@ -98,6 +98,8 @@ class Community
     {
         $post = $this->createPost($request);
         $this->linkPostWithTag($post, $request->get('hash_tag'));
+
+        return $post->refresh();
     }
 
     public function linkPostWithTag($post, $hash_tag)
