@@ -8,6 +8,7 @@ use Jawabapp\Community\Models;
 
 return [
     'user_class' => \App\Models\User::class,
+    'slug_fields' => ['name'],
     'route' => [
         'prefix' => null,
         'middleware' => 'web',

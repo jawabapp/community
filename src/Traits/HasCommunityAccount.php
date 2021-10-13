@@ -301,18 +301,34 @@ trait HasCommunityAccount
         parent::boot();
 
         static::saving(function (self $node) {
-            if (empty($node->getAttribute('name')) || $node->isDirty('name')) {
 
-                if (empty($node->getAttribute('name'))) {
-                    $nickname = \Str::random(16);
-                } else {
-                    $nickname = $node->getAttribute('name');
-                }
+            $node->savingCommunityEvent();
 
-                $node->setAttribute('slug', app(Slug::class)->createSlug($nickname, $node->getKey()));
-                $node->setAttribute('deep_link', $node->generateDeepLink(true));
-            }
-            $node->setAttribute('topic', 'notifications/accounts/' . $node->id);
         });
+    }
+
+    private function savingCommunityEvent() {
+
+        $nicknames = [];
+        $changeSlug = false;
+
+        foreach (config('community.slug_fields', []) as $slug_field) {
+
+            if (empty($this->getAttribute($slug_field)) || $this->isDirty($slug_field)) {
+                $changeSlug = true;
+            }
+
+            $nicknames[] = ucfirst(strtolower(trim($this->getAttribute($slug_field))));
+        }
+
+        if($changeSlug) {
+            $nickname = trim(implode(' ', $nicknames));
+
+            $this->setAttribute('slug', app(Slug::class)->createSlug($nickname, $this->getKey()));
+            $this->setAttribute('deep_link', $this->generateDeepLink(true));
+        }
+
+        $this->setAttribute('topic', 'notifications/accounts/' . $this->id);
+
     }
 }

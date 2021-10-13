@@ -30,6 +30,8 @@ class AddExtraAccountFields extends Migration
             $table->integer('followers_count')->default(0);
             $table->integer('following_count')->default(0);
             $table->integer('mutual_follower_count')->default(0);
+
+            $table->index('slug');
         });
     }
 
@@ -49,6 +51,8 @@ class AddExtraAccountFields extends Migration
             $table->dropColumn('followers_count');
             $table->dropColumn('following_count');
             $table->dropColumn('mutual_follower_count');
+
+            $table->dropIndex('slug');
         });
     }
 }

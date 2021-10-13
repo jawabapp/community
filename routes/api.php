@@ -4,6 +4,23 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('test', 'TestController@testApi');
 
+Route::group(['prefix' => 'account'], function () {
+    Route::get('show/{slug}', 'Api\Account\ShowController@index');
+
+    Route::group(['prefix' => 'follow'], function () {
+        Route::get('followers/{accountId}', 'Api\Account\Follow\FollowersController@index');
+        Route::get('following/{accountId}', 'Api\Account\Follow\FollowingController@index');
+    });
+
+    Route::group(['middleware' => 'auth:api'], function () {
+        Route::group(['prefix' => 'follow'], function () {
+            Route::post('/follow/{accountId}', 'Api\Account\Follow\FollowController@index');
+            Route::post('/un-follow/{accountId}', 'Api\Account\Follow\UnFollowController@index');
+            Route::get('/mutual/{accountId}', 'Api\Account\Follow\MutualController@index');
+        });
+    });
+});
+
 Route::group(['prefix' => 'community'], function () {
 
     Route::get('search', 'Api\Community\SearchController@index');
