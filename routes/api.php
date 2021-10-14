@@ -18,6 +18,9 @@ Route::group(['prefix' => 'account'], function () {
             Route::post('/un-follow/{accountId}', 'Api\Account\Follow\UnFollowController@index');
             Route::get('/mutual/{accountId}', 'Api\Account\Follow\MutualController@index');
         });
+
+        Route::post('/block/{accountId}', 'Api\Account\Block\BlockController@index');
+        Route::post('/unblock/{accountId}', 'Api\Account\Block\UnblockController@index');
     });
 });
 
