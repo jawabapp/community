@@ -2,12 +2,14 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 
-use Carbon\Carbon;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\PostReport;
-use Illuminate\Validation\ValidationException;
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Http\Controllers\Controller;
 use Jawabapp\Community\Http\Requests\Community\Post\ReportRequest;
+
+use Carbon\Carbon;
+use Illuminate\Validation\ValidationException;
 
 /**
  * @group  Community management
@@ -35,7 +37,7 @@ class ReportController extends Controller
     public function report($id, ReportRequest $request)
     {
 
-        $user = config('community.user_class')::getLoggedInUser();
+        $user = CommunityFacade::getLoggedInUser();
 
         //        if($user->is_anonymous) {
         //            throw ValidationException::withMessages([

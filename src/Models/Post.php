@@ -5,6 +5,7 @@ namespace Jawabapp\Community\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Services\DeepLinkBuilder;
 use Jawabapp\Community\Traits\HasDynamicRelation;
 
@@ -51,7 +52,7 @@ class Post extends Model
 
     public function getAccountInteractionAttribute()
     {
-        $activeAccountId = config('community.user_class')::getActiveAccountId();
+        $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
 
         if ($activeAccountId) {
             return PostInteraction::wherePostId($this->getKey())
@@ -65,7 +66,7 @@ class Post extends Model
 
     public function getIsSubscribedAttribute()
     {
-        $activeAccountId = config('community.user_class')::getActiveAccountId();
+        $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
         if ($activeAccountId) {
             return $this->subscribedAccounts()->where('account_id', $activeAccountId)->exists();
         }
@@ -90,7 +91,7 @@ class Post extends Model
 
         static::addGlobalScope('active_account', function (Builder $builder) {
 
-            $activeAccountId = config('community.user_class')::getActiveAccountId();
+            $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
 
             if ($activeAccountId) {
                 $builder->whereNotIn('posts.id', function ($q) use ($activeAccountId) {
@@ -191,7 +192,7 @@ class Post extends Model
 
     public function account()
     {
-        return $this->belongsTo(config('community.user_class'), 'account_id');
+        return $this->belongsTo(CommunityFacade::getUserClass(), 'account_id');
     }
 
     public function interactions()
@@ -305,7 +306,7 @@ class Post extends Model
     public static function getUserFilteredData(Builder $builder)
     {
 
-        $activeAccountId = config('community.user_class')::getActiveAccountId();
+        $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
         if ($activeAccountId) {
 
             $tagGroupFollower = TagGroupFollower::where('account_id', $activeAccountId)->count();
@@ -379,6 +380,6 @@ class Post extends Model
 
     public function subscribedAccounts()
     {
-        return $this->morphToMany(config('community.user_class'), 'notifiable', 'account_notifications', null, 'account_id')->withTimestamps();
+        return $this->morphToMany(CommunityFacade::getUserClass(), 'notifiable', 'account_notifications', null, 'account_id')->withTimestamps();
     }
 }

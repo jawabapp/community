@@ -4,6 +4,7 @@ namespace Jawabapp\Community\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Services\DeepLinkBuilder;
 use Jawabapp\Community\Traits\HasDynamicRelation;
 
@@ -40,7 +41,7 @@ class Tag extends Model
 
     public function getIsSubscribedAttribute()
     {
-        $activeAccountId = config('community.user_class')::getActiveAccountId();
+        $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
         if ($activeAccountId) {
             return $this->subscribedAccounts()->where('account_id', $activeAccountId)->exists();
         }
@@ -69,12 +70,12 @@ class Tag extends Model
 
     public function followers()
     {
-        return $this->belongsToMany(config('community.user_class'), 'tag_followers', 'tag_id', 'account_id');
+        return $this->belongsToMany(CommunityFacade::getUserClass(), 'tag_followers', 'tag_id', 'account_id');
     }
 
     public function isAccountFollowingBy()
     {
-        $activeAccountId = config('community.user_class')::getActiveAccountId();
+        $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
 
         if ($activeAccountId) {
             return TagFollower::whereAccountId($activeAccountId)
@@ -126,6 +127,6 @@ class Tag extends Model
 
     public function subscribedAccounts()
     {
-        return $this->morphToMany(config('community.user_class'), 'notifiable', 'account_notifications', null, 'account_id')->withTimestamps();
+        return $this->morphToMany(CommunityFacade::getUserClass(), 'notifiable', 'account_notifications', null, 'account_id')->withTimestamps();
     }
 }

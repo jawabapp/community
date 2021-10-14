@@ -2,11 +2,13 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 
-use Illuminate\Http\JsonResponse;
 use Jawabapp\Community\Models\Post;
-use Illuminate\Validation\ValidationException;
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Http\Controllers\Controller;
 use Jawabapp\Community\Http\Requests\Post\EditRequest;
+
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 /**
  * @group  Community management
@@ -26,7 +28,7 @@ class EditController extends Controller
     public function edit($id, EditRequest $request): JsonResponse
     {
 
-        $user = config('community.user_class')::getLoggedInUser();
+        $user = CommunityFacade::getLoggedInUser();
 
         if (!empty($user->is_anonymous)) {
             throw ValidationException::withMessages([

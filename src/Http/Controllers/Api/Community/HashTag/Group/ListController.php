@@ -2,12 +2,14 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Community\HashTag\Group;
 
-use Illuminate\Http\JsonResponse;
 use Jawabapp\Community\Models\TagGroup;
-use Illuminate\Validation\ValidationException;
 use Jawabapp\Community\Models\TagGroupFollower;
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Http\Controllers\Controller;
 use Jawabapp\Community\Http\Requests\Community\TagGroup\Follow\FollowRequest;
+
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 /**
  * @group  Community management
@@ -62,7 +64,7 @@ class ListController extends Controller
 
         \Log::info('Follow Tag Groups', $request->all());
 
-        $user = config('community.user_class')::getLoggedInUser();
+        $user = CommunityFacade::getLoggedInUser();
 
         $account = $user->getAccount($accountId);
 

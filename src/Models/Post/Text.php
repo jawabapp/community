@@ -2,6 +2,7 @@
 
 namespace Jawabapp\Community\Models\Post;
 
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\Tag;
 use Jawabapp\Community\Events\PostMention;
@@ -33,7 +34,7 @@ class Text extends Post
 
                 if ($mentions) {
                     foreach ($mentions as $mention) {
-                        $account = config('community.user_class')::where('slug', $mention)->first();
+                        $account = CommunityFacade::getUserClass()::where('slug', $mention)->first();
 
                         if ($account) {
 

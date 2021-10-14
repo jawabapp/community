@@ -2,6 +2,7 @@
 
 namespace Jawabapp\Community\Traits;
 
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Models;
 use Jawabapp\Community\Services\DeepLinkBuilder;
 use Jawabapp\Community\Services\Slug;
@@ -66,7 +67,7 @@ trait HasCommunityAccount
         static $activeAccountId;
 
         if (is_null($activeAccountId)) {
-            $activeAccountId = config('community.user_class')::getLoggedInUser()->id ?? false;
+            $activeAccountId = CommunityFacade::getLoggedInUser()->id ?? false;
         }
 
         $activeAccountId = request()->get('active_account', $activeAccountId);
@@ -155,7 +156,7 @@ trait HasCommunityAccount
      */
     public function user()
     {
-        return $this->belongsTo(config('community.user_class'));
+        return $this->belongsTo(CommunityFacade::getUserClass());
     }
 
     /**
@@ -263,12 +264,12 @@ trait HasCommunityAccount
 
     public function subscribedAccounts()
     {
-        return $this->morphToMany(config('community.user_class'), 'notifiable', 'account_notifications', 'notifiable_id', 'account_id')->withTimestamps();
+        return $this->morphToMany(CommunityFacade::getUserClass(), 'notifiable', 'account_notifications', 'notifiable_id', 'account_id')->withTimestamps();
     }
 
     public function subscribeAccounts()
     {
-        return $this->morphedByMany(config('community.user_class'), 'notifiable', 'account_notifications', 'notifiable_id', 'account_id')->withTimestamps();
+        return $this->morphedByMany(CommunityFacade::getUserClass(), 'notifiable', 'account_notifications', 'notifiable_id', 'account_id')->withTimestamps();
     }
 
     public function subscribePosts()

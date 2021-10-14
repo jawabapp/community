@@ -3,6 +3,7 @@
 namespace Jawabapp\Community\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class AccountBlock extends Model
@@ -23,7 +24,7 @@ class AccountBlock extends Model
      */
     public function account()
     {
-        return $this->belongsTo(config('community.user_class'), 'account_id');
+        return $this->belongsTo(CommunityFacade::getUserClass(), 'account_id');
     }
 
     /**
@@ -31,6 +32,6 @@ class AccountBlock extends Model
      */
     public function block()
     {
-        return $this->belongsTo(config('community.user_class'), 'block_account_id');
+        return $this->belongsTo(CommunityFacade::getUserClass(), 'block_account_id');
     }
 }

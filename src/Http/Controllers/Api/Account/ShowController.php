@@ -5,6 +5,7 @@ namespace Jawabapp\Community\Http\Controllers\Api\Account;
 
 use Illuminate\Support\Facades\Request;
 use Illuminate\Validation\ValidationException;
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Http\Controllers\Controller;
 
 /**
@@ -26,7 +27,7 @@ class ShowController extends Controller
     public function index($slug, Request $request) {
 
         $slug = str_replace('@', '', $slug);
-        $account = config('community.user_class')::where('slug', "@{$slug}")->first();
+        $account = CommunityFacade::getUserClass()::where('slug', "@{$slug}")->first();
 
         if (!$account) {
             throw ValidationException::withMessages([

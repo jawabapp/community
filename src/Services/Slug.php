@@ -11,6 +11,7 @@ namespace Jawabapp\Community\Services;
 
 
 use Illuminate\Support\Str;
+use Jawabapp\Community\CommunityFacade;
 use Random;
 
 class Slug
@@ -42,7 +43,7 @@ class Slug
 
     protected function getRelatedSlugs($slug, $id = 0)
     {
-        return config('community.user_class')::select(\DB::raw('LOWER(`slug`) AS slug'))->whereRaw("LOWER(`slug`) like ?", [strtolower($slug) . '%'])
+        return CommunityFacade::getUserClass()::select(\DB::raw('LOWER(`slug`) AS slug'))->whereRaw("LOWER(`slug`) like ?", [strtolower($slug) . '%'])
             ->where('id', '<>', $id)
             ->get();
     }

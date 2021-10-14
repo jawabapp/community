@@ -2,6 +2,7 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Account\Follow;
 
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Http\Requests\Account\Follow\FollowRequest;
 use Jawabapp\Community\Http\Controllers\Controller;
 use Jawabapp\Community\Models\AccountFollower;
@@ -23,7 +24,7 @@ class FollowController extends Controller
 
     public function index($accountId, FollowRequest $request): JsonResponse
     {
-        $user = config('community.user_class')::getLoggedInUser();
+        $user = CommunityFacade::getLoggedInUser();
 
         if($user->is_anonymous) {
             throw ValidationException::withMessages([
@@ -39,7 +40,7 @@ class FollowController extends Controller
             ]);
         }
 
-        $account = config('community.user_class')::find($request->get('follower_account_id'));
+        $account = CommunityFacade::getUserClass()::find($request->get('follower_account_id'));
 
         if (!$account || $account->id == $owner_account->id) {
             throw ValidationException::withMessages([

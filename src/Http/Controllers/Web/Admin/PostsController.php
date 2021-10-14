@@ -2,6 +2,7 @@
 
 namespace Jawabapp\Community\Http\Controllers\Web\Admin;
 
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Models\Account;
 use Illuminate\Http\Request;
 use Jawabapp\Community\Models\Post;
@@ -41,7 +42,7 @@ class PostsController extends Controller
         }
 
         if ($request->get('slug')) {
-            $account = config('community.user_class')::where('slug', 'like', "%{$request->get('slug')}%")->first();
+            $account = CommunityFacade::getUserClass()::where('slug', 'like', "%{$request->get('slug')}%")->first();
             if ($account) {
                 $query->where('posts.account_id', $account->id);
             }

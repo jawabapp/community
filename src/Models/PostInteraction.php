@@ -3,6 +3,7 @@
 namespace Jawabapp\Community\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class PostInteraction extends Model
@@ -63,7 +64,7 @@ class PostInteraction extends Model
 
     public function account()
     {
-        return $this->belongsTo(config('community.user_class'), 'account_id');
+        return $this->belongsTo(CommunityFacade::getUserClass(), 'account_id');
     }
 
     public function post()
@@ -75,7 +76,7 @@ class PostInteraction extends Model
     {
 
         if (is_null($accountId)) {
-            $accountId = config('community.user_class')::getActiveAccountId();
+            $accountId = CommunityFacade::getUserClass()::getActiveAccountId();
         }
 
         $post = Post::find($postId);

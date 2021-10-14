@@ -3,6 +3,7 @@
 namespace Jawabapp\Community\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Traits\HasDynamicRelation;
 
 class TagFollower extends Model
@@ -23,7 +24,7 @@ class TagFollower extends Model
      */
     public function account()
     {
-        return $this->belongsTo(config('community.user_class'), 'account_id');
+        return $this->belongsTo(CommunityFacade::getUserClass(), 'account_id');
     }
 
     /**

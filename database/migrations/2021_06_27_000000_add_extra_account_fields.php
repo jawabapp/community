@@ -11,7 +11,7 @@ class AddExtraAccountFields extends Migration
 
     public function __construct()
     {
-        $this->table_name = app(config('community.user_class'))->getTable();
+        $this->table_name = app(\Jawabapp\Community\CommunityFacade::getUserClass())->getTable();
     }
 
     /**

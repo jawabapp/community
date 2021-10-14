@@ -2,12 +2,14 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Community\HashTag\Follow;
 
-use Illuminate\Http\JsonResponse;
 use Jawabapp\Community\Models\Tag;
 use Jawabapp\Community\Models\TagFollower;
-use Illuminate\Validation\ValidationException;
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Http\Controllers\Controller;
 use Jawabapp\Community\Http\Requests\Community\Tag\Follow\UnFollowRequest;
+
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 /**
  * @group  Community management
@@ -23,7 +25,7 @@ class UnFollowController extends Controller
 
     public function index($accountId, UnFollowRequest $request): JsonResponse
     {
-        $user = config('community.user_class')::getLoggedInUser();
+        $user = CommunityFacade::getLoggedInUser();
 
         if (!empty($user->is_anonymous)) {
             throw ValidationException::withMessages([

@@ -2,6 +2,7 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Account\Follow;
 
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Http\Requests\Account\Follow\FollowersRequest;
 use Jawabapp\Community\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -38,7 +39,7 @@ class FollowersController extends Controller
     public function index($accountId, FollowersRequest $request): JsonResponse
     {
 
-        $account = config('community.user_class')::find($accountId);
+        $account = CommunityFacade::getUserClass()::find($accountId);
 
         if(!$account) {
             throw ValidationException::withMessages([

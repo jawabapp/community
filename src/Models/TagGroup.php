@@ -2,6 +2,7 @@
 
 namespace Jawabapp\Community\Models;
 
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Scopes\TagGroup\CountryCodeScope;
 use Jawabapp\Community\Scopes\TagGroup\PublishedScope;
 use Jawabapp\Community\Scopes\TagGroup\ServiceScope;
@@ -77,7 +78,7 @@ class TagGroup extends Model
 
     public function isAccountFollowingBy()
     {
-        $activeAccountId = config('community.user_class')::getActiveAccountId();
+        $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
 
         if ($activeAccountId) {
             return TagGroupFollower::whereAccountId($activeAccountId)

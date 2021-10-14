@@ -2,12 +2,13 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Community\HashTag\Follow;
 
-use Jawabapp\Community\Models\Account;
+use Jawabapp\Community\CommunityFacade;
+use Jawabapp\Community\Http\Controllers\Controller;
+use Jawabapp\Community\Http\Resources\Api\FollowingTagResource;
+
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
-use Jawabapp\Community\Http\Controllers\Controller;
-use Jawabapp\Community\Http\Resources\Api\FollowingTagResource;
 
 /**
  * @group  Community management
@@ -39,7 +40,7 @@ class FollowingController extends Controller
     public function index($accountId, Request $request): JsonResponse
     {
 
-        $account = config('community.user_class')::find($accountId);
+        $account = CommunityFacade::getUserClass()::find($accountId);
 
         if (!$account) {
             throw ValidationException::withMessages([

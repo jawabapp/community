@@ -2,6 +2,7 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Account\Follow;
 
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Http\Requests\Account\Follow\UnFollowRequest;
 use Jawabapp\Community\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -21,7 +22,7 @@ class UnFollowController extends Controller
 
     public function index($accountId, UnFollowRequest $request): JsonResponse
     {
-        $user = config('community.user_class')::getLoggedInUser();
+        $user = CommunityFacade::getLoggedInUser();
 
         if($user->is_anonymous) {
             throw ValidationException::withMessages([
@@ -47,7 +48,7 @@ class UnFollowController extends Controller
 
         $accountFollower->delete();
 
-        $follower_account = config('community.user_class')::find($accountFollower->follower_account_id);
+        $follower_account = CommunityFacade::getUserClass()::find($accountFollower->follower_account_id);
         $follower_account->followCounts();
 
         $account->followCounts();

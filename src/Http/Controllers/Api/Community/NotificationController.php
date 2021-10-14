@@ -2,12 +2,13 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Community;
 
-use Jawabapp\Community\Models\Account;
-use Illuminate\Http\Request;
 use Jawabapp\Community\Models\Tag;
 use Jawabapp\Community\Models\Post;
-use Illuminate\Validation\ValidationException;
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 /**
  * @group  Community management
@@ -46,7 +47,7 @@ class NotificationController extends Controller
     public function subscribe($type, $id, $account_id, Request $request)
     {
         // POST, Account, HashTag
-        $user = config('community.user_class')::getLoggedInUser();
+        $user = CommunityFacade::getLoggedInUser();
 
         $account = $user->getAccount($account_id);
 
@@ -68,7 +69,7 @@ class NotificationController extends Controller
                 break;
 
             case 'account':
-                $notifiable = config('community.user_class')::find($id);
+                $notifiable = CommunityFacade::getUserClass()::find($id);
                 if (!$notifiable) {
                     throw ValidationException::withMessages([
                         'id' => [trans("Invalid {$type} id")],
@@ -130,7 +131,7 @@ class NotificationController extends Controller
     public function unSubscribe($type, $id, $account_id, Request $request)
     {
         // POST, Account, HashTag
-        $user = config('community.user_class')::getLoggedInUser();
+        $user = CommunityFacade::getLoggedInUser();
 
         $account = $user->getAccount($account_id);
 
@@ -152,7 +153,7 @@ class NotificationController extends Controller
                 break;
 
             case 'account':
-                $notifiable = config('community.user_class')::find($id);
+                $notifiable = CommunityFacade::getUserClass()::find($id);
                 if (!$notifiable) {
                     throw ValidationException::withMessages([
                         'id' => [trans("Invalid {$type} id")],

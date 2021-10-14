@@ -3,10 +3,12 @@
 namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 
 use Jawabapp\Community\Models\Post;
-use Illuminate\Validation\ValidationException;
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Http\Controllers\Controller;
 use Jawabapp\Community\Http\Requests\Post\DeleteRequest;
 use Jawabapp\Community\Events\DeletePostReply;
+
+use Illuminate\Validation\ValidationException;
 
 /**
  * @group  Community management
@@ -24,7 +26,7 @@ class DeleteController extends Controller
     public function index($id, DeleteRequest $request)
     {
 
-        $user = config('community.user_class')::getLoggedInUser();
+        $user = CommunityFacade::getLoggedInUser();
 
         if (!empty($user->is_anonymous)) {
             throw ValidationException::withMessages([

@@ -2,15 +2,17 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 
-use Carbon\Carbon;
-use App\Plugins\CommonPlugin;
+
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\PostInteraction;
-use Illuminate\Validation\ValidationException;
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Events\CreatePostInteraction;
 use Jawabapp\Community\Events\DeletePostInteraction;
 use Jawabapp\Community\Http\Controllers\Controller;
 use Jawabapp\Community\Http\Requests\Post\InteractionRequest;
+
+use Carbon\Carbon;
+use Illuminate\Validation\ValidationException;
 
 /**
  * @group  Community management
@@ -28,7 +30,7 @@ class InteractionController extends Controller
     public function index($id, InteractionRequest $request)
     {
 
-        $user = config('community.user_class')::getLoggedInUser();
+        $user = CommunityFacade::getLoggedInUser();
 
         if (!empty($user->is_anonymous) && $request->get('type') == 'viewed') {
             throw ValidationException::withMessages([

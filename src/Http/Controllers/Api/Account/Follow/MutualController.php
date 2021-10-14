@@ -3,6 +3,7 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Account\Follow;
 
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Http\Requests\Account\Follow\MutualRequest;
 use Jawabapp\Community\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -32,7 +33,7 @@ class MutualController extends Controller
      */
     public function index($accountId, MutualRequest $request): JsonResponse
     {
-        $user = config('community.user_class')::getLoggedInUser();
+        $user = CommunityFacade::getLoggedInUser();
 
         if ($user->is_anonymous) {
             throw ValidationException::withMessages([
@@ -48,7 +49,7 @@ class MutualController extends Controller
             ]);
         }
 
-        $follower_account = config('community.user_class')::find($request->get('follower_account_id'));
+        $follower_account = CommunityFacade::getUserClass()::find($request->get('follower_account_id'));
 
         if (!$follower_account || $follower_account->id == $account->id) {
             throw ValidationException::withMessages([

@@ -11,12 +11,9 @@ use Illuminate\Validation\ValidationException;
 
 class Community
 {
-    // Build your next great package.
     public function createPost(Request $request)
     {
-        // creatre posts
-
-        $user = config('community.user_class')::getLoggedInUser();
+        $user = CommunityFacade::getLoggedInUser();
 
         if (!empty($user->is_anonymous)) {
             throw ValidationException::withMessages([
@@ -94,6 +91,9 @@ class Community
         return $post;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function createPostWithTag(Request $request)
     {
         $post = $this->createPost($request);
@@ -114,5 +114,25 @@ class Community
             $post->tags()->attach([$tag->id]);
 
         }
+    }
+
+    public function getLoggedInUser() {
+
+        $userClass = $this->getUserClass();
+
+        if(method_exists($userClass, 'getLoggedInUser')) {
+            return $userClass::getLoggedInUser();
+        }
+
+        return null;
+    }
+
+    public function getUserClass() {
+
+        if(class_exists(config('community.user_class'))) {
+            return config('community.user_class');
+        }
+
+        return null;
     }
 }

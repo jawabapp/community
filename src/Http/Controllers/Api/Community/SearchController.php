@@ -2,6 +2,7 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Community;
 
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Http\Controllers\Controller;
 use Jawabapp\Community\Http\Requests\Community\SearchRequest;
 use Jawabapp\Community\Models\Account;
@@ -140,7 +141,7 @@ class SearchController extends Controller
         $keyword = preg_replace('/\s+/', ' ', $keyword);
         $keyword = trim($keyword);
 
-        $q = config('community.user_class')::query();
+        $q = CommunityFacade::getUserClass()::query();
 
         if(config('community.user_search_columns')) {
             foreach (config('community.user_search_columns') as $column) {
