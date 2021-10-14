@@ -137,14 +137,14 @@ class SearchController extends Controller
 
         $query = trim($request->get('query'));
 
-        $keyword = str_replace(['-', '_', '&', '"', '\'', ',', ';', '^', '!', '\\', '/', '(', ')', '[', ']', '%', '$', '#', '@', '~', '+', '*', '|'], ' ', $query);
-        $keyword = preg_replace('/\s+/', ' ', $keyword);
-        $keyword = trim($keyword);
+//        $keyword = str_replace(['-', '_', '&', '"', '\'', ',', ';', '^', '!', '\\', '/', '(', ')', '[', ']', '%', '$', '#', '@', '~', '+', '*', '|'], ' ', $query);
+//        $keyword = preg_replace('/\s+/', ' ', $keyword);
+//        $keyword = trim($keyword);
 
         $q = CommunityFacade::getUserClass()::query();
 
-        if(config('community.user_search_columns')) {
-            foreach (config('community.user_search_columns') as $column) {
+        if(config('community.search_fields')) {
+            foreach (config('community.search_fields') as $column) {
                 $q->orWhere($column, 'LIKE', "%{$query}%");
             }
         }
