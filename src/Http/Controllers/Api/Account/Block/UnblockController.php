@@ -9,7 +9,7 @@ use Jawabapp\Community\Http\Requests\Account\Block\UnblockRequest;
 use Illuminate\Validation\ValidationException;
 
 /**
- * @group  Account management
+ * @group Account management
  *
  * APIs for managing user accounts
  */

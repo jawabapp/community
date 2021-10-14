@@ -11,7 +11,7 @@ use Jawabapp\Community\Models\Tag;
 use Illuminate\Http\Request;
 
 /**
- * @group  Community management
+ * @group Community management
  *
  * APIs for managing community and the notifications
  */
