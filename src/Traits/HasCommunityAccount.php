@@ -308,10 +308,9 @@ trait HasCommunityAccount
         });
     }
 
-    private function savingCommunityEvent() {
+    public function savingCommunityEvent($changeSlug = false) {
 
         $nicknames = [];
-        $changeSlug = false;
 
         foreach (config('community.slug_fields', []) as $slug_field) {
 
