@@ -12,7 +12,6 @@ namespace Jawabapp\Community\Services;
 
 use Illuminate\Support\Str;
 use Jawabapp\Community\CommunityFacade;
-use Random;
 
 class Slug
 {
@@ -36,6 +35,14 @@ class Slug
             if (!$allSlugs->contains('slug', strtolower($slug))) {
                 return $slug;
             }
+
+            // Just append numbers like a savage until we find not used.
+            for ($i = 1; $i <= 5; $i++) {
+                $newSlug = $slug . '-' . $this->generateRandomString();
+                if (! $allSlugs->contains('slug', strtolower($newSlug))) {
+                    return $newSlug;
+                }
+            }
         }
 
         return '@' . uniqid();
@@ -46,6 +53,20 @@ class Slug
         return CommunityFacade::getUserClass()::select(\DB::raw('LOWER(`slug`) AS slug'))->whereRaw("LOWER(`slug`) like ?", [strtolower($slug) . '%'])
             ->where('id', '<>', $id)
             ->get();
+    }
+
+    /**
+     * @param int $num
+     * @return string
+     */
+    private function generateRandomString($num = 5)
+    {
+        $seed = str_split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
+        shuffle($seed);
+        $rand = '';
+        foreach (array_rand($seed, $num) as $k) $rand .= $seed[$k];
+
+        return $rand;
     }
 
     private function accountSlug($title, $separator = '-', $language = 'en')

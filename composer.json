@@ -14,8 +14,7 @@
         "role": "Developer"
     }],
     "require": {
-        "intervention/image": "^2.6",
-        "webcraft/laravel-random": "^2.0"
+        "intervention/image": "^2.6"
     },
     "autoload": {
         "psr-4": {

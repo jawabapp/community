@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Webcraft\Random\RandomServiceProvider;
 
 class CommunityServiceProvider extends ServiceProvider
 {
@@ -70,10 +69,6 @@ class CommunityServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'community');
 
         $this->app->register(EventServiceProvider::class);
-
-        $this->app->register(RandomServiceProvider::class);
-        $this->app->bind('Random', Webcraft\Random\RandomFacade::class);
-
 
         // Register the main class to use with the facade
         $this->app->singleton('community', function () {
