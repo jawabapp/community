@@ -26,7 +26,7 @@ class LikeController extends Controller
     {
         $user = CommunityFacade::getLoggedInUser();
 
-        if($user->is_anonymous) {
+        if(config('community.check_anonymous', true) && $user->is_anonymous) {
             throw ValidationException::withMessages([
                 'id' => [trans('User is anonymous')],
             ]);
@@ -48,11 +48,11 @@ class LikeController extends Controller
             ]);
         }
 
-        if (AccountLike::whereAccountId($owner_account->id)->whereLikedAccountId($account->id)->first()) {
-            throw ValidationException::withMessages([
-                'liked_account_id' => [trans('Account is already liked')],
-            ]);
-        }
+//        if (AccountLike::whereAccountId($owner_account->id)->whereLikedAccountId($account->id)->first()) {
+//            throw ValidationException::withMessages([
+//                'liked_account_id' => [trans('Account is already liked')],
+//            ]);
+//        }
 
         $owner_account->likes()->create([
             'liked_account_id' => $account->id

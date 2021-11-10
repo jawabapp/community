@@ -47,11 +47,6 @@ trait HasCommunityAccount
         return $this->isAccountFollowingBy();
     }
 
-    public function getAccountIsLikedAttribute()
-    {
-        return $this->isAccountLikedBy();
-    }
-
     public function getAccountIsBlockedAttribute()
     {
         return $this->isAccountBlocked();
@@ -124,19 +119,6 @@ trait HasCommunityAccount
         if ($activeAccountId) {
             return Models\AccountFollower::whereAccountId($activeAccountId)
                 ->whereFollowerAccountId($this->getKey())
-                ->exists();
-        }
-
-        return false;
-    }
-
-    public function isAccountLikedBy()
-    {
-        $activeAccountId = self::getActiveAccountId();
-
-        if ($activeAccountId) {
-            return Models\AccountLike::whereAccountId($activeAccountId)
-                ->whereLikedAccountId($this->getKey())
                 ->exists();
         }
 

@@ -40,7 +40,6 @@ class ShowController extends Controller
                 'account_is_subscribed',
                 'account_is_followed',
                 'account_is_blocked',
-                'account_is_liked',
             ])
         ]);
 

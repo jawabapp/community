@@ -26,7 +26,7 @@ class FollowController extends Controller
     {
         $user = CommunityFacade::getLoggedInUser();
 
-        if($user->is_anonymous) {
+        if(config('community.check_anonymous', true) && $user->is_anonymous) {
             throw ValidationException::withMessages([
                 'id' => [trans('User is anonymous')],
             ]);

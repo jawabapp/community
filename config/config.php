@@ -10,6 +10,7 @@ return [
     'user_class' => \App\Models\User::class,
     'slug_fields' => ['name'],
     'search_fields' => ['name'],
+    'check_anonymous' => true,
     'route' => [
         'prefix' => null,
         'middleware' => 'web',
