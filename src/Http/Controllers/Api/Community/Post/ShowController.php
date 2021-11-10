@@ -2,6 +2,7 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 
+use Jawabapp\Community\Http\Resources\Api\PostResource;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\PostInteraction;
 use Jawabapp\Community\Http\Controllers\Controller;
@@ -50,7 +51,7 @@ class ShowController extends Controller
         PostInteraction::assignInteractionToAccount('viewed', $post->id, false);
 
         return response()->json([
-            'result' => $post
+            'result' => PostResource::make($post)
         ]);
     }
 }

@@ -9,7 +9,17 @@ use Jawabapp\Community\Services\Slug;
 
 trait HasCommunityAccount
 {
-    protected $dynamic_fillable = ['slug', 'deep_link', 'extra_info', 'topic', 'post_count', 'followers_count', 'following_count', 'mutual_follower_count'];
+    protected $dynamic_fillable = [
+        'slug',
+        'deep_link',
+        'extra_info',
+        'topic',
+        'post_count',
+        'followers_count',
+        'following_count',
+        'mutual_follower_count',
+        'likes_count',
+    ];
 
     public function getFillable()
     {
@@ -23,7 +33,7 @@ trait HasCommunityAccount
         return str_replace('@', '', $this->slug);
     }
 
-    public function getIsSubscribedAttribute()
+    public function getAccountIsSubscribedAttribute()
     {
         $activeAccountId = self::getActiveAccountId();
         if ($activeAccountId) {
@@ -32,9 +42,14 @@ trait HasCommunityAccount
         return false;
     }
 
-    public function getAccountFollowingAttribute()
+    public function getAccountIsFollowedAttribute()
     {
         return $this->isAccountFollowingBy();
+    }
+
+    public function getAccountIsLikedAttribute()
+    {
+        return $this->isAccountLikedBy();
     }
 
     public function getAccountIsBlockedAttribute()
@@ -50,6 +65,11 @@ trait HasCommunityAccount
     public function getFollowersCount()
     {
         return $this->following()->count();
+    }
+
+    public function getLikesCount()
+    {
+        return $this->likes()->count();
     }
 
     public function getFollowingCount()
@@ -104,6 +124,19 @@ trait HasCommunityAccount
         if ($activeAccountId) {
             return Models\AccountFollower::whereAccountId($activeAccountId)
                 ->whereFollowerAccountId($this->getKey())
+                ->exists();
+        }
+
+        return false;
+    }
+
+    public function isAccountLikedBy()
+    {
+        $activeAccountId = self::getActiveAccountId();
+
+        if ($activeAccountId) {
+            return Models\AccountLike::whereAccountId($activeAccountId)
+                ->whereLikedAccountId($this->getKey())
                 ->exists();
         }
 
@@ -181,6 +214,14 @@ trait HasCommunityAccount
     public function followers()
     {
         return $this->hasMany(Models\AccountFollower::class, 'account_id');
+    }
+
+    /**
+     * Get the account contacts
+     */
+    public function likes()
+    {
+        return $this->hasMany(Models\AccountLike::class, 'account_id');
     }
 
     /**
@@ -297,24 +338,33 @@ trait HasCommunityAccount
         ]);
     }
 
+    public function likeCounts()
+    {
+        $this->update([
+            'likes_count' => $this->getLikesCount(),
+        ]);
+    }
+
     protected static function boot()
     {
         parent::boot();
 
-        static::saving(function (self $node) {
+        static::creating(function (self $node) {
+            $node->setCommunityAttributes(true);
+        });
 
-            $node->savingCommunityEvent();
-
+        static::updating(function (self $node) {
+            $node->setCommunityAttributes();
         });
     }
 
-    public function savingCommunityEvent($changeSlug = false) {
+    public function setCommunityAttributes($changeSlug = false) {
 
         $nicknames = [];
 
         foreach (config('community.slug_fields', []) as $slug_field) {
 
-            if (empty($this->getAttribute($slug_field)) || $this->isDirty($slug_field)) {
+            if (!empty($this->getAttribute($slug_field)) && $this->isDirty($slug_field)) {
                 $changeSlug = true;
             }
 

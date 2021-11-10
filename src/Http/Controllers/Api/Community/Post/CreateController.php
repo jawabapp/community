@@ -3,6 +3,7 @@
 namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 
 use Jawabapp\Community\CommunityFacade;
+use Jawabapp\Community\Http\Resources\Api\PostResource;
 use Jawabapp\Community\Plugins\CommonPlugin;
 use Jawabapp\Community\Http\Controllers\Controller;
 use Jawabapp\Community\Http\Requests\Post\CreateRequest;
@@ -37,7 +38,7 @@ class CreateController extends Controller
         ]));
 
         return response()->json([
-            'result' => $post
+            'result' => PostResource::make($post)
         ]);
     }
 }
