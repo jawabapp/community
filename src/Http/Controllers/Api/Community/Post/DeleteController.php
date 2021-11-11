@@ -2,13 +2,14 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 
+use Exception;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\CommunityFacade;
+use Jawabapp\Community\Events\PostDelete;
+use Jawabapp\Community\Events\CommentDelete;
+use Illuminate\Validation\ValidationException;
 use Jawabapp\Community\Http\Controllers\Controller;
 use Jawabapp\Community\Http\Requests\Post\DeleteRequest;
-use Jawabapp\Community\Events\DeletePostReply;
-
-use Illuminate\Validation\ValidationException;
 
 /**
  * @group  Community management
@@ -50,13 +51,25 @@ class DeleteController extends Controller
             ]);
         }
 
-        $parent_post_id = $post->parent_post_id;
-        $post->delete();
+        try {
+            if ($post->parent_post_id) {
+                $parent_post = $post->getRootPost();
+                event(new CommentDelete([
+                    'post_id' => $parent_post->id,
+                    'sender_id' => $account->id,
+                    'post_user_id' => $parent_post->account_id,
+                ]));
+            } else {
+                event(new PostDelete([
+                    'post_id' => $post->id,
+                    'post_user_id' => $post->account_id,
+                ]));
+            }
+        } catch (Exception $e) {
+            //throw $e;
+        }
 
-        event(new DeletePostReply([
-            'post_id' => $parent_post_id,
-            'sender_id' => $account->id
-        ]));
+        $post->delete();
 
         return response()->json(null, 204);
     }
