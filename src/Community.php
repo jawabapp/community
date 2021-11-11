@@ -2,6 +2,7 @@
 
 namespace Jawabapp\Community;
 
+use Exception;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Jawabapp\Community\Models\Post;
@@ -27,7 +28,13 @@ class Community
             ]);
         }
 
-        $account = $user->getAccount($request->get('account_id'));
+        try {
+            $account = $user->getAccount($request->get('account_id'));
+        } catch (Exception $exception) {
+            throw ValidationException::withMessages([
+                'account_id' => [trans('Account id is not valid!')],
+            ]);
+        }
 
         if (!$account) {
             throw ValidationException::withMessages([
@@ -67,7 +74,9 @@ class Community
                     }
                 }
             } else {
-                throw new \Exception('Post Class Type not Found');
+                throw ValidationException::withMessages([
+                    'post_class' => [trans('Post Class Type not Found')],
+                ]);
             }
         }
 
@@ -92,7 +101,7 @@ class Community
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function createPostWithTag(Request $request)
     {
