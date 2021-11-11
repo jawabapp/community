@@ -17,6 +17,12 @@ class Community
     {
         $user = CommunityFacade::getLoggedInUser();
 
+        if(!$user) {
+            throw ValidationException::withMessages([
+                'account_id' => [trans('Account id is not valid!')],
+            ]);
+        }
+
         if (config('community.check_anonymous', true) && !empty($user->is_anonymous)) {
             throw ValidationException::withMessages([
                 'id' => [trans('User is anonymous')],
@@ -29,13 +35,7 @@ class Community
             ]);
         }
 
-        try {
-            $account = $user->getAccount($request->get('account_id'));
-        } catch (Exception $exception) {
-            throw ValidationException::withMessages([
-                'account_id' => [trans('Account id is not valid!')],
-            ]);
-        }
+        $account = $user->getAccount($request->get('account_id'));
 
         if (!$account) {
             throw ValidationException::withMessages([
