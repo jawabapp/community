@@ -2,6 +2,7 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 
+//use Jawabapp\Community\Http\Resources\Api\PostResource;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\Account;
 use Jawabapp\Community\Models\PostInteraction;
@@ -53,6 +54,12 @@ class ListController extends Controller
         if ($parentPostId) {
             PostInteraction::assignInteractionToAccount('viewed', $parentPostId);
         }
+
+//        $data = PostResource::collection(
+//            $query->paginate(10)
+//        )->resource;
+//
+//        return response()->json($data);
 
         return response()->json($query->paginate(20));
     }

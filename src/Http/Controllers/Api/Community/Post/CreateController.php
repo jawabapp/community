@@ -37,7 +37,8 @@ class CreateController extends Controller
         ]));
 
         return response()->json([
-            'result' => $post
+//            'result' => PostResource::make($post),
+            'result' => $post,
         ]);
     }
 }

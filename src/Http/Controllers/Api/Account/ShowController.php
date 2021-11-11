@@ -36,7 +36,11 @@ class ShowController extends Controller
         }
 
         return response()->json([
-            'result' => $account
+            'result' => $account->setAppends([
+                'account_is_subscribed',
+                'account_is_followed',
+                'account_is_blocked',
+            ])
         ]);
 
     }

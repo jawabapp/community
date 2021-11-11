@@ -17,7 +17,7 @@ class Community
     {
         $user = CommunityFacade::getLoggedInUser();
 
-        if (!empty($user->is_anonymous)) {
+        if (config('community.check_anonymous', true) && !empty($user->is_anonymous)) {
             throw ValidationException::withMessages([
                 'id' => [trans('User is anonymous')],
             ]);

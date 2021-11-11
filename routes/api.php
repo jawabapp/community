@@ -13,6 +13,10 @@ Route::group(['prefix' => 'account'], function () {
     });
 
     Route::group(['middleware' => 'auth:api'], function () {
+        Route::group(['prefix' => 'like'], function () {
+            Route::post('/like/{accountId}', 'Api\Account\Like\LikeController@index');
+        });
+
         Route::group(['prefix' => 'follow'], function () {
             Route::post('/follow/{accountId}', 'Api\Account\Follow\FollowController@index');
             Route::post('/un-follow/{accountId}', 'Api\Account\Follow\UnFollowController@index');
@@ -44,7 +48,7 @@ Route::group(['prefix' => 'community'], function () {
         });
     });
 
-    // Route::group(['middleware' => 'auth:api'], function () {
+    Route::group(['middleware' => 'auth:api'], function () {
 
         Route::get('subscribe-notification/{type}/{id}/{account_id}', 'Api\Community\NotificationController@subscribe');
         Route::get('unsubscribe-notification/{type}/{id}/{account_id}', 'Api\Community\NotificationController@unSubscribe');
@@ -69,5 +73,5 @@ Route::group(['prefix' => 'community'], function () {
                 Route::post('follow/{accountId}', 'Api\Community\HashTag\Group\ListController@follow');
             });
         });
-    // });
+    });
 });

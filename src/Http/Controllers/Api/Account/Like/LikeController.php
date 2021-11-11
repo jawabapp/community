@@ -1,21 +1,21 @@
 <?php
 
-namespace Jawabapp\Community\Http\Controllers\Api\Account\Follow;
+namespace Jawabapp\Community\Http\Controllers\Api\Account\Like;
 
 use Jawabapp\Community\CommunityFacade;
-use Jawabapp\Community\Http\Requests\Account\Follow\LikeRequest;
+use Jawabapp\Community\Http\Requests\Account\Like\LikeRequest;
 use Jawabapp\Community\Http\Controllers\Controller;
-use Jawabapp\Community\Models\AccountFollower;
 // use Jawabapp\Community\Plugins\CommonPlugin;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
+use Jawabapp\Community\Models\AccountLike;
 
 /**
  * @group  Account management
  *
  * APIs for managing user accounts
  */
-class FollowController extends Controller
+class LikeController extends Controller
 {
     public function __construct()
     {
@@ -40,26 +40,26 @@ class FollowController extends Controller
             ]);
         }
 
-        $account = CommunityFacade::getUserClass()::find($request->get('follower_account_id'));
+        $account = CommunityFacade::getUserClass()::find($request->get('liked_account_id'));
 
         if (!$account || $account->id == $owner_account->id) {
             throw ValidationException::withMessages([
-                'follower_account_id' => [trans('follower id is not valid or your own account!')],
+                'follower_account_id' => [trans('like account id is not valid or your own account!')],
             ]);
         }
 
-        if (AccountFollower::whereAccountId($owner_account->id)->whereFollowerAccountId($account->id)->first()) {
-            throw ValidationException::withMessages([
-                'friend_account_id' => [trans('Account is already in your contact')],
-            ]);
-        }
+//        if (AccountLike::whereAccountId($owner_account->id)->whereLikedAccountId($account->id)->first()) {
+//            throw ValidationException::withMessages([
+//                'liked_account_id' => [trans('Account is already liked')],
+//            ]);
+//        }
 
-        $owner_account->followers()->create([
-            'follower_account_id' => $account->id
+        $owner_account->likes()->create([
+            'liked_account_id' => $account->id
         ]);
 
-        $owner_account->followCounts();
-        $account->followCounts();
+        $owner_account->likeCounts();
+        $account->likeCounts();
 
 //        CommonPlugin::mqttPublish($account->id,'usr/community/' . $account->user->id, [
 //            'type' => 'follow',
@@ -71,7 +71,7 @@ class FollowController extends Controller
 //        ]);
 
         return response()->json([
-            'result' => $owner_account->followers()->with('follower')->get()
+            'result' => $owner_account->likes()->with('liked_account')->get()
         ]);
     }
 }

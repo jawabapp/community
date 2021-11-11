@@ -32,7 +32,7 @@ class InteractionController extends Controller
 
         $user = CommunityFacade::getLoggedInUser();
 
-        if (!empty($user->is_anonymous) && $request->get('type') == 'viewed') {
+        if (config('community.check_anonymous', true) && !empty($user->is_anonymous) && $request->get('type') == 'viewed') {
             throw ValidationException::withMessages([
                 'id' => [trans('User is anonymous')],
             ]);

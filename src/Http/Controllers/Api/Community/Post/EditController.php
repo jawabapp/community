@@ -2,6 +2,7 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 
+//use Jawabapp\Community\Http\Resources\Api\PostResource;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Http\Controllers\Controller;
@@ -30,7 +31,7 @@ class EditController extends Controller
 
         $user = CommunityFacade::getLoggedInUser();
 
-        if (!empty($user->is_anonymous)) {
+        if (config('community.check_anonymous', true) && !empty($user->is_anonymous)) {
             throw ValidationException::withMessages([
                 'id' => [trans('User is anonymous')],
             ]);
@@ -59,6 +60,7 @@ class EditController extends Controller
         }
 
         return response()->json([
+//            'result' => PostResource::make($this->post),
             'result' => $this->post
         ]);
     }
