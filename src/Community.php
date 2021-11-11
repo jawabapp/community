@@ -5,9 +5,10 @@ namespace Jawabapp\Community;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\Tag;
-use Jawabapp\Community\Events\CreatePostReply;
+use Jawabapp\Community\Models\Post;
+use Jawabapp\Community\Events\PostCreate;
+use Jawabapp\Community\Events\CommentCreate;
 use Illuminate\Validation\ValidationException;
 
 class Community
@@ -82,19 +83,30 @@ class Community
 
         $post = Post::whereId($this->post->id)->with(['related', 'account'])->first();
 
-        if ($post->parent_post_id) {
-            $parentPost = Post::whereId($post->parent_post_id)->first();
+        try {
+            //comment
+            if ($post->parent_post_id) {
+                $parentPost = Post::whereId($post->parent_post_id)->first();
 
-            if ($account->id != $parentPost->account->id) {
-                $rootPost = $post->getRootPost();
+                if ($account->id != $parentPost->account->id) {
+                    $rootPost = $post->getRootPost();
 
-                event(new CreatePostReply([
-                    'deeplink' => $rootPost->deep_link,
-                    'post_id' => $rootPost->id,
-                    'sender_id' => $account->id,
-                    'post_user_id' => $rootPost->account_id,
+                    event(new CommentCreate([
+                        'deeplink' => $rootPost->deep_link,
+                        'post_id' => $rootPost->id,
+                        'sender_id' => $account->id,
+                        'post_user_id' => $rootPost->account_id,
+                    ]));
+                }
+            } else {
+                event(new PostCreate([
+                    'deeplink' => $post->deep_link,
+                    'post_id' => $post->id,
+                    'post_user_id' => $post->account_id,
                 ]));
             }
+        } catch (Exception $e) {
+            //throw $e;
         }
 
         return $post;
@@ -116,29 +128,30 @@ class Community
     {
         $hash_tag = str_replace([' ', '#'], ['_', ''], trim($hash_tag));
 
-        if($hash_tag) {
+        if ($hash_tag) {
 
             $tag = Tag::firstOrCreate(['hash_tag' => "#{$hash_tag}"]);
 
             $post->tags()->attach([$tag->id]);
-
         }
     }
 
-    public function getLoggedInUser() {
+    public function getLoggedInUser()
+    {
 
         $userClass = $this->getUserClass();
 
-        if(method_exists($userClass, 'getLoggedInUser')) {
+        if (method_exists($userClass, 'getLoggedInUser')) {
             return $userClass::getLoggedInUser();
         }
 
         return null;
     }
 
-    public function getUserClass() {
+    public function getUserClass()
+    {
 
-        if(class_exists(config('community.user_class'))) {
+        if (class_exists(config('community.user_class'))) {
             return config('community.user_class');
         }
 

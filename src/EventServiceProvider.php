@@ -2,11 +2,9 @@
 
 namespace Jawabapp\Community;
 
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
-use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 use Jawabapp\Community\Events;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -24,30 +22,44 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (config('community.listeners.create_post_reply')) {
+        if (config('community.listeners.create_post')) {
             Event::listen(
-                Events\CreatePostReply::class,
-                config('community.listeners.create_post_reply')
+                Events\PostCreate::class,
+                config('community.listeners.create_post')
             );
         }
 
-        if (config('community.listeners.delete_post_reply')) {
+        if (config('community.listeners.delete_post')) {
             Event::listen(
-                Events\DeletePostReply::class,
-                config('community.listeners.delete_post_reply')
+                Events\PostDelete::class,
+                config('community.listeners.delete_post')
+            );
+        }
+
+        if (config('community.listeners.create_comment')) {
+            Event::listen(
+                Events\CommentCreate::class,
+                config('community.listeners.create_comment')
+            );
+        }
+
+        if (config('community.listeners.delete_comment')) {
+            Event::listen(
+                Events\CommentDelete::class,
+                config('community.listeners.delete_comment')
             );
         }
 
         if (config('community.listeners.create_post_interaction')) {
             Event::listen(
-                Events\CreatePostInteraction::class,
+                Events\PostInteractionCreate::class,
                 config('community.listeners.create_post_interaction')
             );
         }
 
         if (config('community.listeners.delete_post_interaction')) {
             Event::listen(
-                Events\DeletePostInteraction::class,
+                Events\PostInteractionDelete::class,
                 config('community.listeners.delete_post_interaction')
             );
         }

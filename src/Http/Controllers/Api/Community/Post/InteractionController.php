@@ -6,8 +6,8 @@ namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\PostInteraction;
 use Jawabapp\Community\CommunityFacade;
-use Jawabapp\Community\Events\CreatePostInteraction;
-use Jawabapp\Community\Events\DeletePostInteraction;
+use Jawabapp\Community\Events\PostInteractionCreate;
+use Jawabapp\Community\Events\PostInteractionDelete;
 use Jawabapp\Community\Http\Controllers\Controller;
 use Jawabapp\Community\Http\Requests\Post\InteractionRequest;
 
@@ -53,7 +53,6 @@ class InteractionController extends Controller
         }
 
         $account = $user->getAccount($request->get('account_id'));
-
         if (!$account) {
             throw ValidationException::withMessages([
                 'id' => [trans("You don't have permission to do any Interaction with this post!")],
@@ -73,9 +72,10 @@ class InteractionController extends Controller
                     $postInteraction->delete();
 
                     $rootPost = $post->getRootPost();
-                    event(new DeletePostInteraction([
+                    event(new PostInteractionDelete([
                         'interaction' => $request->get('type'),
                         'post_id' => $rootPost->id,
+                        'post_user_id' => $rootPost->account_id,
                         'sender_id' => $account->id
                     ]));
                 }
@@ -94,7 +94,7 @@ class InteractionController extends Controller
 
                         $rootPost = $post->getRootPost();
 
-                        event(new CreatePostInteraction([
+                        event(new PostInteractionCreate([
                             'interaction' => $request->get('type'),
                             'deeplink' => $rootPost->deep_link,
                             'post_id' => $rootPost->id,
