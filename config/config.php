@@ -66,8 +66,15 @@ return [
         ]
     ],
     'listeners' => [
-        'post_reply' => null,
-        'post_interaction' => null,
+        'create_post' => null,
+        'delete_post' => null,
+
+        'create_comment' => null,
+        'delete_comment' => null,
+
+        'create_post_interaction' => null,
+        'delete_post_interaction' => null,
+
         'post_mention' => null
     ],
     'mimetypes' =>  [

@@ -9,15 +9,14 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Support\Facades\Log;
 
-class CreatePostInteraction
+class PostCreate
 {
-    use SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $interaction;
     public $deep_link;
     public $post_id;
-    public $sender_id;
     public $post_user_id;
 
     /**
@@ -27,20 +26,22 @@ class CreatePostInteraction
      */
     public function __construct(array $data)
     {
-        if (!empty($data['interaction'])) {
-            $this->interaction = $data['interaction'];
-        }
         if (!empty($data['deep_link'])) {
             $this->deep_link = $data['deep_link'];
         }
+
         if (!empty($data['post_id'])) {
             $this->post_id = $data['post_id'];
         }
-        if (!empty($data['sender_id'])) {
-            $this->sender_id = $data['sender_id'];
-        }
+
         if (!empty($data['post_user_id'])) {
             $this->post_user_id = $data['post_user_id'];
         }
+
+        Log::info([
+            'deep_link' => $this->deep_link,
+            'post_id' => $this->post_id,
+            'post_user_id' => $this->post_user_id,
+        ]);
     }
 }
