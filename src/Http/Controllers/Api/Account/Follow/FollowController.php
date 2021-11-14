@@ -3,7 +3,7 @@
 namespace Jawabapp\Community\Http\Controllers\Api\Account\Follow;
 
 use Jawabapp\Community\CommunityFacade;
-use Jawabapp\Community\Http\Requests\Account\Follow\LikeRequest;
+use Jawabapp\Community\Http\Requests\Account\Follow\FollowRequest;
 use Jawabapp\Community\Http\Controllers\Controller;
 use Jawabapp\Community\Models\AccountFollower;
 // use Jawabapp\Community\Plugins\CommonPlugin;
@@ -22,7 +22,7 @@ class FollowController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function index($accountId, LikeRequest $request): JsonResponse
+    public function index($accountId, FollowRequest $request): JsonResponse
     {
         $user = CommunityFacade::getLoggedInUser();
 
