@@ -14,7 +14,7 @@ class AccountResource extends Resource
      */
     public function toArray($request)
     {
-        return $this->setAppends([
+        return $this->append([
             'account_is_subscribed',
             'account_is_followed',
             'account_is_blocked',
