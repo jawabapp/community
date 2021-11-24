@@ -101,6 +101,10 @@ class Tag extends Model
 
     public function generateDeepLink()
     {
+        if(!config('community.deep_link.hashtag')) {
+            return null;
+        }
+
         $hash_tag = (str_replace('#', '', $this->hash_tag));
 
         $deep_link = DeepLinkBuilder::generate(

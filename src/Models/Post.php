@@ -264,6 +264,9 @@ class Post extends Model
 
     public function generateDeepLink()
     {
+        if(!config('community.deep_link.post')) {
+            return null;
+        }
 
         $slug = ($this->account->slug_without_at);
         $hash = ($this->hash);

@@ -52,12 +52,6 @@ return [
             'utm_medium' => null,
             'utm_campaign' => null,
         ],
-        'tag' => [
-            'url_prefix' => null,
-            'utm_source' => null,
-            'utm_medium' => null,
-            'utm_campaign' => null,
-        ],
         'hashtag' => [
             'url_prefix' => null,
             'utm_source' => null,

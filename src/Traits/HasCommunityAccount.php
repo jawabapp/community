@@ -140,8 +140,11 @@ trait HasCommunityAccount
 
     public function generateDeepLink($returnOnly = false)
     {
-        $slug = ($this->slug_without_at);
+        if(!config('community.deep_link.account')) {
+            return null;
+        }
 
+        $slug = ($this->slug_without_at);
 
         $deep_link = DeepLinkBuilder::generate(
             [
