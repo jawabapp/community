@@ -117,23 +117,23 @@ class Community
      */
     public function createPostWithTag(Request $request)
     {
-        $post = $this->createPost($request);
 
-        $this->linkPostWithTag($post, $request->get('hash_tag'));
-
-        return $post->refresh();
-    }
-
-    public function linkPostWithTag($post, $hash_tag)
-    {
-        $hash_tag = str_replace([' ', '#'], ['_', ''], trim($hash_tag));
+        $hash_tag = str_replace([' ', '#'], ['_', ''], trim($request->get('hash_tag')));
 
         if ($hash_tag) {
 
             $tag = Tag::firstOrCreate(['hash_tag' => "#{$hash_tag}"]);
 
-            $post->tags()->attach([$tag->id]);
+            if($tag) {
+                $post = $this->createPost($request);
+
+                $post->tags()->attach([$tag->id]);
+
+                return $post->refresh();
+            }
         }
+
+        return null;
     }
 
     public function getLoggedInUser()

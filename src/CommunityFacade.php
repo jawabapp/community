@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Facade;
  *
  * @method static getUserClass()
  * @method static getLoggedInUser()
- * @method static linkPostWithTag($post, $hash_tag)
  * @method static createPostWithTag(Request $request)
  * @method static createPost(Request $request)
  */
