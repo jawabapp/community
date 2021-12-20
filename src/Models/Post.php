@@ -309,6 +309,9 @@ class Post extends Model
     public static function getUserFilteredData(Builder $builder)
     {
 
+        //App post filters
+        CommunityFacade::getUserClass()::postfilters($builder);
+
         $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
         if ($activeAccountId) {
 
