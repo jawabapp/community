@@ -38,10 +38,5 @@ class PostCreate
             $this->post_user_id = $data['post_user_id'];
         }
 
-        Log::info([
-            'deep_link' => $this->deep_link,
-            'post_id' => $this->post_id,
-            'post_user_id' => $this->post_user_id,
-        ]);
     }
 }

@@ -36,7 +36,7 @@ class ListController extends Controller
     public function index(): JsonResponse
     {
 
-        \Log::info('List Tag Groups', request()->all());
+//        \Log::info('List Tag Groups', request()->all());
 
         $query = TagGroup::with('children')
             ->whereNull('parent_id')
@@ -62,7 +62,7 @@ class ListController extends Controller
     public function follow($accountId, FollowRequest $request)
     {
 
-        \Log::info('Follow Tag Groups', $request->all());
+//        \Log::info('Follow Tag Groups', $request->all());
 
         $user = CommunityFacade::getLoggedInUser();
 
