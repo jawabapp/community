@@ -309,47 +309,50 @@ class Post extends Model
     public static function getUserFilteredData(Builder $builder)
     {
 
-        //App timeline Filters
-        CommunityFacade::getUserClass()::timelineFilters($builder);
-
         $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
+
         if ($activeAccountId) {
 
-            $tagGroupFollower = TagGroupFollower::where('account_id', $activeAccountId)->count();
+            $builder->where(function ($query) use ($activeAccountId) {
 
-            if ($tagGroupFollower == 0) {
-                $builder->where(function ($query) use ($activeAccountId) {
-                    $query->whereNotIn('posts.id', function ($q) use ($activeAccountId) {
-                        $q->select('post_tags.post_id')->from('post_tags')
-                            ->join('tags', 'post_tags.tag_id', '=', 'tags.id')
-                            ->join('tag_groups', 'tags.tag_group_id', '=', 'tag_groups.id')
-                            ->where('tag_groups.hide_in_public', 1);
-                    });
+                // Get user's own posts
+                $query->where('posts.account_id', $activeAccountId);
+
+                // Get user's followed hashtags posts
+                $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
+                    $q->select('post_tags.post_id')->from('post_tags')
+                        ->join('tag_followers', 'post_tags.tag_id', '=', 'tag_followers.tag_id')
+                        ->where('tag_followers.account_id', $activeAccountId);
                 });
-            } else {
-                $builder->where(function ($query) use ($activeAccountId) {
-                    // Get user's followed tag-groups posts
-                    $query->whereIn('posts.id', function ($q) use ($activeAccountId) {
-                        $q->select('post_tags.post_id')->from('post_tags')
-                            ->join('tags', 'post_tags.tag_id', '=', 'tags.id')
-                            ->join('tag_group_followers', 'tags.tag_group_id', '=', 'tag_group_followers.tag_group_id')
-                            ->where('tag_group_followers.account_id', $activeAccountId);
-                    });
-                    // Get user's followed hashtags posts
-                    $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
-                        $q->select('post_tags.post_id')->from('post_tags')
-                            ->join('tag_followers', 'post_tags.tag_id', '=', 'tag_followers.tag_id')
-                            ->where('tag_followers.account_id', $activeAccountId);
-                    });
-                    //                    // Get user's followed accounts posts
-                    //                    $query->orWhereIn('posts.account_id', function($q) use ($activeAccountId) {
-                    //                        $q->select('account_followers.follower_account_id')->from('account_followers')
-                    //                            ->where('account_followers.account_id', $activeAccountId);
-                    //                    });
-                    // Get user's own posts
-                    $query->orWhere('posts.account_id', $activeAccountId);
+
+                // Get user's followed accounts posts
+                $query->orWhereIn('posts.account_id', function($q) use ($activeAccountId) {
+                    $q->select('account_followers.follower_account_id')->from('account_followers')
+                        ->where('account_followers.account_id', $activeAccountId);
                 });
-            }
+
+                // Get user's followed tag-groups posts
+                if(TagGroup::count()) {
+                    if (TagGroupFollower::where('account_id', $activeAccountId)->count()) {
+                        $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
+                            $q->select('post_tags.post_id')->from('post_tags')
+                                ->join('tags', 'post_tags.tag_id', '=', 'tags.id')
+                                ->join('tag_group_followers', 'tags.tag_group_id', '=', 'tag_group_followers.tag_group_id')
+                                ->where('tag_group_followers.account_id', $activeAccountId);
+                        });
+                    } else {
+                        $query->orWhereNotIn('posts.id', function ($q) use ($activeAccountId) {
+                            $q->select('post_tags.post_id')->from('post_tags')
+                                ->join('tags', 'post_tags.tag_id', '=', 'tags.id')
+                                ->join('tag_groups', 'tags.tag_group_id', '=', 'tag_groups.id')
+                                ->where('tag_groups.hide_in_public', 1);
+                        });
+                    }
+                }
+
+                //App timeline Filters
+                CommunityFacade::getUserClass()::timelineFilters($query);
+            });
         }
     }
 
