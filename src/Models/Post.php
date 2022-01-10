@@ -255,7 +255,8 @@ class Post extends Model
 
         if ($parent_post && empty($this->related_post_id)) {
             $parent_post->update([
-                'children_count' => ($isDecrease ? ($parent_post->children_count - $this->children_count - 1) : ($parent_post->children_count + 1))
+//                'children_count' => ($isDecrease ? ($parent_post->children_count - $this->children_count - 1) : ($parent_post->children_count + 1))
+                'children_count' => self::where('parent_post_id', $parent_post->id)->count()
             ]);
 
             $parent_post->updateParentsCount($isDecrease);
