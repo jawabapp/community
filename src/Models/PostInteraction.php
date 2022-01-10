@@ -37,7 +37,7 @@ class PostInteraction extends Model
                 $post = Post::find($node->getAttribute('post_id'));
                 if ($post) {
                     $extra_info = $post->extra_info;
-                    $extra_info['interacttion_users'] = $post->getUserInteractions();
+                    $extra_info['interaction_users'] = $post->getUserInteractions();
                     $post->update([
                         'interactions' => $post->getInteractions(),
                         'extra_info' => $extra_info,
@@ -52,7 +52,7 @@ class PostInteraction extends Model
                 $post = Post::find($node->getAttribute('post_id'));
                 if ($post) {
                     $extra_info = $post->extra_info;
-                    $extra_info['interacttion_users'] = $post->getUserInteractions();
+                    $extra_info['interaction_users'] = $post->getUserInteractions();
                     $post->update([
                         'interactions' => $post->getInteractions(),
                         'extra_info' => $extra_info
