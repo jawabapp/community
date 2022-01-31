@@ -69,7 +69,9 @@ return [
         'create_post_interaction' => null,
         'delete_post_interaction' => null,
 
-        'post_mention' => null
+        'post_mention' => null,
+
+        'like_account' => null
     ],
     'mimetypes' =>  [
         'gif' => 'image/gif',
