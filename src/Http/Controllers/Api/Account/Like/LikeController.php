@@ -8,6 +8,7 @@ use Jawabapp\Community\Http\Controllers\Controller;
 // use Jawabapp\Community\Plugins\CommonPlugin;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
+use Jawabapp\Community\Events\AccountLikeCreate;
 use Jawabapp\Community\Models\AccountLike;
 
 /**
@@ -26,7 +27,7 @@ class LikeController extends Controller
     {
         $user = CommunityFacade::getLoggedInUser();
 
-        if(config('community.check_anonymous', true) && $user->is_anonymous) {
+        if (config('community.check_anonymous', true) && $user->is_anonymous) {
             throw ValidationException::withMessages([
                 'id' => [trans('User is anonymous')],
             ]);
@@ -34,7 +35,7 @@ class LikeController extends Controller
 
         $owner_account = $user->getAccount($accountId);
 
-        if(!$owner_account) {
+        if (!$owner_account) {
             throw ValidationException::withMessages([
                 'account_id' => [trans('Account id is not valid!')],
             ]);
@@ -48,11 +49,11 @@ class LikeController extends Controller
             ]);
         }
 
-//        if (AccountLike::whereAccountId($owner_account->id)->whereLikedAccountId($account->id)->first()) {
-//            throw ValidationException::withMessages([
-//                'liked_account_id' => [trans('Account is already liked')],
-//            ]);
-//        }
+        //        if (AccountLike::whereAccountId($owner_account->id)->whereLikedAccountId($account->id)->first()) {
+        //            throw ValidationException::withMessages([
+        //                'liked_account_id' => [trans('Account is already liked')],
+        //            ]);
+        //        }
 
         $owner_account->likes()->create([
             'liked_account_id' => $account->id
@@ -61,14 +62,20 @@ class LikeController extends Controller
         $owner_account->likeCounts();
         $account->likeCounts();
 
-//        CommonPlugin::mqttPublish($account->id,'usr/community/' . $account->user->id, [
-//            'type' => 'follow',
-//            'content' => trans('notification.profile_follow', ['nickname' => $owner_account->slug], $account->user->language),
-//            'deeplink' => $owner_account->deep_link,
-//            'account_sender_nickname' => $owner_account->slug,
-//            'account_sender_avatar' => $owner_account->avatar['100*100'] ?? '',
-//            'account_sender_id' => $owner_account->id
-//        ]);
+        event(new AccountLikeCreate([
+            'deep_link' => $account->deep_link,
+            'user_id' => $owner_account->id,
+            'reciver_user_id' => $account->id,
+        ]));
+
+        //        CommonPlugin::mqttPublish($account->id,'usr/community/' . $account->user->id, [
+        //            'type' => 'follow',
+        //            'content' => trans('notification.profile_follow', ['nickname' => $owner_account->slug], $account->user->language),
+        //            'deeplink' => $owner_account->deep_link,
+        //            'account_sender_nickname' => $owner_account->slug,
+        //            'account_sender_avatar' => $owner_account->avatar['100*100'] ?? '',
+        //            'account_sender_id' => $owner_account->id
+        //        ]);
 
         return response()->json([
             'result' => $owner_account->likes()->with('liked_account')->get()

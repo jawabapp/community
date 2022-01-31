@@ -70,5 +70,12 @@ class EventServiceProvider extends ServiceProvider
                 config('community.listeners.post_mention')
             );
         }
+
+        if (config('community.listeners.like_account')) {
+            Event::listen(
+                Events\AccountLikeCreate::class,
+                config('community.listeners.like_account')
+            );
+        }
     }
 }
