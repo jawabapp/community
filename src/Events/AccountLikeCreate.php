@@ -15,9 +15,10 @@ class AccountLikeCreate
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $deep_link;
+    public $flow;
     public $user_id;
-    public $reciver_user_id;
+    public $deep_link;
+    public $receiver_user_id;
 
     /**
      * Create a new event instance.
@@ -30,16 +31,21 @@ class AccountLikeCreate
         Log::info([
             'AccountLikeCreate' => $data
         ]);
-        if (!empty($data['deep_link'])) {
-            $this->deep_link = $data['deep_link'];
+
+        if (!empty($data['flow'])) {
+            $this->flow = $data['flow'];
         }
 
         if (!empty($data['user_id'])) {
             $this->user_id = $data['user_id'];
         }
 
-        if (!empty($data['reciver_user_id'])) {
-            $this->reciver_user_id = $data['reciver_user_id'];
+        if (!empty($data['deep_link'])) {
+            $this->deep_link = $data['deep_link'];
+        }
+
+        if (!empty($data['receiver_user_id'])) {
+            $this->receiver_user_id = $data['receiver_user_id'];
         }
     }
 }

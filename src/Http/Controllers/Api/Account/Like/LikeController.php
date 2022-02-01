@@ -63,19 +63,11 @@ class LikeController extends Controller
         $account->likeCounts();
 
         event(new AccountLikeCreate([
-            'deep_link' => $account->deep_link,
+            'flow' => $request->get('flow'),
             'user_id' => $owner_account->id,
-            'reciver_user_id' => $account->id,
+            'deep_link' => $account->deep_link,
+            'receiver_user_id' => $account->id,
         ]));
-
-        //        CommonPlugin::mqttPublish($account->id,'usr/community/' . $account->user->id, [
-        //            'type' => 'follow',
-        //            'content' => trans('notification.profile_follow', ['nickname' => $owner_account->slug], $account->user->language),
-        //            'deeplink' => $owner_account->deep_link,
-        //            'account_sender_nickname' => $owner_account->slug,
-        //            'account_sender_avatar' => $owner_account->avatar['100*100'] ?? '',
-        //            'account_sender_id' => $owner_account->id
-        //        ]);
 
         return response()->json([
             'result' => $owner_account->likes()->with('liked_account')->get()
