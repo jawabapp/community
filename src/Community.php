@@ -92,7 +92,7 @@ class Community
                     $rootPost = $post->getRootPost();
 
                     event(new CommentCreate([
-                        'deeplink' => $rootPost->deep_link,
+                        'deep_link' => $rootPost->deep_link,
                         'post_id' => $rootPost->id,
                         'sender_id' => $account->id,
                         'post_user_id' => $rootPost->account_id,
@@ -100,7 +100,7 @@ class Community
                 }
             } else {
                 event(new PostCreate([
-                    'deeplink' => $post->deep_link,
+                    'deep_link' => $post->deep_link,
                     'post_id' => $post->id,
                     'post_user_id' => $post->account_id,
                 ]));

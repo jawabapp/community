@@ -96,7 +96,7 @@ class InteractionController extends Controller
 
                         event(new PostInteractionCreate([
                             'interaction' => $request->get('type'),
-                            'deeplink' => $rootPost->deep_link,
+                            'deep_link' => $rootPost->deep_link,
                             'post_id' => $rootPost->id,
                             'sender_id' => $account->id,
                             'post_user_id' => $post->account_id

@@ -41,11 +41,10 @@ class Text extends Post
                             $rootPost = $node->getRootPost();
 
                             event(new PostMention([
-                                'deeplink' => $rootPost->deep_link,
+                                'deep_link' => $rootPost->deep_link,
                                 'post_id' => $rootPost->id,
                                 'sender_id' => $node->account->id,
                                 'post_user_id' => $account->id,
-
                             ]));
                         }
                     }

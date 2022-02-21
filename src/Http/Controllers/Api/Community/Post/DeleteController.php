@@ -55,6 +55,7 @@ class DeleteController extends Controller
             if ($post->parent_post_id) {
                 $parent_post = $post->getRootPost();
                 event(new CommentDelete([
+                    'deep_link' => $parent_post->deep_link,
                     'post_id' => $parent_post->id,
                     'sender_id' => $account->id,
                     'post_user_id' => $parent_post->account_id,
