@@ -2,6 +2,7 @@
 
 namespace Jawabapp\Community\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -42,12 +43,19 @@ class Post extends Model
     protected $appends = [
         'type',
         'account_interaction',
-        'is_subscribed'
+        'is_subscribed',
+        'formatted_created_at'
     ];
 
     public function getTypeAttribute()
     {
         return strtolower(str_replace(self::class . '\\', '', $this->class_type));
+    }
+
+    //TODO: This should be changed to be another key example: (formatted_created_at)
+    public function getFormattedCreatedAtAttribute($date)
+    {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $date)->diffForHumans();
     }
 
     public function getAccountInteractionAttribute()
@@ -255,7 +263,7 @@ class Post extends Model
 
         if ($parent_post && empty($this->related_post_id)) {
             $parent_post->update([
-//                'children_count' => ($isDecrease ? ($parent_post->children_count - $this->children_count - 1) : ($parent_post->children_count + 1))
+                //                'children_count' => ($isDecrease ? ($parent_post->children_count - $this->children_count - 1) : ($parent_post->children_count + 1))
                 'children_count' => self::where('parent_post_id', $parent_post->id)->count()
             ]);
 
@@ -265,7 +273,7 @@ class Post extends Model
 
     public function generateDeepLink()
     {
-        if(!config('community.deep_link.post')) {
+        if (!config('community.deep_link.post')) {
             return null;
         }
 
@@ -327,13 +335,13 @@ class Post extends Model
                 });
 
                 // Get user's followed accounts posts
-                $query->orWhereIn('posts.account_id', function($q) use ($activeAccountId) {
+                $query->orWhereIn('posts.account_id', function ($q) use ($activeAccountId) {
                     $q->select('account_followers.follower_account_id')->from('account_followers')
                         ->where('account_followers.account_id', $activeAccountId);
                 });
 
                 // Get user's followed tag-groups posts
-                if(TagGroup::count()) {
+                if (TagGroup::count()) {
                     if (TagGroupFollower::where('account_id', $activeAccountId)->count()) {
                         $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
                             $q->select('post_tags.post_id')->from('post_tags')
