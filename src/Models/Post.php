@@ -319,6 +319,19 @@ class Post extends Model
                 // Get user's own posts
                 $query->where('posts.account_id', $activeAccountId);
 
+                // Get user's liked posts
+                $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
+                    $q->select('post_interactions.post_id')->from('post_interactions')
+                        ->where('post_interactions.account_id', $activeAccountId);
+                });
+
+                // Get user's committed posts
+                $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
+                    $q->select('posts.id')->from('posts')
+                        ->whereNotNull('parent_post_id')
+                        ->where('posts.account_id', $activeAccountId);
+                });
+
                 // Get user's followed hashtags posts
                 $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
                     $q->select('post_tags.post_id')->from('post_tags')
@@ -352,7 +365,7 @@ class Post extends Model
                 }
 
                 //App timeline Filters
-                CommunityFacade::getUserClass()::timelineFilters($query);
+                CommunityFacade::getUserClass()::timelineFilters($query, $activeAccountId);
             });
         }
     }
