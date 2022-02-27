@@ -27,7 +27,8 @@ class Post extends Model
         'children_count',
         'hash',
         'extra_info',
-        'topic'
+        'topic',
+        'weight'
     ];
 
     protected $hidden = [

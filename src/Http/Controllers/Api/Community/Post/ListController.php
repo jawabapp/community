@@ -44,6 +44,7 @@ class ListController extends Controller
             $query->oldest();
         } else {
             $query->whereNull('parent_post_id');
+            $query->orderBy('weight', 'desc');
             $query->latest();
         }
 
