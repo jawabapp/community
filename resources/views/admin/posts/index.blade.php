@@ -87,6 +87,7 @@
                                 <li>created at : <strong>{{ $item->created_at }}</strong></li>
                                 <li>owner : <strong>{{ $item->account['slug'] ?? '' }}</strong></li>
                                 <li>deep-link : <strong>{{ $item->deep_link }}</strong></li>
+                                <li>hash : <strong>{{ $item->hash }}</strong></li>
                                 @foreach($item->interactions as $interaction => $value)
                                     <li>{{ $interaction }} : <strong>{{ $value }}</strong></li>
                                 @endforeach
