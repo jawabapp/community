@@ -143,10 +143,15 @@ class SearchController extends Controller
 
         $q = CommunityFacade::getUserClass()::query();
 
+//        if(config('community.search_fields')) {
+//            foreach (config('community.search_fields') as $column) {
+//                $q->orWhere($column, 'LIKE', "%{$query}%");
+//            }
+//        }
+
         if(config('community.search_fields')) {
-            foreach (config('community.search_fields') as $column) {
-                $q->orWhere($column, 'LIKE', "%{$query}%");
-            }
+            $search_fields = "`" .implode("`, ' ',`", config('community.search_fields')) . "`";
+            $q->orWhereRaw("CONCAT({$search_fields}) LIKE '%{$query}%'");
         }
 
         return $q->paginate(10);
