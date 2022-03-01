@@ -42,10 +42,14 @@ class PostsController extends Controller
         }
 
         if ($request->get('slug')) {
-            $account = CommunityFacade::getUserClass()::where('slug', 'like', "%{$request->get('slug')}%")->first();
+            $account = CommunityFacade::getUserClass()::where('slug', 'like',  '%' . $request->get('slug') . '%')->first();
             if ($account) {
                 $query->where('posts.account_id', $account->id);
             }
+        }
+
+        if ($request->get('hash')) {
+            $query->where('posts.hash', 'like',  '%' . $request->get('hash') . '%');
         }
 
         $join = false;

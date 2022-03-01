@@ -11,7 +11,15 @@
     <div class="card mb-3">
         <div class="card-body">
             <form>
-                <input type="text" class="form-control mb-2" name="slug" value="{{ request('slug') }}" placeholder="@Account">
+                <div class="form-group">
+                    <label for="slug">User Slug</label>
+                    <input type="text" class="form-control mb-2" name="slug" value="{{ request('slug') }}" placeholder="@Account">
+                </div>
+
+                <div class="form-group">
+                    <label for="hash">Post Hash</label>
+                    <input type="text" class="form-control" id="hash" name="hash" value="{{ request('hash') }}">
+                </div>
 
                 <div class="row">
                     <div class="col">
