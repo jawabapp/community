@@ -51,6 +51,8 @@ Route::group(['prefix' => 'admin'], function () {
 
         Route::post('assign-tag-group', 'Web\Admin\TagGroupsController@assign');
 
+        Route::get('user/search', 'Web\Admin\UserController@search');
+
         // Route::group(['prefix' => 'upload'], function() {
         //     Route::post('image', 'Api\Admin\IndexController@image');
         // });

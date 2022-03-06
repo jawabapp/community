@@ -1,6 +1,18 @@
 @extends('community::layouts.app')
 
 @section('content')
+    @push('styles')
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <style>
+            .select2-container .select2-selection--single{
+                height: calc(1.5em + 0.75rem + 2px);
+                padding: 0.375rem 0.75rem;
+                display: flex;
+                align-items: center;
+                border: 1px solid #ced4d9;
+            }
+        </style>
+    @endpush
     <div class="card">
         <div class="card-header">
             Add / Static Page
@@ -9,8 +21,49 @@
         <div class="card-body">
             <form method="POST" action="{{ route('community.posts.store') }}" class="form-horizontal">
                 {{ csrf_field() }}
-                @include('community::admin.posts.fields')
+                <div class="form-group">
+                    <label for="hash">User</label>
+                    <select class="form-control select2" style="width: 100%;"></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="hash">Comment</label>
+                    <textarea name="content" id="content" class="form-control" cols="30" rows="10"></textarea>
+                </div>
+
             </form>
         </div>
     </div>
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("select.select2").select2({
+                placeholder: 'Select User',
+                minimumInputLength: 3,
+                ajax: {
+                    url: "{{url('/en/admin/api/user/search')}}",
+                    dataType: 'json',
+                    data: (params) => {
+                        return {
+                            phone: params.term,
+                        }
+                    },
+                    processResults: (data, params) => {
+                        const results = data.data.map(item => {
+                            return {
+                                id: item.id,
+                                text: item.first_name + ' ' +item.last_name
+                            };
+                        });
+                        return {
+                            results: results,
+                        }
+                    },
+                },
+            });
+        });
+    </script>
+@endpush
+
 @endsection

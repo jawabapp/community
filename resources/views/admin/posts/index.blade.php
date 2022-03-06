@@ -51,6 +51,7 @@
     </div>
 
     @if(request('parent_post_id'))
+
         <div class="card mb-3">
             <div class="card-body">
                 @php($post = Jawabapp\Community\Models\Post::find(request('parent_post_id')))
@@ -68,9 +69,10 @@
                             @endforeach
                         </ul>
                     </div>
-                </div>
 
+                </div>
                 <a href="{{route('community.posts.index', ['parent_post_id' => $post->parent_post_id])}}" class="btn btn-outline-primary">Back</a>
+                <a href="{{route('community.posts.create', ['parent_post_id' => request()->parent_post_id])}}" class="btn btn-primary">Add New Comment</a>
             </div>
         </div>
     @endif
