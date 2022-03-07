@@ -147,6 +147,22 @@ class PostsController extends Controller
      * @param CreateRequest $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
+
+
+    public function store_comment(Post $post,Request $request)
+    {
+
+        Post\Text::create([
+            'account_id' => $request->account_id,
+            'parent_post_id' => $post->id,
+            'content' => $request->content,
+            'is_status' => true
+        ]);
+
+        return redirect(route('community.posts.index',['parent_post_id' => $post->id]));
+
+    }
+
     protected function store(CreateRequest $request)
     {
         //        $this->repository->create($request->all());

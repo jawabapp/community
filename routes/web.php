@@ -16,6 +16,9 @@ Route::resource('posts', 'Web\Admin\PostsController', [
     ]
 ]);
 
+Route::post('posts/{post}/store_comment', 'Web\Admin\PostsController@store_comment')->name('community.posts.store_comment');
+
+
 Route::get('tag-groups/tags', 'Web\Admin\TagGroupsController@tags')->name('community.tag-groups.tags');
 
 

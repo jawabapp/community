@@ -19,18 +19,17 @@
         </div>
 
         <div class="card-body">
-            <form method="POST" action="{{ route('community.posts.store') }}" class="form-horizontal">
+            <form method="POST" action="{{route('community.posts.store_comment', ['parent_post_id' => request()->parent_post_id])}}" class="form-horizontal">
                 {{ csrf_field() }}
                 <div class="form-group">
                     <label for="hash">User</label>
-                    <select class="form-control select2" style="width: 100%;"></select>
+                    <select required name="account_id" class="form-control select2" style="width: 100%;"></select>
                 </div>
-
                 <div class="form-group">
                     <label for="hash">Comment</label>
-                    <textarea name="content" id="content" class="form-control" cols="30" rows="10"></textarea>
+                    <textarea required name="content" id="content" class="form-control" cols="30" rows="4"></textarea>
                 </div>
-
+                <button type="submit" class="btn btn-primary">Add</button>
             </form>
         </div>
     </div>
@@ -53,7 +52,7 @@
                         const results = data.data.map(item => {
                             return {
                                 id: item.id,
-                                text: item.first_name + ' ' +item.last_name
+                                text: item.phone
                             };
                         });
                         return {
