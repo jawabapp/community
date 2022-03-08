@@ -149,15 +149,10 @@ class PostsController extends Controller
      */
 
 
-    public function store_comment(Post $post,Request $request)
+    public function store_comment(CreateRequest $request)
     {
 
-        Post\Text::create([
-            'account_id' => $request->account_id,
-            'parent_post_id' => $post->id,
-            'content' => $request->content,
-            'is_status' => true
-        ]);
+        $post = CommunityFacade::insertPost($request);
 
         return redirect(route('community.posts.index',['parent_post_id' => $post->id]));
 

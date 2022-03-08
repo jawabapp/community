@@ -13,6 +13,18 @@
             }
         </style>
     @endpush
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <p><strong>Opps Something went wrong</strong></p>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+
     <div class="card">
         <div class="card-header">
             Add / Static Page
@@ -25,9 +37,10 @@
                     <label for="hash">User</label>
                     <select required name="account_id" class="form-control select2" style="width: 100%;"></select>
                 </div>
+                <input type="hidden" name="parent_post_id" value="{{request()->parent_post_id}}">
                 <div class="form-group">
                     <label for="hash">Comment</label>
-                    <textarea required name="content" id="content" class="form-control" cols="30" rows="4"></textarea>
+                    <textarea required name="post" id="post" class="form-control" cols="30" rows="4"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Add</button>
             </form>
