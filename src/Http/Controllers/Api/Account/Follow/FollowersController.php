@@ -53,11 +53,13 @@ class FollowersController extends Controller
 
         $data->getCollection()->transform(function ($item) {
             $data = $item->toArray();
-            $data['follower'] = $item->account->append([
-                'account_is_subscribed',
-                'account_is_followed',
-                'account_is_blocked',
-            ]);
+            if($item->account) {
+                $data['follower'] = $item->account->append([
+                    'account_is_subscribed',
+                    'account_is_followed',
+                    'account_is_blocked',
+                ]);
+            }
             unset($data['account']);
             return $data;
         });
