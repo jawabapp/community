@@ -112,15 +112,16 @@ class SearchController extends Controller
         return $this->index($request, 'tags');
     }
 
+    private function getKeyword($query) {
+        $keyword = str_replace(['-', '_', '&', '"', '\'', ',', ';', '^', '!', '\\', '/', '(', ')', '[', ']', '%', '$', '#', '@', '~', '+', '*', '|'], ' ', trim($query));
+        $keyword = preg_replace('/\s+/', ' ', $keyword);
+        return trim($keyword);
+    }
+
     private function post(SearchRequest $request)
     {
 
-        $query = trim($request->get('query'));
-
-        $keyword = str_replace(['-', '_', '&', '"', '\'', ',', ';', '^', '!', '\\', '/', '(', ')', '[', ']', '%', '$', '#', '@', '~', '+', '*', '|'], ' ', $query);
-        $keyword = preg_replace('/\s+/', ' ', $keyword);
-        $keyword = trim($keyword);
-
+        $keyword = $this->getKeyword($request->get('query'));
         $keywords = '+' . preg_replace('#[\s]+#i', '+', $keyword);
 
         return Post::whereRaw("MATCH (`content`) AGAINST(? IN BOOLEAN MODE)", $keywords)
@@ -135,24 +136,21 @@ class SearchController extends Controller
     private function account(SearchRequest $request)
     {
 
-        $query = trim($request->get('query'));
-
-//        $keyword = str_replace(['-', '_', '&', '"', '\'', ',', ';', '^', '!', '\\', '/', '(', ')', '[', ']', '%', '$', '#', '@', '~', '+', '*', '|'], ' ', $query);
-//        $keyword = preg_replace('/\s+/', ' ', $keyword);
-//        $keyword = trim($keyword);
-
         $q = CommunityFacade::getUserClass()::query();
 
-//        if(config('community.search_fields')) {
-//            foreach (config('community.search_fields') as $column) {
-//                $q->orWhere($column, 'LIKE', "%{$query}%");
-//            }
-//        }
+        $keyword = $this->getKeyword($request->get('query'));
 
-        if(config('community.search_fields')) {
-            $search_fields = "`" .implode("`, ' ',`", config('community.search_fields')) . "`";
-            $q->orWhereRaw("CONCAT({$search_fields}) LIKE '%{$query}%'");
+        if(config('community.search_fields') && $keyword) {
+            $keywords = preg_replace('#[\s]+#i', '%', $keyword);
+            foreach (config('community.search_fields') as $column) {
+                $q->orWhere($column, 'LIKE', "%{$keywords}%");
+            }
         }
+
+//        if(config('community.search_fields')) {
+//            $search_fields = "`" .implode("`, ' ',`", config('community.search_fields')) . "`";
+//            $q->orWhereRaw("CONCAT({$search_fields}) LIKE '%{$keyword}%'");
+//        }
 
         return $q->paginate(10);
     }
@@ -160,11 +158,11 @@ class SearchController extends Controller
     private function hashTag(SearchRequest $request)
     {
 
-        $query = trim($request->get('query'));
+        $keyword = $this->getKeyword($request->get('query'));
 
         return Tag::selectRaw('`tag_id`, `hash_tag`, count(*) as `hash_tag_count`')
             ->join('post_tags', 'tag_id', '=', 'tags.id')
-            ->where('hash_tag', 'LIKE', "%{$query}%")
+            ->where('hash_tag', 'LIKE', "%{$keyword}%")
             ->groupBy('tag_id')
             ->orderBy('hash_tag_count', 'desc')
             ->paginate(10);
