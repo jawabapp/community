@@ -147,6 +147,17 @@ class PostsController extends Controller
      * @param CreateRequest $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
+
+
+    public function store_comment(CreateRequest $request)
+    {
+
+        $post = CommunityFacade::insertPost($request);
+
+        return redirect(route('community.posts.index',['parent_post_id' => $post->id]));
+
+    }
+
     protected function store(CreateRequest $request)
     {
         //        $this->repository->create($request->all());

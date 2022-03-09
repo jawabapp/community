@@ -16,6 +16,9 @@ Route::resource('posts', 'Web\Admin\PostsController', [
     ]
 ]);
 
+Route::post('posts/store_comment', 'Web\Admin\PostsController@store_comment')->name('community.posts.store_comment');
+
+
 Route::get('tag-groups/tags', 'Web\Admin\TagGroupsController@tags')->name('community.tag-groups.tags');
 
 
@@ -50,6 +53,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('selected-services', 'Api\Admin\IndexController@selectedServices');
 
         Route::post('assign-tag-group', 'Web\Admin\TagGroupsController@assign');
+
+        Route::get('user/search', 'Web\Admin\UserController@search');
 
         // Route::group(['prefix' => 'upload'], function() {
         //     Route::post('image', 'Api\Admin\IndexController@image');

@@ -28,13 +28,8 @@ class CreateController extends Controller
 
     public function create(CreateRequest $request): JsonResponse
     {
-        $post = CommunityFacade::createPost(new Request([
-            'account_id' => $request->get('account_id'),
-            'parent_post_id' => $request->get('parent_post_id'),
-            'post' => $request->get('post'),
-            'attachment_type' => $request->get('attachment_type'),
-            'attachments' => $request->attachments,
-        ]));
+
+        $post = CommunityFacade::createPost($request);
 
         return response()->json([
 //            'result' => PostResource::make($post),
