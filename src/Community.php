@@ -150,7 +150,7 @@ class Community
                         'deep_link' => $rootPost->deep_link,
                         'post_id' => $rootPost->id,
                         'sender_id' => $request->get('account_id'),
-                        'post_user_id' => $rootPost->account_id,
+                        'post_user_id' => $parentPost->account_id,
                     ]));
                 }
             } else {
