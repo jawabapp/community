@@ -24,10 +24,34 @@
         </div>
     @endif
 
+    @if(request('parent_post_id'))
+    <div class="card mb-3">
+        <div class="card-body">
+            @php($post = Jawabapp\Community\Models\Post::find(request('parent_post_id')))
+
+            <div class="row mb-3">
+                <div class="col-6">{!! $post->draw() !!}</div>
+                <div class="col-6">
+                    <ul>
+                        <li>created at : <strong>{{ $post->created_at }}</strong></li>
+                        @foreach($post->interactions as $interaction => $value)
+                            <li>{{ $interaction }} : <strong>{{ $value }}</strong></li>
+                        @endforeach
+                        @foreach($post->getReports() as $report => $value)
+                            <li>{{ Jawabapp\Community\Models\PostReport::REPORT_TYPES[$report] }} : <strong>{{ $value }}</strong></li>
+                        @endforeach
+                    </ul>
+                </div>
+
+            </div>
+            <a href="{{route('community.posts.index', ['parent_post_id' => $post->id])}}" class="btn btn-outline-primary">Back</a>
+        </div>
+    </div>
+    @endif
 
     <div class="card">
         <div class="card-header">
-            Add / Static Page
+            Add Comment / Reply
         </div>
 
         <div class="card-body">
