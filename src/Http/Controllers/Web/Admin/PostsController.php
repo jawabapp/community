@@ -154,7 +154,7 @@ class PostsController extends Controller
 
         $post = CommunityFacade::insertPost($request);
 
-        return redirect(route('community.posts.index',['parent_post_id' => $post->id]));
+        return redirect(route('community.posts.index',['parent_post_id' => $post->parent_post_id]));
 
     }
 
