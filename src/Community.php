@@ -66,6 +66,10 @@ class Community
 
                 $post->tags()->attach([$tag->id]);
 
+                $tag->update([
+                    'posts_count' => $tag->getPostsCount()
+                ]);
+
                 return $post->refresh();
             }
         }
