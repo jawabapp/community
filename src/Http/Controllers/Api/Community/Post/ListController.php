@@ -3,6 +3,7 @@
 namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 
 //use Jawabapp\Community\Http\Resources\Api\PostResource;
+use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\Account;
 use Jawabapp\Community\Models\PostInteraction;
@@ -27,11 +28,23 @@ class ListController extends Controller
 
     public function index(ListRequest $request)
     {
+
+        $with = ['related', 'account'];
+
+        $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
+        if ($activeAccountId) {
+            $with = array_merge($with, [
+                'myInteractions',
+                'mySubscribes',
+                'tags.myFollowers',
+                'tags.mySubscribes',
+            ]);
+        }
+
         $accountId = intval($request->get('account_id'));
         $parentPostId = intval($request->get('parent_post_id'));
 
-        $query = Post::whereNull('related_post_id')
-            ->with(['related', 'account']);
+        $query = Post::whereNull('related_post_id')->with($with);
 
         if (empty($accountId) && empty($parentPostId)) {
             // Get user's filtered home data
@@ -55,6 +68,10 @@ class ListController extends Controller
         if ($parentPostId) {
             PostInteraction::assignInteractionToAccount('viewed', $parentPostId);
         }
+
+//        \DB::enableQueryLog();
+//        response()->json($query->paginate(20));
+//        dd(\DB::getQueryLog());
 
 //        $data = PostResource::collection(
 //            $query->paginate(10)

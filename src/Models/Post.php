@@ -42,9 +42,28 @@ class Post extends Model
 
     protected $appends = [
         'type',
+
         'account_interaction',
         'is_subscribed'
     ];
+
+    public function myInteractions()
+    {
+        $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
+
+        if ($activeAccountId) {
+            return $this->interactions()->whereIn('type', PostInteraction::SINGLE_TYPES)->whereAccountId($activeAccountId);
+        }
+    }
+
+    public function mySubscribes()
+    {
+        $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
+
+        if ($activeAccountId) {
+            return $this->subscribedAccounts()->whereAccountId($activeAccountId);
+        }
+    }
 
     public function getTypeAttribute()
     {
@@ -56,10 +75,7 @@ class Post extends Model
         $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
 
         if ($activeAccountId) {
-            return PostInteraction::wherePostId($this->getKey())
-                ->whereAccountId($activeAccountId)
-                ->whereIn('type', PostInteraction::SINGLE_TYPES)
-                ->first()->type ?? '';
+            return $this->myInteractions->where('post_id', $this->getKey())->first()->type ?? '';
         }
 
         return '';
@@ -68,9 +84,11 @@ class Post extends Model
     public function getIsSubscribedAttribute()
     {
         $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
+
         if ($activeAccountId) {
-            return $this->subscribedAccounts()->where('account_id', $activeAccountId)->exists();
+            return $this->mySubscribes->contains('pivot_notifiable_id', $this->getKey());
         }
+
         return false;
     }
 

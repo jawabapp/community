@@ -39,11 +39,20 @@ class Tag extends Model
         return $this->isAccountFollowingBy();
     }
 
+    public function mySubscribes()
+    {
+        $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
+
+        if ($activeAccountId) {
+            return $this->subscribedAccounts()->whereAccountId($activeAccountId);
+        }
+    }
+
     public function getIsSubscribedAttribute()
     {
         $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
         if ($activeAccountId) {
-            return $this->subscribedAccounts()->where('account_id', $activeAccountId)->exists();
+            return $this->mySubscribes->contains('pivot_notifiable_id', $this->getKey());
         }
         return false;
     }
@@ -73,14 +82,21 @@ class Tag extends Model
         return $this->belongsToMany(CommunityFacade::getUserClass(), 'tag_followers', 'tag_id', 'account_id');
     }
 
+    public function myFollowers()
+    {
+        $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
+
+        if ($activeAccountId) {
+            return $this->followers()->where('account_id', $activeAccountId);
+        }
+    }
+
     public function isAccountFollowingBy()
     {
         $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
 
         if ($activeAccountId) {
-            return TagFollower::whereAccountId($activeAccountId)
-                ->whereTagId($this->getKey())
-                ->exists();
+            return $this->myFollowers->contains('pivot_tag_id', $this->getKey());
         }
 
         return false;
