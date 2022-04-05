@@ -129,7 +129,7 @@ class SearchController extends Controller
             ->whereNull('related_post_id')
             ->whereNull('parent_post_id')
             ->orderBy('children_count', 'desc')
-            ->with(['related', 'account'])
+            ->with(Post::withPost())
             ->paginate(10);
     }
 

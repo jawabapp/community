@@ -28,23 +28,10 @@ class ListController extends Controller
 
     public function index(ListRequest $request)
     {
-
-        $with = ['related', 'account'];
-
-        $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
-        if ($activeAccountId) {
-            $with = array_merge($with, [
-                'myInteractions',
-                'mySubscribes',
-                'tags.myFollowers',
-                'tags.mySubscribes',
-            ]);
-        }
-
         $accountId = intval($request->get('account_id'));
         $parentPostId = intval($request->get('parent_post_id'));
 
-        $query = Post::whereNull('related_post_id')->with($with);
+        $query = Post::whereNull('related_post_id')->with(Post::withPost());
 
         if (empty($accountId) && empty($parentPostId)) {
             // Get user's filtered home data

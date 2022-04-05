@@ -4,6 +4,7 @@ namespace Jawabapp\Community\Http\Controllers\Api\Community\HashTag;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\Tag;
 use Illuminate\Validation\ValidationException;
 use Jawabapp\Community\Http\Controllers\Controller;
@@ -40,7 +41,7 @@ class PostListController extends Controller
         $query = $tag->posts()
             ->whereNull('related_post_id')
             ->whereNull('parent_post_id')
-            ->with(['related', 'account']);
+            ->with(Post::withPost());
 
         return response()->json($query->latest()->paginate(10));
     }

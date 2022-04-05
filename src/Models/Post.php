@@ -424,4 +424,20 @@ class Post extends Model
     {
         return $this->morphToMany(CommunityFacade::getUserClass(), 'notifiable', 'account_notifications', null, 'account_id')->withTimestamps();
     }
+
+    public static function withPost() {
+
+        $with = ['related', 'account', 'tags'];
+        $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
+        if ($activeAccountId) {
+            $with = array_merge($with, [
+                'myInteractions',
+                'mySubscribes',
+                'tags.myFollowers',
+                'tags.mySubscribes',
+            ]);
+        }
+
+        return $with;
+    }
 }

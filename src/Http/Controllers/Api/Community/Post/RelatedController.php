@@ -37,7 +37,7 @@ class RelatedController extends Controller
 
         $query = Post::whereNull('parent_post_id')
             ->whereNull('related_post_id')
-            ->with(['related', 'account'])
+            ->with(Post::withPost())
             ->latest();
 
         // Get user's filtered home data
