@@ -49,7 +49,7 @@ class FollowersController extends Controller
 
         $query = $account->following()->with('account');
 
-        $data = $query->paginate(20);
+        $data = $query->paginate(config('community.per_page', 10));
 
         $data->getCollection()->transform(function ($item) {
             $data = $item->toArray();

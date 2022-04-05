@@ -84,7 +84,7 @@ class IndexController extends Controller
 
     public function searchTags(Request $request) {
 
-        $limit = 20;
+        $limit = config('community.per_page', 10);
 
         $searchQuery = $request->get('query');
 

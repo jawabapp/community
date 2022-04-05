@@ -78,6 +78,7 @@ return [
         'image' => 'image/jpeg,image/png,image/webp,image/gif,image/svg+xml',
         'video' => 'video/mp4,video/3gpp,video/quicktime,video/x-msvideo,video/x-ms-wmv',
         'audio' => 'audio/mid,audio/mpeg,audio/mp4,audio/vnd.wav,audio/x-aiff,audio/aac,audio/3gpp,audio/x-hx-aac-adts,audio/x-m4a'
-    ]
+    ],
+    'per_page' => 10
 
 ];

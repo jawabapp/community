@@ -43,6 +43,6 @@ class PostListController extends Controller
             ->whereNull('parent_post_id')
             ->with(Post::withPost());
 
-        return response()->json($query->latest()->paginate(10));
+        return response()->json($query->latest()->paginate(config('community.per_page', 10)));
     }
 }

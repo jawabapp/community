@@ -37,7 +37,7 @@ class InteractionListController extends Controller
             ->with(['account']);
 
         return response()->json(
-            $query->paginate(10)
+            $query->paginate(config('community.per_page', 10))
         );
     }
 }

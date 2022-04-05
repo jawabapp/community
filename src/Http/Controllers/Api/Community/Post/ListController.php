@@ -57,15 +57,15 @@ class ListController extends Controller
         }
 
 //        \DB::enableQueryLog();
-//        response()->json($query->paginate(20));
+//        response()->json($query->paginate(config('community.per_page', 10)));
 //        dd(\DB::getQueryLog());
 
 //        $data = PostResource::collection(
-//            $query->paginate(10)
+//            $query->paginate(config('community.per_page', 10))
 //        )->resource;
 //
 //        return response()->json($data);
 
-        return response()->json($query->paginate(20));
+        return response()->json($query->paginate(config('community.per_page', 10)));
     }
 }

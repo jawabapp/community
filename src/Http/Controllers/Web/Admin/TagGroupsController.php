@@ -41,7 +41,7 @@ class TagGroupsController extends Controller
             $query->where('name', 'like', '%' . request('name') . '%');
         }
 
-        $data = $query->oldest('order')->paginate(10);
+        $data = $query->oldest('order')->paginate(config('community.per_page', 10));
 
         return view('community::admin.tag-groups.index')->with('data', $data);
     }
@@ -190,7 +190,7 @@ class TagGroupsController extends Controller
             $query->where('hash_tag', 'like', '%' . request('hash_tag') . '%');
         }
 
-        $data = $query->latest()->paginate(10);
+        $data = $query->latest()->paginate(config('community.per_page', 10));
 
         return view('community::admin.tag-groups.tags')->with('data', $data)->with('tagGroups', TagGroup::get());
     }

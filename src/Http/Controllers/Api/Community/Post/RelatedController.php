@@ -47,7 +47,7 @@ class RelatedController extends Controller
         Post::getRelatedPostFilteredData($query, $post);
 
         return response()->json(
-            $query->paginate(10)
+            $query->paginate(config('community.per_page', 10))
         );
     }
 }

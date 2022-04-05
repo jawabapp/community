@@ -130,7 +130,7 @@ class SearchController extends Controller
             ->whereNull('parent_post_id')
             ->orderBy('children_count', 'desc')
             ->with(Post::withPost())
-            ->paginate(10);
+            ->paginate(config('community.per_page', 10));
     }
 
     private function account(SearchRequest $request)
@@ -152,7 +152,7 @@ class SearchController extends Controller
 //            $q->orWhereRaw("CONCAT({$search_fields}) LIKE '%{$keyword}%'");
 //        }
 
-        return $q->paginate(10);
+        return $q->paginate(config('community.per_page', 10));
     }
 
     private function hashTag(SearchRequest $request)
@@ -165,6 +165,6 @@ class SearchController extends Controller
             ->where('hash_tag', 'LIKE', "%{$keyword}%")
             ->groupBy('tag_id')
             ->orderBy('hash_tag_count', 'desc')
-            ->paginate(10);
+            ->paginate(config('community.per_page', 10));
     }
 }

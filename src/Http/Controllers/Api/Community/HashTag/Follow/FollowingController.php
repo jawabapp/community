@@ -51,7 +51,7 @@ class FollowingController extends Controller
         $query = $account->followingTag()->with('tag');
 
         $data = FollowingTagResource::collection(
-            $query->paginate(10)
+            $query->paginate(config('community.per_page', 10))
         )->resource;
 
         return response()->json($data);

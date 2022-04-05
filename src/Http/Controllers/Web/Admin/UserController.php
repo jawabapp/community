@@ -18,7 +18,7 @@ class UserController extends Controller
     {
         $userMobile = CommunityFacade::getUserClass()::query();
         $userMobile->where('phone','LIKE',"%{$request->phone}%");
-        return $userMobile->paginate(16);
+        return $userMobile->paginate(config('community.per_page', 10));
     }
 
 }
