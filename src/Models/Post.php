@@ -256,17 +256,6 @@ class Post extends Model
         );
     }
 
-    public function getUserInteractions()
-    {
-        return $this->interactions()
-            ->whereIn('type', PostInteraction::SINGLE_TYPES)
-            ->where('account_id', '!=', $this->account_id)
-            ->limit(3)
-            ->selectRaw('distinct(account_id)')
-            ->get()
-            ->pluck('account_id');
-    }
-
     public function updateParentsCount($isDecrease = false)
     {
 

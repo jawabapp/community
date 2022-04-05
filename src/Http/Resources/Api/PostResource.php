@@ -16,7 +16,10 @@ class PostResource extends Resource
     {
         $resource = parent::toArray($request);
 
-        $resource['account'] = AccountResource::make($this->account ?? null);
+        unset($resource['user_interactions']);
+        unset($resource['my_subscribes']);
+        unset($resource['my_interactions']);
+        unset($resource['tags']);
 
         return $resource;
     }

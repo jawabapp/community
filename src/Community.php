@@ -140,7 +140,7 @@ class Community
             }
         }
 
-        $post = Post::whereId($postObject->id)->with(['related', 'account'])->first();
+        $post = Post::whereId($postObject->id)->with(Post::withPost())->first();
 
         try {
             //comment
