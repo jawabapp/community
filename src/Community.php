@@ -148,11 +148,9 @@ class Community
                 $parentPost = Post::whereId($post->parent_post_id)->first();
 
                 if ($request->get('account_id') != $parentPost->account->id) {
-                    $rootPost = $post->getRootPost();
-
                     event(new CommentCreate([
-                        'deep_link' => $rootPost->deep_link,
-                        'post_id' => $rootPost->id,
+                        'deep_link' => $parentPost->deep_link,
+                        'post_id' => $parentPost->id,
                         'sender_id' => $request->get('account_id'),
                         'post_user_id' => $parentPost->account_id,
                     ]));
