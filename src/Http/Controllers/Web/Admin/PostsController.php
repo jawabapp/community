@@ -52,6 +52,12 @@ class PostsController extends Controller
             $query->where('posts.hash', 'like',  '%' . $request->get('hash') . '%');
         }
 
+        if ($request->get('hash_tag')) {
+            $query->join('post_tags', 'posts.id', '=', 'post_tags.post_id');
+            $query->join('tags', 'post_tags.tag_id', '=', 'tags.id');
+            $query->where('tags.hash_tag', 'like',  '%' . $request->get('hash_tag') . '%');
+        }
+
         $join = false;
 
         if ($request->has('all_reports')) {
