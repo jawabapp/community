@@ -21,6 +21,11 @@
                     <input type="text" class="form-control" id="hash" name="hash" value="{{ request('hash') }}">
                 </div>
 
+                <div class="form-group">
+                    <label for="hash_tag">Hash tag</label>
+                    <input type="text" class="form-control" id="hash_tag" name="hash_tag" value="{{ request('hash_tag') }}">
+                </div>
+
                 <div class="row">
                     <div class="col">
                         <div class="form-row align-items-center">
