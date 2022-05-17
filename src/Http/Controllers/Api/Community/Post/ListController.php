@@ -70,7 +70,7 @@ class ListController extends Controller
 
             $data = $query->paginate(config('community.per_page', 10));
 
-            Cache::put($cacheKey, $data, 3600); // 60 * 60 = 3600 seconds
+            Cache::put($cacheKey, $data, 300); // 60 * 5 = 300 seconds
         }
 
         return response()->json($data);
