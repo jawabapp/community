@@ -3,6 +3,7 @@
 namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 
 //use Jawabapp\Community\Http\Resources\Api\PostResource;
+use Illuminate\Support\Facades\Cache;
 use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Models\Post;
 use Jawabapp\Community\Models\Account;
@@ -28,44 +29,48 @@ class ListController extends Controller
 
     public function index(ListRequest $request)
     {
+        $page = intval($request->get('page'));
         $accountId = intval($request->get('account_id'));
         $parentPostId = intval($request->get('parent_post_id'));
+        $activeAccountId = intval(CommunityFacade::getUserClass()::getActiveAccountId());
 
-        $query = Post::whereNull('related_post_id')->with(Post::withPost());
+        $cacheKey = "{$page}_{$accountId}_{$parentPostId}_{$activeAccountId}";
 
-        if (empty($accountId) && empty($parentPostId)) {
-            // Get user's filtered home data
-            Post::getUserFilteredData($query);
-        }
-
-        if ($parentPostId) {
-            $query->whereParentPostId($parentPostId);
-            //$query->orderBy('children_count', 'desc');
-            $query->oldest();
+        if (Cache::has($cacheKey)) {
+            $data = Cache::get($cacheKey);
         } else {
-            $query->whereNull('parent_post_id');
-            $query->orderBy('weight', 'desc');
-            $query->latest();
+
+            $query = Post::whereNull('related_post_id')->with(Post::withPost());
+
+            if (empty($accountId) && empty($parentPostId)) {
+                // Get user's filtered home data
+                Post::getUserFilteredData($query);
+            }
+
+            if ($parentPostId) {
+                $query->whereParentPostId($parentPostId);
+                //$query->orderBy('children_count', 'desc');
+                $query->oldest();
+            } else {
+                $query->whereNull('parent_post_id');
+                $query->orderBy('weight', 'desc');
+                $query->latest();
+            }
+
+            if ($accountId) {
+                $query->whereAccountId($accountId);
+            }
+
+            if ($parentPostId) {
+                PostInteraction::assignInteractionToAccount('viewed', $parentPostId);
+            }
+
+            $data = $query->paginate(config('community.per_page', 10);
+
+            Cache::put($cacheKey, $data, 3600); // 60 * 60 = 3600 seconds
         }
 
-        if ($accountId) {
-            $query->whereAccountId($accountId);
-        }
+        return response()->json($data);
 
-        if ($parentPostId) {
-            PostInteraction::assignInteractionToAccount('viewed', $parentPostId);
-        }
-
-//        \DB::enableQueryLog();
-//        response()->json($query->paginate(config('community.per_page', 10)));
-//        dd(\DB::getQueryLog());
-
-//        $data = PostResource::collection(
-//            $query->paginate(config('community.per_page', 10))
-//        )->resource;
-//
-//        return response()->json($data);
-
-        return response()->json($query->paginate(config('community.per_page', 10)));
     }
 }
