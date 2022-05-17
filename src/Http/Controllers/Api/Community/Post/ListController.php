@@ -32,9 +32,12 @@ class ListController extends Controller
         $page = intval($request->get('page'));
         $accountId = intval($request->get('account_id'));
         $parentPostId = intval($request->get('parent_post_id'));
-        $activeAccountId = intval(CommunityFacade::getUserClass()::getActiveAccountId());
 
-        $cacheKey = "{$page}_{$accountId}_{$parentPostId}_{$activeAccountId}";
+        $cacheKey = "{$page}_{$accountId}_{$parentPostId}";
+
+        if($activeAccountId = intval(CommunityFacade::getUserClass()::getActiveAccountId())) {
+            $cacheKey .= "_{$activeAccountId}";
+        }
 
         if (Cache::has($cacheKey)) {
             $data = Cache::get($cacheKey);
