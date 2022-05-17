@@ -39,8 +39,8 @@ class ListController extends Controller
             $cacheKey .= "_{$activeAccountId}";
         }
 
-        if (Cache::has($cacheKey)) {
-            $data = Cache::get($cacheKey);
+        if (Cache::tags(['posts'])->has($cacheKey)) {
+            $data = Cache::tags(['posts'])->get($cacheKey);
         } else {
 
             $query = Post::whereNull('related_post_id')->with(Post::withPost());
@@ -70,7 +70,7 @@ class ListController extends Controller
 
             $data = $query->paginate(config('community.per_page', 10));
 
-            Cache::put($cacheKey, $data, 300); // 60 * 5 = 300 seconds
+            Cache::tags(['posts'])->put($cacheKey, $data, 600); // 60 * 10 = 600 seconds
         }
 
         return response()->json($data);

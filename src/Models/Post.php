@@ -2,6 +2,7 @@
 
 namespace Jawabapp\Community\Models;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -206,7 +207,7 @@ class Post extends Model
 
     public function resetCache()
     {
-        //
+        Cache::tags('posts')->flush();
     }
 
     public function account()
