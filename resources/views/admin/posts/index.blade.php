@@ -12,8 +12,8 @@
         <div class="card-body">
             <form>
                 <div class="form-group">
-                    <label for="slug">User Slug</label>
-                    <input type="text" class="form-control mb-2" name="slug" value="{{ request('slug') }}" placeholder="@Account">
+                    <label for="slug">User Account</label>
+                    <input type="text" class="form-control mb-2" name="slug" value="{{ request('slug') }}" placeholder="@slug or phone">
                 </div>
 
                 <div class="form-group">
@@ -22,7 +22,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="hash_tag">Hash tag</label>
+                    <label for="hash_tag">Hash tag (Phone)</label>
                     <input type="text" class="form-control" id="hash_tag" name="hash_tag" value="{{ request('hash_tag') }}">
                 </div>
 
