@@ -47,7 +47,7 @@ class ListController extends Controller
 
             if (empty($accountId) && empty($parentPostId)) {
                 // Get user's filtered home data
-                // Post::getUserFilteredData($query);
+                Post::getUserFilteredData($query);
             }
 
             if ($parentPostId) {

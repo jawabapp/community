@@ -354,24 +354,24 @@ class Post extends Model
                         ->where('account_followers.account_id', $activeAccountId);
                 });
 
-                // Get user's followed tag-groups posts
-                if(TagGroup::count()) {
-                    if (TagGroupFollower::where('account_id', $activeAccountId)->count()) {
-                        $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
-                            $q->select('post_tags.post_id')->from('post_tags')
-                                ->join('tags', 'post_tags.tag_id', '=', 'tags.id')
-                                ->join('tag_group_followers', 'tags.tag_group_id', '=', 'tag_group_followers.tag_group_id')
-                                ->where('tag_group_followers.account_id', $activeAccountId);
-                        });
-                    } else {
-                        $query->orWhereNotIn('posts.id', function ($q) use ($activeAccountId) {
-                            $q->select('post_tags.post_id')->from('post_tags')
-                                ->join('tags', 'post_tags.tag_id', '=', 'tags.id')
-                                ->join('tag_groups', 'tags.tag_group_id', '=', 'tag_groups.id')
-                                ->where('tag_groups.hide_in_public', 1);
-                        });
-                    }
-                }
+//                // Get user's followed tag-groups posts
+//                if(TagGroup::count()) {
+//                    if (TagGroupFollower::where('account_id', $activeAccountId)->count()) {
+//                        $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
+//                            $q->select('post_tags.post_id')->from('post_tags')
+//                                ->join('tags', 'post_tags.tag_id', '=', 'tags.id')
+//                                ->join('tag_group_followers', 'tags.tag_group_id', '=', 'tag_group_followers.tag_group_id')
+//                                ->where('tag_group_followers.account_id', $activeAccountId);
+//                        });
+//                    } else {
+//                        $query->orWhereNotIn('posts.id', function ($q) use ($activeAccountId) {
+//                            $q->select('post_tags.post_id')->from('post_tags')
+//                                ->join('tags', 'post_tags.tag_id', '=', 'tags.id')
+//                                ->join('tag_groups', 'tags.tag_group_id', '=', 'tag_groups.id')
+//                                ->where('tag_groups.hide_in_public', 1);
+//                        });
+//                    }
+//                }
 
                 //App timeline Filters
                 CommunityFacade::getUserClass()::timelineFilters($query, $activeAccountId);
