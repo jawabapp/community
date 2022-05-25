@@ -68,7 +68,9 @@ class ListController extends Controller
                 PostInteraction::assignInteractionToAccount('viewed', $parentPostId);
             }
 
+            //\DB::enableQueryLog();
             $data = $query->paginate(config('community.per_page', 10));
+            //dd(\DB::getQueryLog());
 
             Cache::tags(['posts'])->put($cacheKey, $data, 600); // 60 * 10 = 600 seconds
         }
