@@ -69,7 +69,17 @@ class ListController extends Controller
             }
 
             //\DB::enableQueryLog();
-            $data = $query->paginate(config('community.per_page', 10));
+
+            if (empty($accountId) && empty($parentPostId)) {
+                $data = $query->simplePaginate(config('community.per_page', 10));
+
+                $data['total'] = config('community.per_page', 10) * 100;
+                $data['last_page'] = 100;
+                $data['last_page_url'] = 'http://api.whoapp.us/api/community/post/list?page=1';
+            } else {
+                $data = $query->paginate(config('community.per_page', 10));
+            }
+
             //dd(\DB::getQueryLog());
 
             Cache::tags(['posts'])->put($cacheKey, $data, 600); // 60 * 10 = 600 seconds
