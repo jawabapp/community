@@ -73,9 +73,14 @@ class ListController extends Controller
             if (empty($accountId) && empty($parentPostId)) {
                 $data = $query->simplePaginate(config('community.per_page', 10));
 
-                $data['total'] = config('community.per_page', 10) * 100;
-                $data['last_page'] = 100;
-                $data['last_page_url'] = 'http://api.whoapp.us/api/community/post/list?page=1';
+                $data = $data->toArray();
+
+                $last_page = empty($data['next_page_url']) ? $data['current_page'] : ($data['current_page'] + 1);
+                $total = config('community.per_page', 10) * $last_page;
+
+                $data['total'] = $total;
+                $data['last_page'] = $last_page;
+                $data['last_page_url'] = "http://api.whoapp.us/api/community/post/list?page={$last_page}";
             } else {
                 $data = $query->paginate(config('community.per_page', 10));
             }
