@@ -331,12 +331,13 @@ class Post extends Model
                 // Get user's liked posts
                 $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
                     $q->select('post_interactions.post_id')->from('post_interactions')
+                        ->where('post_interactions.type', 'vote_up')
                         ->where('post_interactions.account_id', $activeAccountId);
                 });
 
                 // Get user's committed posts
                 $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
-                    $q->select('posts.id')->from('posts')
+                    $q->select('posts.parent_post_id')->from('posts')
                         ->whereNotNull('parent_post_id')
                         ->where('posts.account_id', $activeAccountId);
                 });
