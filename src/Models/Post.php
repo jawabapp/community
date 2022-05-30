@@ -322,62 +322,77 @@ class Post extends Model
         $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
 
         if ($activeAccountId) {
+            if(method_exists(CommunityFacade::getUserClass(), 'userTimelineFilters')) {
+                CommunityFacade::getUserClass()::userTimelineFilters($builder, $activeAccountId);
+            } else {
+                $builder->where(function ($query) use ($activeAccountId) {
 
-            $builder->where(function ($query) use ($activeAccountId) {
+                    // Get user's own posts
+                    $query->where('posts.account_id', $activeAccountId);
 
-                // Get user's own posts
-                $query->where('posts.account_id', $activeAccountId);
+                    //Get Posts for liked accounts
+                    $query->orWhereIn('posts.account_id', function($q) use ($activeAccountId) {
+                        $q->select('account_likes.liked_account_id')->from('account_likes')
+                            ->where('account_likes.account_id', $activeAccountId);
+                    });
 
-                // Get user's liked posts
-                $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
-                    $q->select('post_interactions.post_id')->from('post_interactions')
-                        ->where('post_interactions.type', 'vote_up')
-                        ->where('post_interactions.account_id', $activeAccountId);
+                    // Get user's followed accounts posts
+                    $query->orWhereIn('posts.account_id', function($q) use ($activeAccountId) {
+                        $q->select('account_followers.follower_account_id')->from('account_followers')
+                            ->where('account_followers.account_id', $activeAccountId);
+                    });
+
+                    // Get user's liked posts
+                    $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
+                        $q->select('post_interactions.post_id')->from('post_interactions')
+                            ->where('post_interactions.type', 'vote_up')
+                            ->where('post_interactions.account_id', $activeAccountId);
+                    });
+
+                    // Get user's viewed posts
+                    $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
+                        $q->select('post_interactions.post_id')->from('post_interactions')
+                            ->where('post_interactions.type', 'viewed')
+                            ->where('post_interactions.account_id', $activeAccountId);
+                    });
+
+                    // Get user's committed posts
+                    $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
+                        $q->select('posts.parent_post_id')->from('posts')
+                            ->whereNotNull('parent_post_id')
+                            ->where('posts.account_id', $activeAccountId);
+                    });
+
+                    // Get user's followed hashtags posts
+                    $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
+                        $q->select('post_tags.post_id')->from('post_tags')
+                            ->join('tag_followers', 'post_tags.tag_id', '=', 'tag_followers.tag_id')
+                            ->where('tag_followers.account_id', $activeAccountId);
+                    });
+
+                    // Get user's followed tag-groups posts
+                    if(TagGroup::count()) {
+                        if (TagGroupFollower::where('account_id', $activeAccountId)->count()) {
+                            $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
+                                $q->select('post_tags.post_id')->from('post_tags')
+                                    ->join('tags', 'post_tags.tag_id', '=', 'tags.id')
+                                    ->join('tag_group_followers', 'tags.tag_group_id', '=', 'tag_group_followers.tag_group_id')
+                                    ->where('tag_group_followers.account_id', $activeAccountId);
+                            });
+                        } else {
+                            $query->orWhereNotIn('posts.id', function ($q) use ($activeAccountId) {
+                                $q->select('post_tags.post_id')->from('post_tags')
+                                    ->join('tags', 'post_tags.tag_id', '=', 'tags.id')
+                                    ->join('tag_groups', 'tags.tag_group_id', '=', 'tag_groups.id')
+                                    ->where('tag_groups.hide_in_public', 1);
+                            });
+                        }
+                    }
+
                 });
-
-                // Get user's committed posts
-                $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
-                    $q->select('posts.parent_post_id')->from('posts')
-                        ->whereNotNull('parent_post_id')
-                        ->where('posts.account_id', $activeAccountId);
-                });
-
-                // Get user's followed hashtags posts
-                $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
-                    $q->select('post_tags.post_id')->from('post_tags')
-                        ->join('tag_followers', 'post_tags.tag_id', '=', 'tag_followers.tag_id')
-                        ->where('tag_followers.account_id', $activeAccountId);
-                });
-
-                // Get user's followed accounts posts
-                $query->orWhereIn('posts.account_id', function($q) use ($activeAccountId) {
-                    $q->select('account_followers.follower_account_id')->from('account_followers')
-                        ->where('account_followers.account_id', $activeAccountId);
-                });
-
-//                // Get user's followed tag-groups posts
-//                if(TagGroup::count()) {
-//                    if (TagGroupFollower::where('account_id', $activeAccountId)->count()) {
-//                        $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
-//                            $q->select('post_tags.post_id')->from('post_tags')
-//                                ->join('tags', 'post_tags.tag_id', '=', 'tags.id')
-//                                ->join('tag_group_followers', 'tags.tag_group_id', '=', 'tag_group_followers.tag_group_id')
-//                                ->where('tag_group_followers.account_id', $activeAccountId);
-//                        });
-//                    } else {
-//                        $query->orWhereNotIn('posts.id', function ($q) use ($activeAccountId) {
-//                            $q->select('post_tags.post_id')->from('post_tags')
-//                                ->join('tags', 'post_tags.tag_id', '=', 'tags.id')
-//                                ->join('tag_groups', 'tags.tag_group_id', '=', 'tag_groups.id')
-//                                ->where('tag_groups.hide_in_public', 1);
-//                        });
-//                    }
-//                }
-
-                //App timeline Filters
-                CommunityFacade::getUserClass()::timelineFilters($query, $activeAccountId);
-            });
+            }
         }
+
     }
 
     public static function getRelatedPostFilteredData(Builder $builder, Post $post)

@@ -80,7 +80,7 @@ class ListController extends Controller
 
                 $data['total'] = $total;
                 $data['last_page'] = $last_page;
-                $data['last_page_url'] = "http://api.whoapp.us/api/community/post/list?page={$last_page}";
+                $data['last_page_url'] = url("/api/community/post/list?page={$last_page}");
             } else {
                 $data = $query->paginate(config('community.per_page', 10));
             }
