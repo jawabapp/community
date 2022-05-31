@@ -2,7 +2,6 @@
 
 namespace Jawabapp\Community\Http\Controllers\Api\Community\Post;
 
-//use Jawabapp\Community\Http\Resources\Api\PostResource;
 use Illuminate\Support\Facades\Cache;
 use Jawabapp\Community\CommunityFacade;
 use Jawabapp\Community\Models\Post;
@@ -20,11 +19,11 @@ class ListController extends Controller
 {
     public function __construct()
     {
-         if (request()->server('HTTP_AUTHORIZATION')) {
-             $this->middleware('auth:api');
-         } else {
-             $this->middleware('guest');
-         }
+        if (request()->server('HTTP_AUTHORIZATION')) {
+            $this->middleware('auth:api');
+        } else {
+            $this->middleware('guest');
+        }
     }
 
     public function index(ListRequest $request)
@@ -43,25 +42,30 @@ class ListController extends Controller
             $data = Cache::tags(['posts'])->get($cacheKey);
         } else {
 
-            $query = Post::whereNull('related_post_id')->with(Post::withPost());
-
-            if (empty($accountId) && empty($parentPostId)) {
-                // Get user's filtered home data
-                Post::getUserFilteredData($query);
-            }
-
-            if ($parentPostId) {
-                $query->whereParentPostId($parentPostId);
-                //$query->orderBy('children_count', 'desc');
-                $query->oldest();
+            // load yousef hack
+            if(empty($accountId) && empty($parentPostId) && method_exists(CommunityFacade::getUserClass(), 'userTimelineData')) {
+                $query = CommunityFacade::getUserClass()::userTimelineData($activeAccountId);
             } else {
-                $query->whereNull('parent_post_id');
-                $query->orderBy('weight', 'desc');
-                $query->latest();
-            }
+                $query = Post::whereNull('related_post_id')->with(Post::withPost());
 
-            if ($accountId) {
-                $query->whereAccountId($accountId);
+                if (empty($accountId) && empty($parentPostId)) {
+                    // Get user's filtered home data
+                    Post::getUserFilteredData($query);
+                }
+
+                if ($parentPostId) {
+                    $query->whereParentPostId($parentPostId);
+                    //$query->orderBy('children_count', 'desc');
+                    $query->oldest();
+                } else {
+                    $query->whereNull('parent_post_id');
+                    $query->orderBy('weight', 'desc');
+                    $query->latest();
+                }
+
+                if ($accountId) {
+                    $query->whereAccountId($accountId);
+                }
             }
 
             if ($parentPostId) {
