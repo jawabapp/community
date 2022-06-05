@@ -50,6 +50,7 @@ class ListController extends Controller
             if (empty($accountId) && empty($parentPostId)) {
                 // Get user's filtered home data
                 Post::getUserTimelineFilter($query);
+                $query->orderBy('weight', 'desc');
             } else {
 
                 $query->whereNull('related_post_id');
