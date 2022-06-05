@@ -41,7 +41,7 @@ class RelatedController extends Controller
             ->latest();
 
         // Get user's filtered home data
-        Post::getUserFilteredData($query);
+        Post::getUserTimelineFilter($query);
 
         // Get Related filter
         Post::getRelatedPostFilteredData($query, $post);

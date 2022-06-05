@@ -28,6 +28,9 @@ class ListController extends Controller
 
     public function index(ListRequest $request)
     {
+
+        //\DB::enableQueryLog();
+
         $page = intval($request->get('page'));
         $accountId = intval($request->get('account_id'));
         $parentPostId = intval($request->get('parent_post_id'));
@@ -42,59 +45,56 @@ class ListController extends Controller
             $data = Cache::tags(['posts'])->get($cacheKey);
         } else {
 
-            // load yousef hack
-            if(empty($accountId) && empty($parentPostId) && method_exists(CommunityFacade::getUserClass(), 'userTimelineData')) {
-                $query = CommunityFacade::getUserClass()::userTimelineData($activeAccountId);
+            $query = Post::query()->with(Post::withPost());
+
+            if (empty($accountId) && empty($parentPostId)) {
+                // Get user's filtered home data
+                Post::getUserTimelineFilter($query);
             } else {
-                $query = Post::whereNull('related_post_id')->with(Post::withPost());
 
-                if (empty($accountId) && empty($parentPostId)) {
-                    // Get user's filtered home data
-                    Post::getUserFilteredData($query);
-                }
-
-                if ($parentPostId) {
-                    $query->whereParentPostId($parentPostId);
-                    //$query->orderBy('children_count', 'desc');
-                    $query->oldest();
-                } else {
-                    $query->whereNull('parent_post_id');
-                    $query->orderBy('weight', 'desc');
-                    $query->latest();
-                }
+                $query->whereNull('related_post_id');
 
                 if ($accountId) {
                     $query->whereAccountId($accountId);
                 }
+
+                if ($parentPostId) {
+                    $query->whereParentPostId($parentPostId);
+                    $query->oldest();
+                } else {
+                    $query->whereNull('parent_post_id');
+                    $query->orderBy('weight', 'desc');
+                }
+
+                if ($parentPostId) {
+                    PostInteraction::assignInteractionToAccount('viewed', $parentPostId);
+                }
             }
 
-            if ($parentPostId) {
-                PostInteraction::assignInteractionToAccount('viewed', $parentPostId);
-            }
-
-            //\DB::enableQueryLog();
-
-            if (empty($accountId) && empty($parentPostId)) {
-                $data = $query->simplePaginate(config('community.per_page', 10));
-
-                $data = $data->toArray();
-
-                $last_page = empty($data['next_page_url']) ? $data['current_page'] : ($data['current_page'] + 1);
-                $total = config('community.per_page', 10) * $last_page;
-
-                $data['total'] = $total;
-                $data['last_page'] = $last_page;
-                $data['last_page_url'] = url("/api/community/post/list?page={$last_page}");
-            } else {
-                $data = $query->paginate(config('community.per_page', 10));
-            }
-
-            //dd(\DB::getQueryLog());
+            $data = $this->simplePaginate($query);
 
             Cache::tags(['posts'])->put($cacheKey, $data, 600); // 60 * 10 = 600 seconds
         }
 
+        //dd(\DB::getQueryLog());
+
         return response()->json($data);
 
+    }
+
+    private function simplePaginate($query) {
+
+        $per_page = config('community.per_page', 10);
+
+        $data = $query->simplePaginate($per_page);
+        $data = $data->toArray();
+
+        $last_page = empty($data['next_page_url']) ? $data['current_page'] : ($data['current_page'] + 1);
+
+        $data['total'] = $per_page * $last_page;
+        $data['last_page'] = $last_page;
+        $data['last_page_url'] = url("/api/community/post/list?page={$last_page}");
+
+        return $data;
     }
 }

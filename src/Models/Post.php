@@ -2,6 +2,7 @@
 
 namespace Jawabapp\Community\Models;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -223,7 +224,7 @@ class Post extends Model
     public function getReports()
     {
         return $this->reports()
-            ->select('report', \DB::raw('count(*) as total'))
+            ->select('report', DB::raw('count(*) as total'))
             ->groupBy('report')->get()->pluck('total', 'report')->all();
     }
 
@@ -252,7 +253,7 @@ class Post extends Model
         return array_merge(
             array_fill_keys(PostInteraction::TYPES, 0),
             $this->interactions()
-                ->select('type', \DB::raw('count(*) as total'))
+                ->select('type', DB::raw('count(*) as total'))
                 ->groupBy('type')->get()->pluck('total', 'type')->all()
         );
     }
@@ -316,83 +317,95 @@ class Post extends Model
         return $this;
     }
 
-    public static function getUserFilteredData(Builder $builder)
+    public static function getUserTimelineFilter(Builder $builder)
     {
 
         $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
 
         if ($activeAccountId) {
-            if(method_exists(CommunityFacade::getUserClass(), 'userTimelineFilters')) {
-                CommunityFacade::getUserClass()::userTimelineFilters($builder, $activeAccountId);
-            } else {
-                $builder->where(function ($query) use ($activeAccountId) {
 
-                    // Get user's own posts
-                    $query->where('posts.account_id', $activeAccountId);
+            $per_page = config('community.timeline_filter_limit', 1000);
 
-                    //Get Posts for liked accounts
-                    $query->orWhereIn('posts.account_id', function($q) use ($activeAccountId) {
-                        $q->select('account_likes.liked_account_id')->from('account_likes')
-                            ->where('account_likes.account_id', $activeAccountId);
-                    });
+            $myPosts = self::globalScopeTimelineFilter()
+                ->where('posts.account_id', $activeAccountId)
+                ->limit($per_page)
+                ->get(['posts.id'])->pluck('id')->all();
 
-                    // Get user's followed accounts posts
-                    $query->orWhereIn('posts.account_id', function($q) use ($activeAccountId) {
-                        $q->select('account_followers.follower_account_id')->from('account_followers')
-                            ->where('account_followers.account_id', $activeAccountId);
-                    });
 
-                    // Get user's liked posts
-                    $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
-                        $q->select('post_interactions.post_id')->from('post_interactions')
-                            ->where('post_interactions.type', 'vote_up')
-                            ->where('post_interactions.account_id', $activeAccountId);
-                    });
+            $accountLikePosts = self::globalScopeTimelineFilter()
+                ->whereIn('posts.account_id', function($q) use ($activeAccountId) {
+                    $q->select('account_likes.liked_account_id')->from('account_likes')
+                        ->where('account_likes.account_id', $activeAccountId);
+                })
+                ->limit($per_page)
+                ->get(['posts.id'])->pluck('id')->all();
 
-                    // Get user's viewed posts
-                    $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
-                        $q->select('post_interactions.post_id')->from('post_interactions')
-                            ->where('post_interactions.type', 'viewed')
-                            ->where('post_interactions.account_id', $activeAccountId);
-                    });
 
-                    // Get user's committed posts
-                    $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
-                        $q->select('posts.parent_post_id')->from('posts')
-                            ->whereNotNull('parent_post_id')
-                            ->where('posts.account_id', $activeAccountId);
-                    });
+            $accountFollowPosts = self::globalScopeTimelineFilter()
+                ->whereIn('posts.account_id', function($q) use ($activeAccountId) {
+                    $q->select('account_followers.follower_account_id')->from('account_followers')
+                        ->where('account_followers.account_id', $activeAccountId);
+                })
+                ->limit($per_page)
+                ->get(['posts.id'])->pluck('id')->all();
 
-                    // Get user's followed hashtags posts
-                    $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
-                        $q->select('post_tags.post_id')->from('post_tags')
-                            ->join('tag_followers', 'post_tags.tag_id', '=', 'tag_followers.tag_id')
-                            ->where('tag_followers.account_id', $activeAccountId);
-                    });
 
-                    // Get user's followed tag-groups posts
-                    if(TagGroup::count()) {
-                        if (TagGroupFollower::where('account_id', $activeAccountId)->count()) {
-                            $query->orWhereIn('posts.id', function ($q) use ($activeAccountId) {
-                                $q->select('post_tags.post_id')->from('post_tags')
-                                    ->join('tags', 'post_tags.tag_id', '=', 'tags.id')
-                                    ->join('tag_group_followers', 'tags.tag_group_id', '=', 'tag_group_followers.tag_group_id')
-                                    ->where('tag_group_followers.account_id', $activeAccountId);
-                            });
-                        } else {
-                            $query->orWhereNotIn('posts.id', function ($q) use ($activeAccountId) {
-                                $q->select('post_tags.post_id')->from('post_tags')
-                                    ->join('tags', 'post_tags.tag_id', '=', 'tags.id')
-                                    ->join('tag_groups', 'tags.tag_group_id', '=', 'tag_groups.id')
-                                    ->where('tag_groups.hide_in_public', 1);
-                            });
-                        }
-                    }
+            $interactionPosts = self::globalScopeTimelineFilter()
+                ->whereIn('posts.id', function ($q) use ($activeAccountId) {
+                    $q->select('post_interactions.post_id')->from('post_interactions')
+                        ->where('post_interactions.account_id', $activeAccountId);
+                })
+                ->limit($per_page)
+                ->get(['posts.id'])->pluck('id')->all();
 
-                });
+
+            $commentedPosts = self::globalScopeTimelineFilter()
+                ->whereIn('posts.id', function ($q) use ($activeAccountId) {
+                    $q->select('posts.parent_post_id')->from('posts')
+                        ->whereNotNull('parent_post_id')
+                        ->where('posts.account_id', $activeAccountId);
+                })
+                ->limit($per_page)
+                ->get(['posts.id'])->pluck('id')->all();
+
+
+            $tagFollowPosts = self::globalScopeTimelineFilter()
+                ->whereIn('posts.id', function ($q) use ($activeAccountId) {
+                    $q->select('post_tags.post_id')->from('post_tags')
+                        ->join('tag_followers', 'post_tags.tag_id', '=', 'tag_followers.tag_id')
+                        ->where('tag_followers.account_id', $activeAccountId);
+                })
+                ->limit($per_page)
+                ->get(['posts.id'])->pluck('id')->all();
+
+            $postIds = array_merge($myPosts, $accountLikePosts, $accountFollowPosts, $interactionPosts, $commentedPosts, $tagFollowPosts);
+
+            if(method_exists(CommunityFacade::getUserClass(), 'getMyUserTimelineFilter')) {
+                $postIds = array_merge($postIds, CommunityFacade::getUserClass()::getMyUserTimelineFilter($activeAccountId, $per_page));
             }
+
+            $builder->whereIn('posts.id', $postIds);
         }
 
+    }
+
+    public static function globalScopeTimelineFilter() {
+
+        $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
+
+        return DB::table('posts')
+            ->whereNull('related_post_id')
+            ->whereNull('parent_post_id')
+            ->whereNull('deleted_at')
+            ->whereNotIn('posts.id', function($q) use ($activeAccountId) {
+                $q->select('post_reports.post_id')->from('post_reports')
+                    ->where('post_reports.account_id', $activeAccountId);
+            })
+            ->whereNotIn('posts.account_id', function($q) use ($activeAccountId) {
+                $q->select('account_blocks.block_account_id')->from('account_blocks')
+                    ->where('account_blocks.account_id', $activeAccountId);
+            })
+            ->orderBy('posts.id', 'desc');
     }
 
     public static function getRelatedPostFilteredData(Builder $builder, Post $post)
@@ -410,7 +423,7 @@ class Post extends Model
         }
 
         $builder->whereIn('posts.id', function ($q) use ($classType) {
-            $q->select(\DB::raw('(CASE WHEN p.related_post_id IS NULL THEN p.id ELSE p.related_post_id END) AS post_id'))->from('posts as p')
+            $q->select(DB::raw('(CASE WHEN p.related_post_id IS NULL THEN p.id ELSE p.related_post_id END) AS post_id'))->from('posts as p')
                 ->where('p.class_type', $classType);
         });
 
