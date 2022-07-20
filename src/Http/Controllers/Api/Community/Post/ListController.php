@@ -72,7 +72,11 @@ class ListController extends Controller
                 }
             }
 
-            $data = $this->simplePaginate($query);
+            if ($parentPostId || $accountId) {
+                $data = $query->paginate(config('community.per_page', 10));
+            } else {
+                $data = $this->simplePaginate($query);
+            }
 
             Cache::tags(['posts'])->put($cacheKey, $data, 600); // 60 * 10 = 600 seconds
         }
