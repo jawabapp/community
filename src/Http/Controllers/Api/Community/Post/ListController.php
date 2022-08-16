@@ -78,7 +78,7 @@ class ListController extends Controller
                 $data = $this->simplePaginate($query);
             }
 
-            Cache::tags(['posts'])->put($cacheKey, $data, 600); // 60 * 10 = 600 seconds
+            Cache::tags(['posts'])->put($cacheKey, $data, 10); // 10 minutes
         }
 
         //dd(\DB::getQueryLog());
