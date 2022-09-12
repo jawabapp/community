@@ -89,7 +89,7 @@
                         const results = data.data.map(item => {
                             return {
                                 id: item.id,
-                                text: item.phone
+                                text: item.slug + ' (' + item.phone + ') ' + item.first_name + ' ' + item.last_name + ' #' + item.id
                             };
                         });
                         return {
