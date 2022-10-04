@@ -378,13 +378,19 @@ class Post extends Model
                 ->limit($per_page)
                 ->get(['posts.id'])->pluck('id')->all();
 
-            $postIds = array_merge($myPosts, $accountLikePosts, $accountFollowPosts, $interactionPosts, $commentedPosts, $tagFollowPosts);
 
-            if(method_exists(CommunityFacade::getUserClass(), 'getMyUserTimelineFilter')) {
-                $postIds = array_merge($postIds, CommunityFacade::getUserClass()::getMyUserTimelineFilter($activeAccountId, $per_page));
+            $customPostIds = [];
+            if(method_exists(CommunityFacade::getUserClass(), 'getCustomPostIdsForUserTimeline')) {
+                $customPostIds = CommunityFacade::getUserClass()::getCustomPostIdsForUserTimeline($activeAccountId, $per_page);
             }
 
+            $postIds = array_unique(array_merge($myPosts, $accountLikePosts, $accountFollowPosts, $interactionPosts, $commentedPosts, $tagFollowPosts, $customPostIds), SORT_NUMERIC);
+
             $builder->whereIn('posts.id', $postIds);
+
+            if(method_exists(CommunityFacade::getUserClass(), 'customUserTimelineFilter')) {
+                CommunityFacade::getUserClass()::customUserTimelineFilter($activeAccountId, $builder);
+            }
         }
 
     }
