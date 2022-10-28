@@ -157,7 +157,7 @@ class Post extends Model
 
     private function updatePostAccountCount()
     {
-        if ($this->account ) {
+        if ($this->account) {
            try {
                $this->account->update([
                    'post_count' => $this->account->getPostCount()
