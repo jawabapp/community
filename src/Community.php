@@ -45,8 +45,6 @@ class Community
         }
 
         return $this->insertPost($request);
-
-
     }
 
     /**
@@ -101,13 +99,13 @@ class Community
 
     public function insertPost($request)
     {
-        $postObject = null;
+        $post = null;
         if ($request->get('parent_post_id')) {
             $parent_post = Post::find($request->get('parent_post_id'));
         }
 
         if ($request->get('post')) {
-            $postObject = Post\Text::create([
+            $post = Post\Text::create([
                 'account_id' => $request->get('account_id'),
                 'parent_post_id' => $parent_post->id ?? null,
                 'content' => $request->get('post'),
@@ -129,8 +127,8 @@ class Community
                         'is_status' => false
                     ]);
 
-                    if (!$postObject) {
-                        $postObject = $attachedPost;
+                    if (!$post) {
+                        $post = $attachedPost;
                     }
                 }
             } else {
@@ -139,8 +137,6 @@ class Community
                 ]);
             }
         }
-
-        $post = Post::whereId($postObject->id)->with(Post::withPost())->first();
 
         try {
             //comment
