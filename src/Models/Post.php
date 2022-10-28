@@ -163,7 +163,7 @@ class Post extends Model
                    'post_count' => $this->account->getPostCount()
                ]);
            } catch (\Exception $e) {
-               error('updatePostAccountCount ' . $e->getMessage());
+               info('updatePostAccountCount ' . $e->getMessage());
            }
         }
     }
