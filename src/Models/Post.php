@@ -133,7 +133,6 @@ class Post extends Model
             $node->generateDeepLink();
             $node->updateParentsCount();
             $node->updatePostAccountCount();
-            $node->updatePostAccountCount();
             $node->updatePostTagsCount();
         });
 
