@@ -32,11 +32,9 @@ class CreateController extends Controller
 
         $post = CommunityFacade::createPost($request);
 
-        $post = Post::whereId($post->id)->with(Post::withPost())->first();
-
         return response()->json([
 //            'result' => PostResource::make($post),
-            'result' => $post,
+            'result' => $post->load(Post::withPost()),
         ]);
     }
 }
