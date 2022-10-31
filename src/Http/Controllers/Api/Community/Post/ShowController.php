@@ -31,20 +31,17 @@ class ShowController extends Controller
     public function index($id, Request $request): JsonResponse
     {
 
-        $with = Post::withPost();
-
-        $query = Post::with($with);
+        $query = Post::with(Post::withPost());
 
         if (preg_match("/[a-zA-Z]/i", $id)) {
-            $post = $query->where('hash', $id)->first();
+            $query->where('hash', $id);
+        } else if (is_numeric($id)) {
+            $query->where('id', $id);
         } else {
-            $post = $query->find($id);
-
-            if (!$post) {
-                $query = Post::with($with);
-                $post = $query->where('hash', $id)->first();
-            }
+            $query->where('id', $id)->orWhere('hash', $id);
         }
+
+        $post = $query->first();
 
         if (!$post) {
             throw ValidationException::withMessages([

@@ -157,14 +157,10 @@ class Post extends Model
 
     private function updatePostAccountCount()
     {
-        if ($this->account) {
-           try {
-               $this->account->update([
-                   'post_count' => $this->account->getPostCount()
-               ]);
-           } catch (\Exception $e) {
-               \Log::error('updatePostAccountCount ' . $e->getMessage());
-           }
+        if ($this->account && !in_array($this->account->id, config('community.ignore_update_accounts', []))) {
+            $this->account->update([
+                'post_count' => $this->account->getPostCount()
+            ]);
         }
     }
 
