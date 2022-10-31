@@ -81,5 +81,4 @@ return [
     ],
     'per_page' => 10,
     'timeline_filter_limit' => 1000,
-    'ignore_update_accounts' => [],
 ];
