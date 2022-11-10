@@ -30,6 +30,7 @@ return [
     'with' => [
         //        Models\Post::class => ['tags_doa'],
     ],
+    'timeline_post_with' => [],
     'appends' => [
         //        Models\Post::class => [
         //            'tag_doa' => function(Models\Post $model) {

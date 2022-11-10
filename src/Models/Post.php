@@ -457,6 +457,11 @@ class Post extends Model
     public static function withPost() {
 
         $with = ['related', 'account', 'tags'];
+
+        if($timeline_with = config('community.timeline_post_with', [])) {
+            $with = array_merge($with, $timeline_with);
+        }
+
         $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
         if ($activeAccountId) {
             $with = array_merge($with, [
