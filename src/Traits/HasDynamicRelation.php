@@ -13,6 +13,7 @@ trait HasDynamicRelation
      */
     protected static $dynamic_relations = [];
     protected static $dynamic_appends = [];
+    protected static $dynamic_hidden = [];
     protected static $dynamic_appends_actions = [];
 
     /**
@@ -89,6 +90,43 @@ trait HasDynamicRelation
         }
 
         return parent::getArrayableAppends();
+    }
+
+    /**
+     * Add a new hidden
+     *
+     * @param $name
+     */
+    public static function addDynamicHidden($name)
+    {
+        static::$dynamic_hidden[$name] = $name;
+    }
+
+    /**
+     * Determine if a hidden exists in dynamic hidden list
+     *
+     * @param $name
+     *
+     * @return bool
+     */
+    public static function hasDynamicHidden($name)
+    {
+        return array_key_exists($name, static::$dynamic_hidden);
+    }
+
+    /**
+     * Get an attribute array of all arrayable values.
+     *
+     * @param  array  $values
+     * @return array
+     */
+    protected function getArrayableItems(array $values)
+    {
+        if (count(static::$dynamic_hidden) > 0) {
+            $values = array_diff_key($values, array_flip(static::$dynamic_hidden));
+        }
+
+        return parent::getArrayableItems($values);
     }
 
     /**

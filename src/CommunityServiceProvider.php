@@ -103,6 +103,14 @@ class CommunityServiceProvider extends ServiceProvider
                 }
             }
         }
+
+        foreach (config('community.hidden', []) as $class => $hidden) {
+            foreach ($hidden as $hidden_attr) {
+                if (method_exists($class, 'addDynamicHidden')) {
+                    $class::addDynamicHidden($hidden_attr);
+                }
+            }
+        }
     }
 
     /**
