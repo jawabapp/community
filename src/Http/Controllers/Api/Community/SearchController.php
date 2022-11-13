@@ -163,6 +163,7 @@ class SearchController extends Controller
         return Tag::selectRaw('`tag_id`, `hash_tag`, count(*) as `hash_tag_count`')
             ->join('post_tags', 'tag_id', '=', 'tags.id')
             ->where('hash_tag', 'LIKE', "%{$keyword}%")
+            ->where('posts_count', '>', 0)
             ->groupBy('tag_id')
             ->orderBy('hash_tag_count', 'desc')
             ->paginate(config('community.per_page', 10));
