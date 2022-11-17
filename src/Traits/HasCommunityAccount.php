@@ -159,7 +159,7 @@ trait HasCommunityAccount
             ]
         );
 
-        if ($deep_link && !$returnOnly) {
+        if (!$returnOnly && $deep_link) {
             $this->update([
                 'deep_link' => $deep_link
             ]);
@@ -235,12 +235,7 @@ trait HasCommunityAccount
      */
     public function groups()
     {
-        return $this->belongsToMany(
-            Models\AccountGroup::class,
-            'account_group_members',
-            'account_id',
-            'account_group_id'
-        );
+        return $this->belongsToMany(Models\AccountGroup::class, 'account_group_members', 'account_id', 'account_group_id');
     }
 
     /**
@@ -339,11 +334,17 @@ trait HasCommunityAccount
         });
 
         static::updating(function (self $node) {
-            $node->setCommunityAttributes();
+            $node->setCommunityAttributes(false, $node->getKey());
         });
     }
 
-    public function setCommunityAttributes($changeSlug = false) {
+    public function setCommunityAttributes($changeSlug = false, $id = 0) {
+
+        if($id) {
+            $this->setAttribute('topic', 'notifications/accounts/' . $id);
+        } else {
+            $this->setAttribute('topic', 'notifications/accounts/');
+        }
 
         $nicknames = [];
 
@@ -359,11 +360,9 @@ trait HasCommunityAccount
         if($changeSlug) {
             $nickname = trim(implode(' ', $nicknames));
 
-            $this->setAttribute('slug', app(Slug::class)->createSlug($nickname, $this->getKey()));
+            $this->setAttribute('slug', app(Slug::class)->createSlug($nickname, $id));
             $this->setAttribute('deep_link', $this->generateDeepLink(true));
         }
-
-        $this->setAttribute('topic', 'notifications/accounts/' . $this->id);
 
     }
 }

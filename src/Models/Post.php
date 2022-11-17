@@ -127,20 +127,26 @@ class Post extends Model
 
         static::creating(function (self $node) {
             $node->setAttribute('hash', uniqid());
+            $node->setAttribute('topic', 'notifications/posts/');
+            $node->setAttribute('deep_link', $node->generateDeepLink(true));
         });
 
-        static::created(function (self $node) {
-            $node->generateDeepLink();
-            $node->updateParentsCount();
-            $node->updatePostAccountCount();
-            $node->updatePostTagsCount();
+        static::updating(function (self $node) {
+            if($node->getAttribute('topic') == 'notifications/posts/') {
+                $node->setAttribute('topic', 'notifications/posts/' . $node->getKey());
+            }
         });
 
         static::saving(function (self $node) {
             if (static::class != self::class) {
-                $node->setAttribute('topic', 'notifications/posts/' . $node->id);
                 $node->setAttribute('class_type', static::class);
             }
+        });
+
+        static::created(function (self $node) {
+            $node->updateParentsCount();
+            $node->updatePostAccountCount();
+            $node->updatePostTagsCount();
         });
 
         static::saved(function (self $node) {
@@ -158,13 +164,13 @@ class Post extends Model
     private function updatePostAccountCount()
     {
         if ($this->account) {
-           try {
-               $this->account->update([
-                   'post_count' => $this->account->getPostCount()
-               ]);
-           } catch (\Exception $e) {
-               \Log::error('updatePostAccountCount ' . $e->getMessage());
-           }
+            try {
+                $this->account->update([
+                    'post_count' => $this->account->getPostCount()
+                ]);
+            } catch (\Exception $e) {
+                \Log::error('updatePostAccountCount ' . $e->getMessage());
+            }
         }
     }
 
@@ -264,43 +270,44 @@ class Post extends Model
 
     public function updateParentsCount($isDecrease = false)
     {
+        if(!empty($this->parent_post_id)) {
+            $parent_post = self::find($this->parent_post_id);
 
-        $parent_post = self::find($this->parent_post_id);
-
-        if ($parent_post && empty($this->related_post_id)) {
-            $parent_post->update([
+            if ($parent_post && empty($this->related_post_id)) {
+                $parent_post->update([
 //                'children_count' => ($isDecrease ? ($parent_post->children_count - $this->children_count - 1) : ($parent_post->children_count + 1))
-                'children_count' => self::where('parent_post_id', $parent_post->id)->count()
-            ]);
+                    'children_count' => self::where('parent_post_id', $parent_post->id)->count()
+                ]);
 
-            $parent_post->updateParentsCount($isDecrease);
+                $parent_post->updateParentsCount($isDecrease);
+            }
         }
     }
 
-    public function generateDeepLink()
+    public function generateDeepLink($returnOnly = false)
     {
         if(!config('community.deep_link.post')) {
             return null;
         }
 
-        $slug = ($this->account->slug_without_at);
+        //$slug = ($this->account->slug_without_at);
         $hash = ($this->hash);
 
         $deep_link = DeepLinkBuilder::generate(
             [
                 'mode' => 'post',
-                'slug' => $slug,
+                //'slug' => $slug,
                 'hash' => $hash,
             ],
             [
                 'domain-uri-prefix' => config('community.deep_link.post.url_prefix'),
                 'utm-source' => config('community.deep_link.post.utm_source'),
                 'utm-medium' => config('community.deep_link.post.utm_medium'),
-                'utm-campaign' => config('community.deep_link.post.utm_campaign') ?? "{$slug}-{$hash}",
+                'utm-campaign' => config('community.deep_link.post.utm_campaign') ?? "{$hash}",
             ]
         );
 
-        if ($deep_link) {
+        if (!$returnOnly && $deep_link) {
             $this->update([
                 'deep_link' => $deep_link
             ]);

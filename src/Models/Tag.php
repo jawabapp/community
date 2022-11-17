@@ -106,16 +106,19 @@ class Tag extends Model
     {
         parent::boot();
 
-        static::created(function (self $node) {
-            $node->generateDeepLink();
+        static::creating(function (self $node) {
+            $node->setAttribute('topic', 'notifications/tags/');
+            $node->setAttribute('deep_link', $node->generateDeepLink(true));
         });
 
-        static::saving(function (self $node) {
-            $node->setAttribute('topic', 'notifications/tags/' . $node->id);
+        static::updating(function (self $node) {
+            if($node->getAttribute('topic') == 'notifications/tags/') {
+                $node->setAttribute('topic', 'notifications/tags/' . $node->getKey());
+            }
         });
     }
 
-    public function generateDeepLink()
+    public function generateDeepLink($returnOnly = false)
     {
         if(!config('community.deep_link.hashtag')) {
             return null;
@@ -136,7 +139,7 @@ class Tag extends Model
             ]
         );
 
-        if ($deep_link) {
+        if (!$returnOnly && $deep_link) {
             $this->update([
                 'deep_link' => $deep_link
             ]);

@@ -70,7 +70,7 @@ class CommunityServiceProvider extends ServiceProvider
 
         // Register the main class to use with the facade
         $this->app->singleton('community', function () {
-            return new Community;
+            return new CommunityService;
         });
 
         foreach (config('community.relations', []) as $class => $relations) {

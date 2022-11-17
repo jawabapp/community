@@ -11,7 +11,7 @@ use Jawabapp\Community\Events\PostCreate;
 use Jawabapp\Community\Events\CommentCreate;
 use Illuminate\Validation\ValidationException;
 
-class Community
+class CommunityService
 {
 
     public function createPost(Request $request)
