@@ -337,42 +337,46 @@ class Post extends Model
 
             $per_page = config('community.timeline_filter_limit', 1000);
 
-            $myPosts = self::globalScopeTimelineFilter()
+            $myPosts = self::baseQuery()
                 ->where('posts.account_id', $activeAccountId)
                 ->limit($per_page)
                 ->get(['posts.id'])->pluck('id')->all();
 
 
-            $accountLikePosts = self::globalScopeTimelineFilter()
-                ->whereIn('posts.account_id', function($q) use ($activeAccountId) {
-                    $q->select('account_likes.liked_account_id')->from('account_likes')
+            $accountLikePosts = self::baseQuery()
+                ->whereIn('posts.account_id', function(\Illuminate\Database\Query\Builder $q) use ($activeAccountId) {
+                    $q->select('account_likes.liked_account_id')
+                        ->from('account_likes')
                         ->where('account_likes.account_id', $activeAccountId);
                 })
                 ->limit($per_page)
                 ->get(['posts.id'])->pluck('id')->all();
 
 
-            $accountFollowPosts = self::globalScopeTimelineFilter()
-                ->whereIn('posts.account_id', function($q) use ($activeAccountId) {
-                    $q->select('account_followers.follower_account_id')->from('account_followers')
+            $accountFollowPosts = self::baseQuery()
+                ->whereIn('posts.account_id', function(\Illuminate\Database\Query\Builder $q) use ($activeAccountId) {
+                    $q->select('account_followers.follower_account_id')
+                        ->from('account_followers')
                         ->where('account_followers.account_id', $activeAccountId);
                 })
                 ->limit($per_page)
                 ->get(['posts.id'])->pluck('id')->all();
 
 
-            $interactionPosts = self::globalScopeTimelineFilter()
-                ->whereIn('posts.id', function ($q) use ($activeAccountId) {
-                    $q->select('post_interactions.post_id')->from('post_interactions')
+            $interactionPosts = self::baseQuery()
+                ->whereIn('posts.id', function (\Illuminate\Database\Query\Builder $q) use ($activeAccountId) {
+                    $q->select('post_interactions.post_id')
+                        ->from('post_interactions')
                         ->where('post_interactions.account_id', $activeAccountId);
                 })
                 ->limit($per_page)
                 ->get(['posts.id'])->pluck('id')->all();
 
 
-            $commentedPosts = self::globalScopeTimelineFilter()
-                ->whereIn('posts.id', function ($q) use ($activeAccountId) {
-                    $q->select('posts.parent_post_id')->from('posts')
+            $commentedPosts = self::baseQuery()
+                ->whereIn('posts.id', function (\Illuminate\Database\Query\Builder $q) use ($activeAccountId) {
+                    $q->select('posts.parent_post_id')
+                        ->from('posts')
                         ->whereNotNull('parent_post_id')
                         ->where('posts.account_id', $activeAccountId);
                 })
@@ -380,9 +384,10 @@ class Post extends Model
                 ->get(['posts.id'])->pluck('id')->all();
 
 
-            $tagFollowPosts = self::globalScopeTimelineFilter()
-                ->whereIn('posts.id', function ($q) use ($activeAccountId) {
-                    $q->select('post_tags.post_id')->from('post_tags')
+            $tagFollowPosts = self::baseQuery()
+                ->whereIn('posts.id', function (\Illuminate\Database\Query\Builder $q) use ($activeAccountId) {
+                    $q->select('post_tags.post_id')
+                        ->from('post_tags')
                         ->join('tag_followers', 'post_tags.tag_id', '=', 'tag_followers.tag_id')
                         ->where('tag_followers.account_id', $activeAccountId);
                 })
@@ -395,9 +400,11 @@ class Post extends Model
                 $customPostIds = CommunityFacade::getUserClass()::getCustomPostIdsForUserTimeline($activeAccountId, $per_page);
             }
 
-            $postIds = array_unique(array_merge($myPosts, $accountLikePosts, $accountFollowPosts, $interactionPosts, $commentedPosts, $tagFollowPosts, $customPostIds), SORT_NUMERIC);
+            $postIds = array_sort(array_unique(array_merge($myPosts, $accountLikePosts, $accountFollowPosts, $interactionPosts, $commentedPosts, $tagFollowPosts, $customPostIds), SORT_NUMERIC));
 
-            $builder->whereIn('posts.id', $postIds);
+            $builder->whereIn('posts.id', $postIds)
+                ->whereNull('related_post_id')
+                ->whereNull('parent_post_id');
 
             if(method_exists(CommunityFacade::getUserClass(), 'customUserTimelineFilter')) {
                 CommunityFacade::getUserClass()::customUserTimelineFilter($activeAccountId, $builder);
@@ -406,23 +413,13 @@ class Post extends Model
 
     }
 
-    public static function globalScopeTimelineFilter() {
-
-        $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
-
-        return DB::table('posts')
-            ->whereNull('related_post_id')
-            ->whereNull('parent_post_id')
-            ->whereNull('deleted_at')
-            ->whereNotIn('posts.id', function($q) use ($activeAccountId) {
-                $q->select('post_reports.post_id')->from('post_reports')
-                    ->where('post_reports.account_id', $activeAccountId);
-            })
-            ->whereNotIn('posts.account_id', function($q) use ($activeAccountId) {
-                $q->select('account_blocks.block_account_id')->from('account_blocks')
-                    ->where('account_blocks.account_id', $activeAccountId);
-            })
-            ->orderBy('posts.id', 'desc');
+    /**
+     * Begin base query without any append or relation.
+     *
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public static function baseQuery() {
+        return DB::table('posts')->orderBy('posts.id', 'desc');
     }
 
     public static function getRelatedPostFilteredData(Builder $builder, Post $post)
