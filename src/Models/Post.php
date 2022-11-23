@@ -347,7 +347,8 @@ class Post extends Model
                 ->whereIn('posts.account_id', function(\Illuminate\Database\Query\Builder $q) use ($activeAccountId) {
                     $q->select('account_likes.liked_account_id')
                         ->from('account_likes')
-                        ->where('account_likes.account_id', $activeAccountId);
+                        ->where('account_likes.account_id', $activeAccountId)
+                        ->whereNotIn('account_likes.liked_account_id', config('community.ignore_liked_user_posts_to_show_in_timeline', []));
                 })
                 ->limit($per_page)
                 ->get(['posts.id'])->pluck('id')->all();
@@ -357,7 +358,8 @@ class Post extends Model
                 ->whereIn('posts.account_id', function(\Illuminate\Database\Query\Builder $q) use ($activeAccountId) {
                     $q->select('account_followers.follower_account_id')
                         ->from('account_followers')
-                        ->where('account_followers.account_id', $activeAccountId);
+                        ->where('account_followers.account_id', $activeAccountId)
+                        ->whereNotIn('account_likes.follower_account_id', config('community.ignore_followed_user_posts_to_show_in_timeline', []));
                 })
                 ->limit($per_page)
                 ->get(['posts.id'])->pluck('id')->all();

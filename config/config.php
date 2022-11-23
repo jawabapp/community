@@ -82,4 +82,6 @@ return [
     ],
     'per_page' => 10,
     'timeline_filter_limit' => 1000,
+    'ignore_liked_user_posts_to_show_in_timeline' => [],
+    'ignore_followed_user_posts_to_show_in_timeline' => [],
 ];
