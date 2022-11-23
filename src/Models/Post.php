@@ -359,7 +359,7 @@ class Post extends Model
                     $q->select('account_followers.follower_account_id')
                         ->from('account_followers')
                         ->where('account_followers.account_id', $activeAccountId)
-                        ->whereNotIn('account_likes.follower_account_id', config('community.ignore_followed_user_posts_to_show_in_timeline', []));
+                        ->whereNotIn('account_followers.follower_account_id', config('community.ignore_followed_user_posts_to_show_in_timeline', []));
                 })
                 ->limit($per_page)
                 ->get(['posts.id'])->pluck('id')->all();
