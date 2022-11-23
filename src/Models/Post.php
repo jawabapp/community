@@ -348,7 +348,9 @@ class Post extends Model
                     $q->select('account_likes.liked_account_id')
                         ->from('account_likes')
                         ->where('account_likes.account_id', $activeAccountId)
-                        ->whereNotIn('account_likes.liked_account_id', config('community.ignore_liked_user_posts_to_show_in_timeline', []));
+                        ->when(count(config('community.ignore_liked_user_posts_to_show_in_timeline', [])) > 0, function ($q) {
+                            return $q->whereNotIn('account_likes.liked_account_id', config('community.ignore_liked_user_posts_to_show_in_timeline', []));
+                        });
                 })
                 ->limit($per_page)
                 ->get(['posts.id'])->pluck('id')->all();
@@ -359,7 +361,9 @@ class Post extends Model
                     $q->select('account_followers.follower_account_id')
                         ->from('account_followers')
                         ->where('account_followers.account_id', $activeAccountId)
-                        ->whereNotIn('account_followers.follower_account_id', config('community.ignore_followed_user_posts_to_show_in_timeline', []));
+                        ->when(count(config('community.ignore_followed_user_posts_to_show_in_timeline', [])) > 0, function ($q) {
+                            return $q->whereNotIn('account_followers.follower_account_id', config('community.ignore_followed_user_posts_to_show_in_timeline', []));
+                        });
                 })
                 ->limit($per_page)
                 ->get(['posts.id'])->pluck('id')->all();
