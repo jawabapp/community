@@ -425,7 +425,7 @@ class Post extends Model
      * @return \Illuminate\Database\Query\Builder
      */
     public static function baseQuery() {
-        return DB::table('posts')->orderBy('posts.id', 'desc');
+        return DB::table('posts')->whereNull('deleted_at')->orderBy('posts.id', 'desc');
     }
 
     public static function getRelatedPostFilteredData(Builder $builder, Post $post)
