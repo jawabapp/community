@@ -32,7 +32,7 @@ class PostsController extends Controller
      */
     public function index(Request $request)
     {
-        $query = $this->repository->with('account')->select('posts.*')->whereNull('related_post_id');
+        $query = $this->repository->with(['account', 'related', 'reports'])->select('posts.*')->whereNull('related_post_id');
 
         if ($request->has('parent_post_id')) {
             $query->whereParentPostId($request->get('parent_post_id'));

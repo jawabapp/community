@@ -233,9 +233,9 @@ class Post extends Model
 
     public function getReports()
     {
-        return $this->reports()
-            ->select('report', DB::raw('count(*) as total'))
-            ->groupBy('report')->get()->pluck('total', 'report')->all();
+        return $this->reports->groupBy('report')->map(function ($data, $report) {
+            return $data->count();
+        })->all();
     }
 
     public function reports()
