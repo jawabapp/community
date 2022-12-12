@@ -74,7 +74,7 @@ class PostsController extends Controller
             $query->join('post_reports', 'posts.id', '=', 'post_reports.post_id');
         }
 
-        $data = $query->latest()->paginate(config('community.per_page', 10));
+        $data = $query->latest('id')->paginate(config('community.per_page', 10));
 
         return view('community::admin.posts.index')->with('data', $data);
     }
