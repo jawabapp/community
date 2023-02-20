@@ -27,19 +27,15 @@ class Slug
             // Normalize the title
             $slug = $this->accountSlug($title);
 
-            // Get any that could possibly be related.
-            // This cuts the queries down by doing it once.
-            $allSlugs = $this->getRelatedSlugs($slug, $id);
-
             // If we haven't used it before then we are all good.
-            if (!$allSlugs->contains('slug', strtolower($slug))) {
+            if (!$this->checkIfSlugExists($slug, $id)) {
                 return $slug;
             }
 
             // Just append numbers like a savage until we find not used.
             for ($i = 1; $i <= 5; $i++) {
-                $newSlug = $slug . '-' . $this->generateRandomString();
-                if (! $allSlugs->contains('slug', strtolower($newSlug))) {
+                $newSlug = $slug . '-' . $this->generateRandomString(rand(5,7));
+                if (!$this->checkIfSlugExists($newSlug, $id)) {
                     return $newSlug;
                 }
             }
@@ -48,11 +44,11 @@ class Slug
         return '@' . uniqid();
     }
 
-    protected function getRelatedSlugs($slug, $id = 0)
+    protected function checkIfSlugExists($slug, $id = 0)
     {
-        return CommunityFacade::getUserClass()::select(\DB::raw('LOWER(`slug`) AS slug'))->whereRaw("LOWER(`slug`) like ?", [strtolower($slug) . '%'])
+        return CommunityFacade::getUserClass()::where("slug", $slug)
             ->where('id', '<>', $id)
-            ->get();
+            ->exists();
     }
 
     /**
