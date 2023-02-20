@@ -34,7 +34,7 @@ class Slug
 
             // Just append numbers like a savage until we find not used.
             for ($i = 1; $i <= 5; $i++) {
-                $newSlug = $slug . '-' . $this->generateRandomString(rand(4,7));
+                $newSlug = $slug . '-' . $this->generateRandomString(rand(3,6));
                 if (!$this->checkIfSlugExists($newSlug, $id)) {
                     return $newSlug;
                 }
