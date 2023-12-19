@@ -22,7 +22,7 @@ class AddExtraAccountFields extends Migration
     public function up()
     {
         Schema::table($this->table_name, function (Blueprint $table) {
-            $table->string('slug')->nullable();
+            $table->string('slug')->nullable()->index();
             $table->string('deep_link')->nullable();
             $table->json('extra_info')->nullable();
             $table->string('topic')->nullable();
@@ -30,8 +30,6 @@ class AddExtraAccountFields extends Migration
             $table->integer('followers_count')->default(0);
             $table->integer('following_count')->default(0);
             $table->integer('mutual_follower_count')->default(0);
-
-            $table->index('slug');
         });
     }
 
@@ -51,8 +49,6 @@ class AddExtraAccountFields extends Migration
             $table->dropColumn('followers_count');
             $table->dropColumn('following_count');
             $table->dropColumn('mutual_follower_count');
-
-            $table->dropIndex('slug');
         });
     }
 }
