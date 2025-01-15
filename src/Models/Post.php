@@ -406,7 +406,9 @@ class Post extends Model
                 $customPostIds = CommunityFacade::getUserClass()::getCustomPostIdsForUserTimeline($activeAccountId, $per_page);
             }
 
-            $postIds = array_sort(array_unique(array_merge($myPosts, $accountLikePosts, $accountFollowPosts, $interactionPosts, $commentedPosts, $tagFollowPosts, $customPostIds), SORT_NUMERIC));
+            $postIds = array_unique(array_merge($myPosts, $accountLikePosts, $accountFollowPosts, $interactionPosts, $commentedPosts, $tagFollowPosts, $customPostIds), SORT_NUMERIC);
+
+            sort($postIds);
 
             $builder->whereIn('posts.id', $postIds)
                 ->whereNull('related_post_id')
