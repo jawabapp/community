@@ -44,6 +44,11 @@ class TagGroup extends Model
         'account_following',
     ];
 
+    public function getConnectionName()
+    {
+        return config('community.database_connection');
+    }
+
     public function getAccountFollowingAttribute()
     {
         return $this->isAccountFollowingBy();

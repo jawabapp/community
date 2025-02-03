@@ -38,4 +38,9 @@ class PostReport extends Model
         'account_id',
         'report'
     ];
+
+    public function getConnectionName()
+    {
+        return config('community.database_connection');
+    }
 }

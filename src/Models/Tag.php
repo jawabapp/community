@@ -29,6 +29,11 @@ class Tag extends Model
         'is_subscribed',
     ];
 
+    public function getConnectionName()
+    {
+        return config('community.database_connection');
+    }
+
     public function getHashTagStringAttribute()
     {
         return str_replace('#', '', $this->hash_tag);

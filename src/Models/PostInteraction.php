@@ -27,6 +27,11 @@ class PostInteraction extends Model
         'vote_down',
     ];
 
+    public function getConnectionName()
+    {
+        return config('community.database_connection');
+    }
+
     protected static function boot()
     {
         parent::boot();

@@ -7,6 +7,7 @@ use Jawabapp\Community\Models;
  */
 
 return [
+    'database_connection' => env('DB_CONNECTION', 'mysql'),
     'user_class' => \App\Models\User::class,
     'slug_fields' => ['name'],
     'search_fields' => ['name'],

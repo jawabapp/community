@@ -19,6 +19,11 @@ class AccountLike extends Model
         'account_id', 'liked_account_id'
     ];
 
+    public function getConnectionName()
+    {
+        return config('community.database_connection');
+    }
+
     /**
      * Get the user that owns the contact.
      */

@@ -14,6 +14,11 @@ class TagGroupFollower extends Model
         'account_id',
     ];
 
+    public function getConnectionName()
+    {
+        return config('community.database_connection');
+    }
+
     protected static function boot()
     {
         parent::boot();

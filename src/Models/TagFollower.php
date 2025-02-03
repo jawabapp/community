@@ -19,6 +19,11 @@ class TagFollower extends Model
         'account_id', 'tag_id', 'created_by'
     ];
 
+    public function getConnectionName()
+    {
+        return config('community.database_connection');
+    }
+
     /**
      * Get the user that owns the contact.
      */

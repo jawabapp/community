@@ -49,6 +49,11 @@ class Post extends Model
         'is_subscribed'
     ];
 
+    public function getConnectionName()
+    {
+        return config('community.database_connection');
+    }
+
     public function myInteractions()
     {
         $activeAccountId = CommunityFacade::getUserClass()::getActiveAccountId();
