@@ -72,11 +72,14 @@ class ListController extends Controller
                 }
             }
 
-            if ($parentPostId || $accountId) {
-                $data = $query->paginate(config('community.per_page', 10));
-            } else {
-                $data = $this->simplePaginate($query);
-            }
+//            if ($parentPostId || $accountId) {
+//                $data = $query->paginate(config('community.per_page', 10));
+//            } else {
+//                $data = $this->simplePaginate($query);
+//            }
+
+            // Disable paginate due to performance with total count query by laravel
+            $data = $this->simplePaginate($query);
 
             Cache::tags(['posts'])->put($cacheKey, $data, 10); // 10 minutes
         }
